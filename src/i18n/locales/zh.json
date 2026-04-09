@@ -1,0 +1,591 @@
+{
+  "common": {
+    "error": "错误",
+    "loading": "加载中...",
+    "save": "保存",
+    "cancel": "取消",
+    "close": "关闭",
+    "back": "返回",
+    "next": "继续",
+    "finish": "完成",
+    "confirm": "确认",
+    "yes": "是",
+    "no": "否",
+    "wallet": "钱包",
+    "copy": "复制",
+    "copied": "已复制！"
+  },
+  "nav": {
+    "home": "首页",
+    "calculator": "计算器",
+    "dashboard": "控制台",
+    "contact": "联系我们",
+    "connectWallet": "连接钱包",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单"
+  },
+  "wallet": {
+    "connectedWallet": "已连接钱包",
+    "balance": "余额",
+    "network": "网络",
+    "unknownNetwork": "未知网络",
+    "switchTo": "切换至",
+    "correctNetwork": "网络正确 ✓",
+    "connectedTo": "已连接至",
+    "wrongNetwork": "网络错误",
+    "viewFullAccount": "查看完整账户",
+    "disconnect": "断开连接",
+    "needTestEth": "需要测试 ETH？",
+    "yourWallet": "你的钱包",
+    "language": "语言",
+    "copyAddress": "复制地址",
+    "viewOnExplorer": "在浏览器中查看",
+    "account": "账户"
+  },
+  "footer": {
+    "tagline": "在区块链上安全透明地规划退休",
+    "quickLinks": "快速链接",
+    "followUs": "关注我们",
+    "copyright": "Ethernal. 保留所有权利。",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "disclaimer": "法律声明",
+    "builtOn": "基于 Arbitrum · 安全 · 透明 · 去中心化"
+  },
+  "hero": {
+    "title": "你在区块链上的财务未来",
+    "subtitle": "使用 Ethernal 规划退休：安全、透明、在 Arbitrum 上去中心化",
+    "ctaDisconnected": "立即开始",
+    "ctaConnected": "前往计算器"
+  },
+  "features": {
+    "title": "为什么选择 Ethernal？",
+    "security": {
+      "title": "安全与控制",
+      "description": "你的资金存储在经过审计的智能合约中。只有你拥有控制权。"
+    },
+    "education": {
+      "title": "金融教育",
+      "description": "在储蓄的同时学习 DeFi 和退休策略。"
+    },
+    "fees": {
+      "title": "低费用",
+      "description": "无中间商。费用比传统基金低达 10 倍。"
+    }
+  },
+  "about": {
+    "title": "关于 Ethernal",
+    "description": "Ethernal 将区块链安全与传统金融规划相结合，为所有人提供去中心化、透明且可访问的退休体验。"
+  },
+  "survey": {
+    "title": "退休与区块链调查",
+    "subtitle": "帮助我们了解你对退休和区块链技术的看法",
+    "bannerText": "帮助我们改进！回答我们关于退休和区块链的简短调查。",
+    "bannerCta": "参加调查",
+    "question1": "你的年龄是多少？",
+    "question2": "你信任传统的退休系统（养老基金）吗？",
+    "question3": "你对区块链/DeFi 有多熟悉？",
+    "question4": "你对退休后的财务未来有多担忧？",
+    "question5": "你目前有退休计划吗？",
+    "question6": "退休中的价值观：安全还是增长？",
+    "question7": "你会对基于区块链的退休计划感兴趣吗？",
+    "ageOptions": {
+      "18-24": "18-24 岁",
+      "25-34": "25-34 岁",
+      "35-44": "35-44 岁",
+      "45-54": "45-54 岁",
+      "55-64": "55-64 岁",
+      "65+": "65 岁以上"
+    },
+    "rating": {
+      "stronglyDisagree": "非常不同意",
+      "disagree": "不同意",
+      "neutral": "中立",
+      "agree": "同意",
+      "stronglyAgree": "非常同意"
+    },
+    "selectAge": "请选择你的年龄",
+    "answerAll": "请回答所有问题",
+    "submitting": "提交中...",
+    "submit": "提交答案",
+    "errorTitle": "提交错误",
+    "required": "必填项"
+  },
+  "followUp": {
+    "successTitle": "调查已完成！",
+    "successMessage": "感谢你的参与。你的回答帮助我们改进。",
+    "question1": "你想接收关于 Ethernal 的信息吗？",
+    "yesInterested": "是的，我想接收最新消息",
+    "notNow": "不，谢谢",
+    "question2": "你的电子邮件地址",
+    "emailPlaceholder": "youremail@example.com",
+    "finish": "完成",
+    "thankYou": "谢谢！",
+    "willContact": "我们将很快与你联系并提供最新消息。",
+    "helpImprove": "你的意见帮助我们改进。",
+    "pleaseIndicate": "请表明你的偏好",
+    "enterEmail": "请输入你的电子邮件地址"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "有问题吗？我们的团队随时为你提供帮助",
+    "name": "全名",
+    "namePlaceholder": "张三",
+    "email": "电子邮件地址",
+    "subject": "主题",
+    "subjectPlaceholder": "例如：关于我的基金的问题",
+    "message": "消息",
+    "messagePlaceholder": "告诉我们如何帮助你...",
+    "messageHint": "最少 10 个字符",
+    "send": "发送消息",
+    "sending": "发送中...",
+    "success": "消息已发送！",
+    "successDetail": "感谢你联系我们。我们将在 24-48 小时内回复。",
+    "error": "发送错误。请重试。",
+    "walletConnected": "钱包已连接",
+    "walletIncluded": "我们将在消息中包含你的钱包：",
+    "otherWays": "其他联系方式",
+    "emailLabel": "电子邮件",
+    "responseTime": "响应时间",
+    "responseTimeValue": "24-48 个工作小时",
+    "requiredFields": "* 必填项",
+    "validation": {
+      "nameRequired": "姓名为必填项",
+      "nameTooShort": "姓名至少需要 2 个字符",
+      "emailRequired": "电子邮件为必填项",
+      "emailInvalid": "请输入有效的电子邮件",
+      "messageRequired": "消息为必填项",
+      "messageTooShort": "消息至少需要 10 个字符",
+      "formErrors": "请修正表单错误"
+    }
+  },
+  "calculator": {
+    "title": "退休计算器",
+    "titleFull": "退休计算器",
+    "titleShort": "计算器",
+    "subtitle": "模拟你的个性化退休计划",
+    "configurePlan": "配置你的计划",
+    "currentAge": "当前年龄",
+    "retirementAge": "期望退休年龄",
+    "initialCapital": "初始资本 (USDC)",
+    "monthlyContribution": "每月供款 (USDC)",
+    "expectedReturn": "预期年回报率 (%)",
+    "frequency": "供款频率",
+    "frequencyMonthly": "每月",
+    "frequencyQuarterly": "每季度",
+    "frequencyAnnual": "每年",
+    "yearsReceivingIncome": "领取收入的年数",
+    "ageLabel": "岁",
+    "monthlyDeposit": "每月储蓄 (USDC)",
+    "currentSavings": "当前储蓄 (USDC)",
+    "interestRate": "预期年利率 (%)",
+    "calculate": "计算",
+    "dataError": "加载数据时出错。请重试。",
+    "growthProjection": "增长预测",
+    "fillFormToSeeChart": "填写表格查看你的预测",
+    "depositSummary": "首次存款摘要",
+    "totalDeposit": "总存款金额",
+    "daoFee": "Ethernal 费用 (5%)",
+    "goesToTreasury": "进入协议国库",
+    "forDefi": "用于你的 DeFi 基金",
+    "netToFund": "净存入基金",
+    "fundReady": "你的基金将在以下时间后准备就绪",
+    "lastStep": "最后一步",
+    "monthlySavingsRequired": "所需每月储蓄",
+    "createContract": "创建合约",
+    "createOnArbitrum": "在 Arbitrum 上创建",
+    "walletWillOpen": "你的钱包将打开以进行签名",
+    "getTestTokens": "获取测试代币",
+    "getTestTokensDesc": "你需要测试网 USDC 来创建基金",
+    "howToStart": "如何开始？",
+    "testnetOnly": "目前仅限测试网",
+    "testnetOnlyDesc": "我们在 Arbitrum Sepolia 上。基金没有实际价值。",
+    "step1Title": "连接你的钱包",
+    "step1Desc": "MetaMask、WalletConnect 或任何兼容钱包",
+    "step2Title": "获取测试网 USDC",
+    "step2Desc": "使用水龙头接收测试代币",
+    "step3Title": "配置你的计划",
+    "step3Desc": "设置你的年龄、储蓄和退休目标",
+    "step4Title": "创建你的基金",
+    "step4Desc": "在区块链上部署你的个人合约",
+    "validation": {
+      "ageRequired": "当前年龄为必填项",
+      "ageTooHigh": "当前年龄必须小于 80 岁",
+      "retirementAgeTooLow": "退休年龄必须比当前年龄大至少 5 岁",
+      "minYears": "你必须至少领取 5 年收入",
+      "contributionRequired": "每月供款必须大于 0",
+      "rateRange": "年利率必须在 0% 到 50% 之间"
+    },
+    "results": {
+      "projected": "退休预测",
+      "monthlyIncome": "估计月收入",
+      "totalSaved": "总储蓄",
+      "yearsCovered": "覆盖年数"
+    }
+  },
+  "createFund": {
+    "title": "创建我的基金",
+    "subtitle": "已计算计划 · Arbitrum Sepolia",
+    "steps": {
+      "review": "审查",
+      "balance": "余额",
+      "approve": "批准",
+      "create": "创建",
+      "success": "完成！"
+    },
+    "review": {
+      "title": "计划参数",
+      "initialDeposit": "初始存款",
+      "monthlyDeposit": "每月储蓄",
+      "currentAge": "当前/退休年龄",
+      "desiredIncome": "期望月收入",
+      "yearsPayments": "领取收入的年数",
+      "interestRate": "预期年利率",
+      "timelock": "安全时间锁",
+      "breakdown": {
+        "title": "首次存款明细",
+        "fromWallet": "来自你的钱包",
+        "fee": "Ethernal 费用 (5%)",
+        "netToFund": "净存入 DeFi 基金"
+      },
+      "investment": {
+        "title": "投资方式",
+        "subtitle": "选择如何增加你的退休储蓄",
+        "selectError": "请选择投资方式以继续。"
+      },
+      "immutability": "一旦创建合约，这些参数将无法修改。{years} 时间锁是永久的。",
+      "continue": "验证余额"
+    },
+    "balance": {
+      "title": "余额验证",
+      "subtitle": "我们在链上检查你的钱包。无需 gas，无需交易。",
+      "yourBalance": "你的 USDC 余额",
+      "required": "所需金额",
+      "insufficient": "不足",
+      "sufficient": "充足",
+      "missing": "还差 {amount}",
+      "allowance": {
+        "title": "当前授权额度",
+        "alreadyApproved": "已批准",
+        "requiresApproval": "需要批准",
+        "needApproval": "你需要签署一次授权交易（1 次）。"
+      },
+      "nextSteps": {
+        "title": "所需后续步骤",
+        "approve": "批准 — 为 Factory 进行 ERC-20 approve",
+        "create": "创建基金 — factory.createFund + 初始存款"
+      },
+      "insufficientBalance": "余额不足。在继续之前请从计算器水龙头获取更多 USDC。",
+      "refresh": "刷新",
+      "continueApprove": "继续至批准",
+      "continueCreate": "继续创建基金"
+    },
+    "approve": {
+      "title": "授权 USDC",
+      "subtitle": "允许 Factory 一次性移动你的代币",
+      "whatIs": {
+        "title": "什么是 Approve？",
+        "description": "在以太坊上，ERC-20 代币（如 USDC）需要你在合约移动它们之前明确授权。这是一个安全标准：合约只能花费你批准的金额。",
+        "note": "此批准不移动任何资金。移动发生在下一步。"
+      },
+      "details": {
+        "contract": "接收合约",
+        "token": "代币",
+        "amount": "授权金额"
+      },
+      "button": "批准 USDC",
+      "waiting": "等待中…",
+      "next": "继续创建基金"
+    },
+    "create": {
+      "title": "创建基金",
+      "subtitle": "Factory 将部署你的个人合约并进行初始存款",
+      "summary": {
+        "title": "交易摘要",
+        "initialDeposit": "初始存款",
+        "fee": "Ethernal 费用 (5%)",
+        "netToFund": "净存入基金",
+        "protocol": "DeFi 协议",
+        "timelock": "时间锁"
+      },
+      "button": "创建我的基金",
+      "processing": "处理中…"
+    },
+    "success": {
+      "title": "基金已创建！",
+      "subtitle": "你的个人合约已存在于区块链上。",
+      "txHash": "交易哈希",
+      "fundAddress": "基金地址",
+      "nextSteps": {
+        "title": "后续步骤",
+        "step1": "每月存入 {amount} 以实现你的目标。",
+        "step2": "从控制台监控你的进度和 DeFi 收益。",
+        "step3": "当时间锁到期时，你可以开始计划提款。"
+      },
+      "goToDashboard": "前往控制台",
+      "redirecting": "将在 {seconds} 秒后自动重定向…"
+    },
+    "back": {
+      "toCalculator": "返回计算器",
+      "previous": "上一步"
+    }
+  },
+  "dashboard": {
+    "title": "你的 Ethernal 控制台",
+    "welcome": "欢迎，{address}",
+    "subtitle": "在区块链上管理你的财务未来",
+    "refresh": "刷新数据",
+    "personalFund": {
+      "title": "我的个人基金",
+      "active": "活跃",
+      "noFund": "无基金",
+      "currentBalance": "当前余额",
+      "fundStatus": "基金状态",
+      "retired": "已退休",
+      "saving": "储蓄中",
+      "progress": {
+        "title": "目标进度",
+        "current": "当前",
+        "projected": "预测",
+        "target": "目标",
+        "monthsRemaining": "距时间锁还有 {months} 个月"
+      },
+      "stats": {
+        "principal": "本金",
+        "monthlyDeposit": "月存款",
+        "totalDeposits": "总存款",
+        "retirementAge": "退休年龄",
+        "years": "岁"
+      },
+      "contractAddress": "合约地址",
+      "viewOnArbiscan": "在 Arbiscan 上查看",
+      "timelock": {
+        "ends": "时间锁结束：",
+        "never": "永不",
+        "daysRemaining": "还剩 {days} 天"
+      },
+      "actions": {
+        "deposit": "进行存款",
+        "startRetirement": "开始退休",
+        "createFund": "创建我的基金"
+      },
+      "noFundMessage": "你还没有退休基金"
+    },
+    "defiInvestments": {
+      "title": "DeFi 投资",
+      "description": "你的资金可以投资于已批准的 DeFi 协议以产生收益",
+      "viewOpportunities": "查看机会"
+    },
+    "preferences": {
+      "title": "我的偏好",
+      "subtitle": "配置你的链上投资档案。这些参数决定你的存款如何路由。",
+      "currentConfig": "当前配置：",
+      "risk": {
+        "title": "风险级别",
+        "conservador": "保守型",
+        "moderado": "稳健型",
+        "agresivo": "激进型",
+        "conservador_desc": "低风险，稳定收益和资本保护",
+        "moderado_desc": "增长与稳定之间的平衡，适合长期",
+        "agresivo_desc": "最大收益潜力，风险敞口更高"
+      },
+      "protocol": {
+        "title": "首选协议",
+        "noProtocols": "没有已注册的活跃协议",
+        "verified": "已验证",
+        "apy": "APY"
+      },
+      "saveSuccess": "偏好已链上保存",
+      "saveError": "保存偏好时出错",
+      "saveButton": "保存配置",
+      "saving": "保存中..."
+    },
+    "strategy": {
+      "title": "协议注册表",
+      "subtitle": "存款路由策略和已验证协议的指标。",
+      "types": {
+        "concentrado": "集中型",
+        "diversificado": "分散型",
+        "hibrido": "混合型",
+        "concentrado_desc": "全部投入最佳可用协议",
+        "diversificado_desc": "分配到多个协议以降低风险",
+        "hibrido_desc": "根据市场表现动态调整组合"
+      },
+      "saveSuccess": "策略已链上保存",
+      "saveButton": "保存策略",
+      "saving": "保存中...",
+      "activeProtocols": "活跃协议",
+      "verified": "已验证",
+      "viewMore": "查看更多 {count} 个",
+      "noProtocols": "尚未注册协议"
+    },
+    "teamContent": {
+      "title": "来自 Ethernal 团队",
+      "subtitle": "由管理员发布的财务建议和教育课程。"
+    },
+    "support": {
+      "title": "需要帮助？",
+      "description": "联系 Ethernal 团队，了解你的退休计划或投资策略",
+      "contact": "联系 Ethernal",
+      "documentation": "查看文档"
+    },
+    "depositModal": {
+      "title": "进行存款",
+      "monthly": "每月",
+      "custom": "自定义",
+      "monthlyAmount": "已配置的月存款金额",
+      "amountLabel": "USDC 金额",
+      "amountPlaceholder": "例如：500.00",
+      "amountError": "请输入有效金额（最多 6 位小数）",
+      "insufficientBalance": "USDC 余额不足。你还需要 {amount}。",
+      "twoTransactions": "需要 2 笔交易：USDC 授权和存款。",
+      "status": {
+        "approving": "等待钱包授权...",
+        "approvingConfirming": "链上确认授权...",
+        "executing": "等待钱包存款...",
+        "confirming": "链上确认存款..."
+      },
+      "buttons": {
+        "approveAndDeposit": "批准并存款",
+        "confirmDeposit": "确认存款",
+        "processing": "处理中...",
+        "cancel": "取消"
+      }
+    }
+  },
+  "errors": {
+    "somethingWrong": "出了些问题。请重试。",
+    "networkError": "网络错误。请检查你的连接。",
+    "walletRequired": "请连接钱包以继续",
+    "wrongNetwork": "网络错误。请切换到 Arbitrum Sepolia",
+    "wrongNetworkTitle": "网络错误",
+    "wrongNetworkMessage": "请切换到 {network}（链 ID {chainId}）以继续。",
+    "alreadyHaveFund": "你已有一个基金",
+    "alreadyHaveFundMessage": "每个钱包只能有一个基金。你的基金：{address}",
+    "approvalPending": "批准待处理。请等待批准确认后再继续。"
+  },
+  "faucet": {
+    "connectWallet": "连接你的钱包以接收测试 USDC。",
+    "success": {
+      "title": "代币已接收！",
+      "amount": "已接收 USDC：{amount} USDC",
+      "balance": "当前余额：{balance} USDC"
+    },
+    "error": {
+      "title": "请求代币时出错",
+      "rateLimit": "已达到请求限制",
+      "rateLimitMessage": "水龙头每个钱包每 24 小时允许一次请求。"
+    },
+    "info": {
+      "mockUSDC": "MockUSDC",
+      "forFund": "用于你的基金",
+      "ethGas": "ETH gas",
+      "forTransactions": "用于交易"
+    },
+    "button": "接收测试 USDC",
+    "minting": "铸造 USDC 中…",
+    "disclaimer": "Arbitrum Sepolia 上的 USDC · 限制：每个钱包每 24 小时 1 次请求"
+  },
+  "network": {
+    "wrongDetected": "检测到错误网络",
+    "youAreOn": "你在 {network} 上。请切换到 {expected}。",
+    "switchButton": "切换到 {network}"
+  },
+  "loading": {
+    "ethernal": "加载 Ethernal 中",
+    "connecting": "正在连接区块链...",
+    "dashboard": "正在加载你的控制台..."
+  },
+  "createContract": {
+    "factoryAddressNotConfigured": "此网络未配置 Factory 地址"
+  },
+  "feeModal": {
+    "headerLabel": "对比分析",
+    "title": "你的退休，无需中间商。",
+    "subtitle": "计算当费用为你服务而非对抗你时，你能多积累多少。",
+    "monthlyDeposit": "月存款",
+    "horizon": "投资期限",
+    "years": "{{count}} 年",
+    "yearsMin": "5 年",
+    "yearsMax": "40 年",
+    "ethFeeLabel": "单次费用：每次存款 3%",
+    "ethApy": "DeFi：~{{apy}} APY (Aave)",
+    "extra": "额外收益",
+    "corpName": "企业基金",
+    "corpFeeLabel": "管理 1.5% + 行政 0.5% + 入场 3%",
+    "corpApy": "总收益：~{{apy}}（净收益少得多）",
+    "year1": "第 1 年",
+    "yearMid": "第 {{year}} 年",
+    "yearEnd": "第 {{year}} 年",
+    "tabResults": "结果",
+    "tabBreakdown": "对比",
+    "tabFees": "费用",
+    "colMetric": "指标",
+    "colCorp": "企业",
+    "row": {
+      "finalCapital": "最终资本",
+      "feesPaid": "已付费用",
+      "returnOnCapital": "资本回报率",
+      "entryFee": "入场费",
+      "ethEntry": "单次 3%",
+      "corpEntry": "每次存款 3%",
+      "annualFee": "年度管理费",
+      "exitFee": "退出费",
+      "ethExit": "0%（正常）",
+      "corpExit": "1% + 罚金",
+      "transparency": "透明度",
+      "ethTransparency": "100% 链上",
+      "corpTransparency": "招募说明书 + 审计",
+      "custody": "托管",
+      "ethCustody": "智能合约",
+      "corpCustody": "金融机构"
+    },
+    "ethStructureTitle": "Ethernal — 简单结构",
+    "corpStructureTitle": "企业 — 典型结构",
+    "ethFees": [
+      {
+        "label": "存款费用",
+        "value": "3% · 进入链上 Treasury",
+        "desc": "无隐藏费用，无年度管理费，无标准退出罚款。"
+      },
+      {
+        "label": "提前提款",
+        "value": "7% · 仅在时间锁之前",
+        "desc": "不鼓励短期行为。如果等到到期，则为 0%。"
+      },
+      {
+        "label": "Gas（Arbitrum L2）",
+        "value": "约 $0.01-$0.10/交易",
+        "desc": "与任何传统替代方案相比几乎可以忽略不计。"
+      }
+    ],
+    "corpFees": [
+      {
+        "label": "入场费",
+        "value": "每次存款 3%",
+        "desc": "从第一分钱就开始收费，在投资之前。"
+      },
+      {
+        "label": "年度管理费 (TER)",
+        "value": "余额的 1.5%",
+        "desc": "即使基金表现为负也会收取。"
+      },
+      {
+        "label": "行政费用",
+        "value": "每年 0.5%",
+        "desc": "运营成本转嫁给投资者。"
+      },
+      {
+        "label": "绩效费",
+        "value": "收益的 20%",
+        "desc": "只在招募说明书中可见，很少出现在报表中。"
+      },
+      {
+        "label": "退出/赎回费",
+        "value": "提款时 1%",
+        "desc": "清算头寸的罚款。"
+      }
+    ],
+    "disclaimer": "指示性模拟 · 实际 DeFi 收益可能有所不同 · 非财务建议"
+  }
+}

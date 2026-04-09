@@ -1,0 +1,733 @@
+{
+  "contractName": "PersonalFundFactory",
+  "address": "0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A",
+  "abi": [
+    {
+      "name": "FundCreated",
+      "inputs": [
+        {
+          "name": "fundAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "owner",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "initialDeposit",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "principal",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "monthlyDeposit",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "selectedProtocol",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "retirementAge",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timelockEnd",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "AdminSet",
+      "inputs": [
+        {
+          "name": "oldAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "newAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "setAdmin",
+      "inputs": [
+        {
+          "name": "_newAdmin",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "configure",
+      "inputs": [
+        {
+          "name": "_usdc",
+          "type": "address"
+        },
+        {
+          "name": "_userPreferences",
+          "type": "address"
+        },
+        {
+          "name": "_dateTime",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "createPersonalFund",
+      "inputs": [
+        {
+          "name": "_principal",
+          "type": "uint256"
+        },
+        {
+          "name": "_monthlyDeposit",
+          "type": "uint256"
+        },
+        {
+          "name": "_currentAge",
+          "type": "uint256"
+        },
+        {
+          "name": "_retirementAge",
+          "type": "uint256"
+        },
+        {
+          "name": "_desiredMonthly",
+          "type": "uint256"
+        },
+        {
+          "name": "_yearsPayments",
+          "type": "uint256"
+        },
+        {
+          "name": "_interestRate",
+          "type": "uint256"
+        },
+        {
+          "name": "_timelockYears",
+          "type": "uint256"
+        },
+        {
+          "name": "_selectedProtocol",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateMinPrincipal",
+      "inputs": [
+        {
+          "name": "_newMin",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateMaxPrincipal",
+      "inputs": [
+        {
+          "name": "_newMax",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateMinMonthlyDeposit",
+      "inputs": [
+        {
+          "name": "_newMin",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateAgeRanges",
+      "inputs": [
+        {
+          "name": "_minAge",
+          "type": "uint256"
+        },
+        {
+          "name": "_maxAge",
+          "type": "uint256"
+        },
+        {
+          "name": "_minRetirementAge",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateTimelockRanges",
+      "inputs": [
+        {
+          "name": "_minYears",
+          "type": "uint256"
+        },
+        {
+          "name": "_maxYears",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateUserPreferences",
+      "inputs": [
+        {
+          "name": "_newUserPreferences",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateDateTime",
+      "inputs": [
+        {
+          "name": "_newDateTime",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getUserFund",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "canUserCreateFund",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getFundOwner",
+      "inputs": [
+        {
+          "name": "_fund",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getUserFundCount",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getFundCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "calculateInitialDeposit",
+      "inputs": [
+        {
+          "name": "_principal",
+          "type": "uint256"
+        },
+        {
+          "name": "_monthlyDeposit",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getConfiguration",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "components": [
+            {
+              "name": "minPrincipal",
+              "type": "uint256"
+            },
+            {
+              "name": "maxPrincipal",
+              "type": "uint256"
+            },
+            {
+              "name": "minMonthlyDeposit",
+              "type": "uint256"
+            },
+            {
+              "name": "minAge",
+              "type": "uint256"
+            },
+            {
+              "name": "maxAge",
+              "type": "uint256"
+            },
+            {
+              "name": "minRetirementAge",
+              "type": "uint256"
+            },
+            {
+              "name": "minTimelockYears",
+              "type": "uint256"
+            },
+            {
+              "name": "maxTimelockYears",
+              "type": "uint256"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getAddresses",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "fallback"
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "treasury",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "usdc",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "userPreferences",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "dateTime",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "personalFundImplementation",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "configured",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "fundsByOwner",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "fundOwners",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "fundExists",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "userFundCount",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "totalFundsCreated",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "deploymentNonce",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "minPrincipal",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "maxPrincipal",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "minMonthlyDeposit",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "minAge",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "maxAge",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "minRetirementAge",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "minTimelockYears",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "maxTimelockYears",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_personalFundImplementation",
+          "type": "address"
+        },
+        {
+          "name": "_treasury",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "constructorArgs": "000000000000000000000000b9357c7c7938f2336ea2a01063cb1c6edb697f9e0000000000000000000000000a743430067afc5b69b0f8ff542fdbdad206a748"
+}

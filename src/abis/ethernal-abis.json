@@ -1,0 +1,5866 @@
+{
+  "network": "arbitrum-sepolia",
+  "chain_id": 421614,
+  "generated": "2026-04-02T14:41:45.077968+00:00",
+  "usdc": "0x6e1371974D923397ecE9eE7525ac50ad7087c77f",
+  "contracts": {
+    "DateTime": {
+      "address": "0xe4A76Bc0CbEC3F4B1297C754985Aed9Fb9b2AaE9",
+      "abi": [
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getYear",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getMonth",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDay",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getHour",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getMinute",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getSecond",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getWeekday",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "toDateTime",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "year",
+                  "type": "uint256"
+                },
+                {
+                  "name": "month",
+                  "type": "uint256"
+                },
+                {
+                  "name": "day",
+                  "type": "uint256"
+                },
+                {
+                  "name": "hour",
+                  "type": "uint256"
+                },
+                {
+                  "name": "minute",
+                  "type": "uint256"
+                },
+                {
+                  "name": "second",
+                  "type": "uint256"
+                },
+                {
+                  "name": "weekday",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDaysInMonth",
+          "inputs": [
+            {
+              "name": "_year",
+              "type": "uint256"
+            },
+            {
+              "name": "_month",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isLeapYear",
+          "inputs": [
+            {
+              "name": "_year",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "addDays",
+          "inputs": [
+            {
+              "name": "_timestamp",
+              "type": "uint256"
+            },
+            {
+              "name": "_days",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "diffDays",
+          "inputs": [
+            {
+              "name": "_from",
+              "type": "uint256"
+            },
+            {
+              "name": "_to",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "monthsBetween",
+          "inputs": [
+            {
+              "name": "_from",
+              "type": "uint256"
+            },
+            {
+              "name": "_to",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        }
+      ]
+    },
+    "Treasury": {
+      "address": "0x0a743430067AFC5B69B0F8fF542fdbdAD206A748",
+      "abi": [
+        {
+          "name": "FeeReceived",
+          "inputs": [
+            {
+              "name": "fundAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "totalFromFund",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "EarlyRetirementRequested",
+          "inputs": [
+            {
+              "name": "fundAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "requester",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "reason",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "EarlyRetirementApproved",
+          "inputs": [
+            {
+              "name": "fundAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "approver",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "EarlyRetirementRejected",
+          "inputs": [
+            {
+              "name": "fundAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "FeesWithdrawn",
+          "inputs": [
+            {
+              "name": "recipient",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "token",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "remainingBalance",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ManagerAdded",
+          "inputs": [
+            {
+              "name": "manager",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "addedBy",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ManagerRemoved",
+          "inputs": [
+            {
+              "name": "manager",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "removedBy",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "FeePercentageUpdated",
+          "inputs": [
+            {
+              "name": "oldFee",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "newFee",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "updatedBy",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "FundDeactivated",
+          "inputs": [
+            {
+              "name": "fundAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "reason",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AdminPushed",
+          "inputs": [
+            {
+              "name": "targetContract",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "pushedBy",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AdminChanged",
+          "inputs": [
+            {
+              "name": "oldAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "EmergencyWithdraw",
+          "inputs": [
+            {
+              "name": "token",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "recipient",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "isUSDC",
+              "type": "bool",
+              "indexed": false
+            },
+            {
+              "name": "feesAdjusted",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "configure",
+          "inputs": [
+            {
+              "name": "_factory",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "changeAdmin",
+          "inputs": [
+            {
+              "name": "_newAdmin",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "pushAdmin",
+          "inputs": [
+            {
+              "name": "_targetContract",
+              "type": "address"
+            },
+            {
+              "name": "_newAdmin",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "addTreasuryManager",
+          "inputs": [
+            {
+              "name": "_manager",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "removeTreasuryManager",
+          "inputs": [
+            {
+              "name": "_manager",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateFeePercentage",
+          "inputs": [
+            {
+              "name": "_newFee",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "recordFee",
+          "inputs": [
+            {
+              "name": "_fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "deactivateFund",
+          "inputs": [
+            {
+              "name": "_fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "_reason",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "requestEarlyRetirement",
+          "inputs": [
+            {
+              "name": "_fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "_reason",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "processEarlyRetirement",
+          "inputs": [
+            {
+              "name": "_fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "_approve",
+              "type": "bool"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawFees",
+          "inputs": [
+            {
+              "name": "_recipient",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "emergencyWithdraw",
+          "inputs": [
+            {
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "name": "_recipient",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "calculateFee",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTreasuryBalance",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTotalFeesCollected",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTotalFeesAllTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getFundFeeRecord",
+          "inputs": [
+            {
+              "name": "_fundAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "fundAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "totalFeesPaid",
+                  "type": "uint256"
+                },
+                {
+                  "name": "lastFeeTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "name": "feeCount",
+                  "type": "uint256"
+                },
+                {
+                  "name": "isActive",
+                  "type": "bool"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getFundCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getActiveFundCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getEarlyRetirementRequest",
+          "inputs": [
+            {
+              "name": "_fundAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "fundAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "requester",
+                  "type": "address"
+                },
+                {
+                  "name": "reason",
+                  "type": "string"
+                },
+                {
+                  "name": "approved",
+                  "type": "bool"
+                },
+                {
+                  "name": "rejected",
+                  "type": "bool"
+                },
+                {
+                  "name": "processed",
+                  "type": "bool"
+                },
+                {
+                  "name": "requestTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "name": "processedTimestamp",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRequestStats",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTreasuryStats",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "totalFeesCollectedUSDC",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalFeesCollectedAllTime",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalFundsRegistered",
+                  "type": "uint256"
+                },
+                {
+                  "name": "activeFundsCount",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalEarlyRetirementRequests",
+                  "type": "uint256"
+                },
+                {
+                  "name": "approvedEarlyRetirements",
+                  "type": "uint256"
+                },
+                {
+                  "name": "rejectedEarlyRetirements",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isTreasuryManager",
+          "inputs": [
+            {
+              "name": "_address",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getManagerCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "fallback"
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "factory",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "fundFeeRecords",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "fundAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "totalFeesPaid",
+                  "type": "uint256"
+                },
+                {
+                  "name": "lastFeeTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "name": "feeCount",
+                  "type": "uint256"
+                },
+                {
+                  "name": "isActive",
+                  "type": "bool"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "fundCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isFundRegistered",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "activeFundsCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "earlyRetirementRequests",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "fundAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "requester",
+                  "type": "address"
+                },
+                {
+                  "name": "reason",
+                  "type": "string"
+                },
+                {
+                  "name": "approved",
+                  "type": "bool"
+                },
+                {
+                  "name": "rejected",
+                  "type": "bool"
+                },
+                {
+                  "name": "processed",
+                  "type": "bool"
+                },
+                {
+                  "name": "requestTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "name": "processedTimestamp",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "requestCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "pendingRequestsCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "approvedCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "rejectedCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalFeesCollectedUSDC",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalFeesCollectedAllTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalFeesWithdrawn",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "treasuryManagers",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "managerCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "feePercentage",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_usdc",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    "ProtocolRegistry": {
+      "address": "0xa76322A970EA80B0ebbB9c5213a2F3A1ee53118f",
+      "abi": [
+        {
+          "name": "ProtocolAdded",
+          "inputs": [
+            {
+              "name": "protocolAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "name": "category",
+              "type": "uint8",
+              "indexed": false
+            },
+            {
+              "name": "apy",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "riskLevel",
+              "type": "uint8",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ProtocolUpdated",
+          "inputs": [
+            {
+              "name": "protocolAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "apy",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "isActive",
+              "type": "bool",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ProtocolVerified",
+          "inputs": [
+            {
+              "name": "protocolAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "verifier",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ProtocolRemoved",
+          "inputs": [
+            {
+              "name": "protocolAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "reason",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "DepositRecorded",
+          "inputs": [
+            {
+              "name": "protocolAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "totalDeposited",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ManagerAdded",
+          "inputs": [
+            {
+              "name": "manager",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ManagerRemoved",
+          "inputs": [
+            {
+              "name": "manager",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AdminSet",
+          "inputs": [
+            {
+              "name": "oldAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "USDCUpdated",
+          "inputs": [
+            {
+              "name": "oldUSDC",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "newUSDC",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "updatedBy",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setAdmin",
+          "inputs": [
+            {
+              "name": "_newAdmin",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "addAuthorizedManager",
+          "inputs": [
+            {
+              "name": "_manager",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "removeAuthorizedManager",
+          "inputs": [
+            {
+              "name": "_manager",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setTreasury",
+          "inputs": [
+            {
+              "name": "_newTreasury",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateUSDC",
+          "inputs": [
+            {
+              "name": "_newUSDC",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "addDeFiProtocol",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            },
+            {
+              "name": "_name",
+              "type": "string"
+            },
+            {
+              "name": "_apy",
+              "type": "uint256"
+            },
+            {
+              "name": "_riskLevel",
+              "type": "uint8"
+            },
+            {
+              "name": "_category",
+              "type": "uint8"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "verifyProtocol",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateProtocolAPY",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            },
+            {
+              "name": "_newAPY",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "toggleProtocolStatus",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "removeProtocol",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            },
+            {
+              "name": "_reason",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "recordDeposit",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateTotalDeposited",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            },
+            {
+              "name": "_newTotal",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocol",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "protocolAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "category",
+                  "type": "uint8"
+                },
+                {
+                  "name": "apy",
+                  "type": "uint256"
+                },
+                {
+                  "name": "isActive",
+                  "type": "bool"
+                },
+                {
+                  "name": "totalDeposited",
+                  "type": "uint256"
+                },
+                {
+                  "name": "riskLevel",
+                  "type": "uint8"
+                },
+                {
+                  "name": "addedTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "name": "lastUpdated",
+                  "type": "uint256"
+                },
+                {
+                  "name": "verified",
+                  "type": "bool"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getActiveProtocolsList",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getActiveProtocols",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[100]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getVerifiedProtocols",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocolsByRisk",
+          "inputs": [
+            {
+              "name": "_riskLevel",
+              "type": "uint8"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[100]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocolsByCategory",
+          "inputs": [
+            {
+              "name": "_category",
+              "type": "uint8"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTopProtocolsByAPY",
+          "inputs": [
+            {
+              "name": "_limit",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTotalValueLocked",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocolStats",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "bool"
+            },
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getGlobalStats",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "totalProtocols",
+                  "type": "uint256"
+                },
+                {
+                  "name": "activeProtocols",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalValueLocked",
+                  "type": "uint256"
+                },
+                {
+                  "name": "averageAPY",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isProtocolActive",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isProtocolVerified",
+          "inputs": [
+            {
+              "name": "_protocolAddress",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocolCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getAllProtocols",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[]"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getCategoryName",
+          "inputs": [
+            {
+              "name": "_category",
+              "type": "uint8"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "treasury",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocols",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "protocolAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "category",
+                  "type": "uint8"
+                },
+                {
+                  "name": "apy",
+                  "type": "uint256"
+                },
+                {
+                  "name": "isActive",
+                  "type": "bool"
+                },
+                {
+                  "name": "totalDeposited",
+                  "type": "uint256"
+                },
+                {
+                  "name": "riskLevel",
+                  "type": "uint8"
+                },
+                {
+                  "name": "addedTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "name": "lastUpdated",
+                  "type": "uint256"
+                },
+                {
+                  "name": "verified",
+                  "type": "bool"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocolAddresses",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocolCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "activeProtocolCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "authorizedManagers",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "managerCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalValueLocked",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocolsByRiskLevel",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "uint8"
+            },
+            {
+              "name": "arg1",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocolsByCategory",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "uint8"
+            },
+            {
+              "name": "arg1",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_treasury",
+              "type": "address"
+            },
+            {
+              "name": "_usdc",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    "UserPreferences": {
+      "address": "0x1c3d7f6C47C7d8EA4bc29864fFB966F2B5896704",
+      "abi": [
+        {
+          "name": "UserConfigUpdated",
+          "inputs": [
+            {
+              "name": "user",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "selectedProtocol",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "autoCompound",
+              "type": "bool",
+              "indexed": false
+            },
+            {
+              "name": "riskTolerance",
+              "type": "uint8",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "RoutingStrategyUpdated",
+          "inputs": [
+            {
+              "name": "user",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "strategyType",
+              "type": "uint8",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "DepositRouted",
+          "inputs": [
+            {
+              "name": "user",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "protocol",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ContractAuthorized",
+          "inputs": [
+            {
+              "name": "contract",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ContractRevoked",
+          "inputs": [
+            {
+              "name": "contract",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "DefaultProtocolSet",
+          "inputs": [
+            {
+              "name": "protocol",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AdminSet",
+          "inputs": [
+            {
+              "name": "oldAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setAdmin",
+          "inputs": [
+            {
+              "name": "_newAdmin",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "configure",
+          "inputs": [
+            {
+              "name": "_protocolRegistry",
+              "type": "address"
+            },
+            {
+              "name": "_usdc",
+              "type": "address"
+            },
+            {
+              "name": "_factory",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "authorizeContract",
+          "inputs": [
+            {
+              "name": "_contract",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "revokeContract",
+          "inputs": [
+            {
+              "name": "_contract",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultProtocol",
+          "inputs": [
+            {
+              "name": "_protocol",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setUserConfig",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "name": "_selectedProtocol",
+              "type": "address"
+            },
+            {
+              "name": "_autoCompound",
+              "type": "bool"
+            },
+            {
+              "name": "_riskTolerance",
+              "type": "uint8"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setRoutingStrategy",
+          "inputs": [
+            {
+              "name": "_strategyType",
+              "type": "uint8"
+            },
+            {
+              "name": "_diversificationPercent",
+              "type": "uint256"
+            },
+            {
+              "name": "_rebalanceThreshold",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "routeDeposit",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUserConfig",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "selectedProtocol",
+                  "type": "address"
+                },
+                {
+                  "name": "autoCompound",
+                  "type": "bool"
+                },
+                {
+                  "name": "riskTolerance",
+                  "type": "uint8"
+                },
+                {
+                  "name": "lastUpdate",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalDeposited",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalWithdrawn",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUserStrategy",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "strategyType",
+                  "type": "uint8"
+                },
+                {
+                  "name": "diversificationPercent",
+                  "type": "uint256"
+                },
+                {
+                  "name": "rebalanceThreshold",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRecommendedProtocol",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocolDeposits",
+          "inputs": [
+            {
+              "name": "_protocol",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUserProtocolDeposits",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "name": "_protocol",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isContractAuthorized",
+          "inputs": [
+            {
+              "name": "_contract",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUserTotalDeposited",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "compareProtocols",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "name": "protocolAddress",
+                  "type": "address"
+                },
+                {
+                  "name": "apy",
+                  "type": "uint256"
+                },
+                {
+                  "name": "riskLevel",
+                  "type": "uint8"
+                },
+                {
+                  "name": "score",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "treasury",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "factory",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocolRegistry",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "configured",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "userConfigs",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "selectedProtocol",
+                  "type": "address"
+                },
+                {
+                  "name": "autoCompound",
+                  "type": "bool"
+                },
+                {
+                  "name": "riskTolerance",
+                  "type": "uint8"
+                },
+                {
+                  "name": "lastUpdate",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalDeposited",
+                  "type": "uint256"
+                },
+                {
+                  "name": "totalWithdrawn",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "userStrategies",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "strategyType",
+                  "type": "uint8"
+                },
+                {
+                  "name": "diversificationPercent",
+                  "type": "uint256"
+                },
+                {
+                  "name": "rebalanceThreshold",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "protocolDeposits",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "userProtocolDeposits",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            },
+            {
+              "name": "arg1",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "authorizedContracts",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultProtocol",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_treasury",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    "MockDeFiProtocol": {
+      "address": "0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71",
+      "abi": [
+        {
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "caller",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "Withdrawn",
+          "inputs": [
+            {
+              "name": "caller",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "deposit",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdraw",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "recoverTokens",
+          "inputs": [
+            {
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBalance",
+          "inputs": [
+            {
+              "name": "_account",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "name",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalDeposited",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "balances",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_usdc",
+              "type": "address"
+            },
+            {
+              "name": "_name",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    "MockAaveAdapter": {
+      "address": "0x3833088891bEcE92e2c492Fd459Cd025dc7b849D",
+      "abi": [
+        {
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "caller",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "Withdrawn",
+          "inputs": [
+            {
+              "name": "caller",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "deposit",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdraw",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBalance",
+          "inputs": [
+            {
+              "name": "_account",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "recoverTokens",
+          "inputs": [
+            {
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "name",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "balances",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "depositTimestamps",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalDeposited",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_usdc",
+              "type": "address"
+            },
+            {
+              "name": "_name",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    "MockOndoAdapter": {
+      "address": "0x9177D9BCbE0e6c3aD4ad9361c7CAe69FAd439198",
+      "abi": [
+        {
+          "name": "Deposited",
+          "inputs": [
+            {
+              "name": "caller",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "Withdrawn",
+          "inputs": [
+            {
+              "name": "caller",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "deposit",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdraw",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBalance",
+          "inputs": [
+            {
+              "name": "_account",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "recoverTokens",
+          "inputs": [
+            {
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "name",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "balances",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "depositTimestamps",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalDeposited",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_usdc",
+              "type": "address"
+            },
+            {
+              "name": "_name",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    "PersonalFund": {
+      "address": "0xb9357c7c7938f2336eA2A01063cb1C6EDB697F9E",
+      "abi": [
+        {
+          "name": "Initialized",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "treasury",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "usdc",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "selectedProtocol",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "initialDeposit",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "feeAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "netToFund",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "MonthlyDeposited",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "grossAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "feeAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "netToFund",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "depositNumber",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "totalBalance",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ExtraDeposited",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "grossAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "feeAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "netToFund",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "totalBalance",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "InvestedInProtocol",
+          "inputs": [
+            {
+              "name": "protocol",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "totalInvested",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "WithdrawnFromProtocol",
+          "inputs": [
+            {
+              "name": "protocol",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "EarlyRetirementApproved",
+          "inputs": [
+            {
+              "name": "approver",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "RetirementStarted",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "totalBalance",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AutoWithdrawalConfigured",
+          "inputs": [
+            {
+              "name": "withdrawalAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "enabled",
+              "type": "bool",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AutoWithdrawalExecuted",
+          "inputs": [
+            {
+              "name": "recipient",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "executionNumber",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "nextExecutionTime",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "Withdrawn",
+          "inputs": [
+            {
+              "name": "recipient",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "remainingBalance",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "EmergencyWithdrawal",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "reason",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "InvestmentMethodUpdated",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "oldProtocol",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "newProtocol",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "ExtraDepositReclaimed",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "grossAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "penaltyAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "refundAmount",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "MissedMonthRecorded",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "missedMonths",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "initialize",
+          "inputs": [
+            {
+              "name": "_treasury",
+              "type": "address"
+            },
+            {
+              "name": "_admin",
+              "type": "address"
+            },
+            {
+              "name": "_owner",
+              "type": "address"
+            },
+            {
+              "name": "_usdc",
+              "type": "address"
+            },
+            {
+              "name": "_userPreferences",
+              "type": "address"
+            },
+            {
+              "name": "_dateTime",
+              "type": "address"
+            },
+            {
+              "name": "_selectedProtocol",
+              "type": "address"
+            },
+            {
+              "name": "_principal",
+              "type": "uint256"
+            },
+            {
+              "name": "_monthlyDeposit",
+              "type": "uint256"
+            },
+            {
+              "name": "_currentAge",
+              "type": "uint256"
+            },
+            {
+              "name": "_retirementAge",
+              "type": "uint256"
+            },
+            {
+              "name": "_desiredMonthly",
+              "type": "uint256"
+            },
+            {
+              "name": "_yearsPayments",
+              "type": "uint256"
+            },
+            {
+              "name": "_interestRate",
+              "type": "uint256"
+            },
+            {
+              "name": "_timelockYears",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateInvestmentMethod",
+          "inputs": [
+            {
+              "name": "_newProtocol",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "depositMonthly",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "depositExtra",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "reclaimExtraDeposit",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "investInDeFi",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawFromDeFi",
+          "inputs": [
+            {
+              "name": "_protocol",
+              "type": "address"
+            },
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "startRetirement",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "configureAutoWithdrawal",
+          "inputs": [
+            {
+              "name": "_withdrawalAmount",
+              "type": "uint256"
+            },
+            {
+              "name": "_intervalDays",
+              "type": "uint256"
+            },
+            {
+              "name": "_enabled",
+              "type": "bool"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "executeAutoWithdrawal",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdraw",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawAll",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "approveEarlyRetirement",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "emergencyWithdraw",
+          "inputs": [
+            {
+              "name": "_reason",
+              "type": "string"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTimelockInfo",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "canStartRetirement",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "canWithdraw",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "canExecuteAutoWithdrawal",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getAutoWithdrawalInfo",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTimeUntilNextAutoWithdrawal",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isEarlyRetirementApproved",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getFundInfo",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDepositStats",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getWithdrawalStats",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBalances",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getInvestedProtocols",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address[10]"
+            },
+            {
+              "name": "",
+              "type": "uint256[10]"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProtocolBalance",
+          "inputs": [
+            {
+              "name": "_protocol",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getInitialDeposit",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "calculateFeeForAmount",
+          "inputs": [
+            {
+              "name": "_amount",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getExtraDepositCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getContractBalance",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProjectedRetirement",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "estimateAutoWithdrawalYears",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "fallback"
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "initialized",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "treasury",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "userPreferences",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "dateTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "selectedProtocol",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "principal",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "monthlyDeposit",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "currentAge",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "retirementAge",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "desiredMonthly",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "yearsPayments",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "interestRate",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "createdAt",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalGrossDeposited",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalFeesPaid",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalNetToFund",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalBalance",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalInvested",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "availableBalance",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "monthlyDepositCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "extraDepositCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "retirementStarted",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "retirementStartTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "timelockPeriod",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "timelockEnd",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "earlyRetirementApproved",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalWithdrawn",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastWithdrawalTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "withdrawalCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "autoWithdrawalEnabled",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "autoWithdrawalAmount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "autoWithdrawalInterval",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "nextAutoWithdrawalTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "autoWithdrawalExecutionCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastAutoWithdrawalTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "investedProtocols",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "activeProtocols",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "activeProtocolCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastMonthlyDepositTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "missedMonths",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastExtraDepositTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastExtraDepositGross",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastExtraDepositNet",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "extraReclaimUsed",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        }
+      ]
+    },
+    "PersonalFundFactory": {
+      "address": "0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A",
+      "abi": [
+        {
+          "name": "FundCreated",
+          "inputs": [
+            {
+              "name": "fundAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "owner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "initialDeposit",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "principal",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "monthlyDeposit",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "selectedProtocol",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "name": "retirementAge",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timelockEnd",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "name": "AdminSet",
+          "inputs": [
+            {
+              "name": "oldAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "anonymous": false,
+          "type": "event"
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setAdmin",
+          "inputs": [
+            {
+              "name": "_newAdmin",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "configure",
+          "inputs": [
+            {
+              "name": "_usdc",
+              "type": "address"
+            },
+            {
+              "name": "_userPreferences",
+              "type": "address"
+            },
+            {
+              "name": "_dateTime",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "createPersonalFund",
+          "inputs": [
+            {
+              "name": "_principal",
+              "type": "uint256"
+            },
+            {
+              "name": "_monthlyDeposit",
+              "type": "uint256"
+            },
+            {
+              "name": "_currentAge",
+              "type": "uint256"
+            },
+            {
+              "name": "_retirementAge",
+              "type": "uint256"
+            },
+            {
+              "name": "_desiredMonthly",
+              "type": "uint256"
+            },
+            {
+              "name": "_yearsPayments",
+              "type": "uint256"
+            },
+            {
+              "name": "_interestRate",
+              "type": "uint256"
+            },
+            {
+              "name": "_timelockYears",
+              "type": "uint256"
+            },
+            {
+              "name": "_selectedProtocol",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateMinPrincipal",
+          "inputs": [
+            {
+              "name": "_newMin",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateMaxPrincipal",
+          "inputs": [
+            {
+              "name": "_newMax",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateMinMonthlyDeposit",
+          "inputs": [
+            {
+              "name": "_newMin",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateAgeRanges",
+          "inputs": [
+            {
+              "name": "_minAge",
+              "type": "uint256"
+            },
+            {
+              "name": "_maxAge",
+              "type": "uint256"
+            },
+            {
+              "name": "_minRetirementAge",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateTimelockRanges",
+          "inputs": [
+            {
+              "name": "_minYears",
+              "type": "uint256"
+            },
+            {
+              "name": "_maxYears",
+              "type": "uint256"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateUserPreferences",
+          "inputs": [
+            {
+              "name": "_newUserPreferences",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateDateTime",
+          "inputs": [
+            {
+              "name": "_newDateTime",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUserFund",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "canUserCreateFund",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getFundOwner",
+          "inputs": [
+            {
+              "name": "_fund",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getUserFundCount",
+          "inputs": [
+            {
+              "name": "_user",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getFundCount",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "calculateInitialDeposit",
+          "inputs": [
+            {
+              "name": "_principal",
+              "type": "uint256"
+            },
+            {
+              "name": "_monthlyDeposit",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getConfiguration",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "name": "minPrincipal",
+                  "type": "uint256"
+                },
+                {
+                  "name": "maxPrincipal",
+                  "type": "uint256"
+                },
+                {
+                  "name": "minMonthlyDeposit",
+                  "type": "uint256"
+                },
+                {
+                  "name": "minAge",
+                  "type": "uint256"
+                },
+                {
+                  "name": "maxAge",
+                  "type": "uint256"
+                },
+                {
+                  "name": "minRetirementAge",
+                  "type": "uint256"
+                },
+                {
+                  "name": "minTimelockYears",
+                  "type": "uint256"
+                },
+                {
+                  "name": "maxTimelockYears",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getAddresses",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            },
+            {
+              "name": "",
+              "type": "address"
+            },
+            {
+              "name": "",
+              "type": "address"
+            },
+            {
+              "name": "",
+              "type": "address"
+            },
+            {
+              "name": "",
+              "type": "address"
+            },
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "fallback"
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "admin",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "treasury",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "usdc",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "userPreferences",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "dateTime",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "personalFundImplementation",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "configured",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "fundsByOwner",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "fundOwners",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "fundExists",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "userFundCount",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "totalFundsCreated",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "deploymentNonce",
+          "inputs": [
+            {
+              "name": "arg0",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "minPrincipal",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "maxPrincipal",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "minMonthlyDeposit",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "minAge",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "maxAge",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "minRetirementAge",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "minTimelockYears",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "view",
+          "type": "function",
+          "name": "maxTimelockYears",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "stateMutability": "nonpayable",
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_personalFundImplementation",
+              "type": "address"
+            },
+            {
+              "name": "_treasury",
+              "type": "address"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    }
+  }
+}

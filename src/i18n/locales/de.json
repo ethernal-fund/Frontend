@@ -1,0 +1,591 @@
+{
+  "common": {
+    "error": "Fehler",
+    "loading": "Laden...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "finish": "Abschließen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein",
+    "wallet": "Wallet",
+    "copy": "Kopieren",
+    "copied": "Kopiert!"
+  },
+  "nav": {
+    "home": "Startseite",
+    "calculator": "Rechner",
+    "dashboard": "Dashboard",
+    "contact": "Kontakt",
+    "connectWallet": "Wallet verbinden",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
+  },
+  "wallet": {
+    "connectedWallet": "Verbundene Wallet",
+    "balance": "Guthaben",
+    "network": "Netzwerk",
+    "unknownNetwork": "Unbekanntes Netzwerk",
+    "switchTo": "Wechseln zu",
+    "correctNetwork": "Richtiges Netzwerk ✓",
+    "connectedTo": "Verbunden mit",
+    "wrongNetwork": "Falsches Netzwerk",
+    "viewFullAccount": "Vollständiges Konto anzeigen",
+    "disconnect": "Trennen",
+    "needTestEth": "Test-ETH benötigt?",
+    "yourWallet": "Deine Wallet",
+    "language": "Sprache",
+    "copyAddress": "Adresse kopieren",
+    "viewOnExplorer": "Im Explorer anzeigen",
+    "account": "Konto"
+  },
+  "footer": {
+    "tagline": "Plane deinen Ruhestand auf der Blockchain sicher und transparent",
+    "quickLinks": "Schnelllinks",
+    "followUs": "Folge uns",
+    "copyright": "Ethernal. Alle Rechte vorbehalten.",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "disclaimer": "Rechtlicher Hinweis",
+    "builtOn": "Gebaut auf Arbitrum · Sicher · Transparent · Dezentralisiert"
+  },
+  "hero": {
+    "title": "Deine finanzielle Zukunft auf der Blockchain",
+    "subtitle": "Plane deinen Ruhestand mit Ethernal: Sicher, Transparent und Dezentralisiert auf Arbitrum",
+    "ctaDisconnected": "Jetzt starten",
+    "ctaConnected": "Zum Rechner"
+  },
+  "features": {
+    "title": "Warum Ethernal?",
+    "security": {
+      "title": "Sicherheit & Kontrolle",
+      "description": "Deine Gelder befinden sich in geprüften Smart Contracts. Nur du hast die Kontrolle."
+    },
+    "education": {
+      "title": "Finanzbildung",
+      "description": "Lerne über DeFi und Ruhestandsstrategien, während du sparst."
+    },
+    "fees": {
+      "title": "Niedrige Gebühren",
+      "description": "Keine Zwischenhändler. Gebühren bis zu 10x niedriger als traditionelle Fonds."
+    }
+  },
+  "about": {
+    "title": "Über Ethernal",
+    "description": "Ethernal kombiniert Blockchain-Sicherheit mit traditioneller Finanzplanung, um ein dezentrales, transparentes und für alle zugängliches Rentenerlebnis zu bieten."
+  },
+  "survey": {
+    "title": "Umfrage zu Rente und Blockchain",
+    "subtitle": "Hilf uns zu verstehen, wie du Rente und Blockchain-Technologie wahrnimmst",
+    "bannerText": "Hilf uns zu verbessern! Beantworte unsere kurze Umfrage zu Rente und Blockchain.",
+    "bannerCta": "An der Umfrage teilnehmen",
+    "question1": "Wie alt bist du?",
+    "question2": "Vertraust du traditionellen Rentensystemen (Pensionsfonds)?",
+    "question3": "Wie vertraut bist du mit Blockchain/DeFi?",
+    "question4": "Wie besorgt bist du um deine finanzielle Zukunft im Ruhestand?",
+    "question5": "Hast du derzeit einen Rentenplan?",
+    "question6": "Werte im Ruhestand: Sicherheit oder Wachstum?",
+    "question7": "Würdest du dich für einen blockchain-basierten Rentenplan interessieren?",
+    "ageOptions": {
+      "18-24": "18-24 Jahre",
+      "25-34": "25-34 Jahre",
+      "35-44": "35-44 Jahre",
+      "45-54": "45-54 Jahre",
+      "55-64": "55-64 Jahre",
+      "65+": "65+ Jahre"
+    },
+    "rating": {
+      "stronglyDisagree": "Stimme überhaupt nicht zu",
+      "disagree": "Stimme nicht zu",
+      "neutral": "Neutral",
+      "agree": "Stimme zu",
+      "stronglyAgree": "Stimme voll zu"
+    },
+    "selectAge": "Bitte wähle dein Alter",
+    "answerAll": "Bitte beantworte alle Fragen",
+    "submitting": "Wird gesendet...",
+    "submit": "Antworten senden",
+    "errorTitle": "Sendefehler",
+    "required": "Pflichtfeld"
+  },
+  "followUp": {
+    "successTitle": "Umfrage abgeschlossen!",
+    "successMessage": "Danke für deine Teilnahme. Deine Antworten helfen uns, uns zu verbessern.",
+    "question1": "Möchtest du Informationen über Ethernal erhalten?",
+    "yesInterested": "Ja, ich möchte Neuigkeiten erhalten",
+    "notNow": "Nein, danke",
+    "question2": "Deine E-Mail-Adresse",
+    "emailPlaceholder": "deinemail@beispiel.com",
+    "finish": "Abschließen",
+    "thankYou": "Danke!",
+    "willContact": "Wir werden dich bald mit Neuigkeiten kontaktieren.",
+    "helpImprove": "Deine Meinung hilft uns, uns zu verbessern.",
+    "pleaseIndicate": "Bitte gib deine Präferenz an",
+    "enterEmail": "Bitte gib deine E-Mail-Adresse ein"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "subtitle": "Fragen? Unser Team ist hier, um zu helfen",
+    "name": "Vollständiger Name",
+    "namePlaceholder": "Max Mustermann",
+    "email": "E-Mail-Adresse",
+    "subject": "Betreff",
+    "subjectPlaceholder": "z.B.: Frage zu meinem Fonds",
+    "message": "Nachricht",
+    "messagePlaceholder": "Sag uns, wie wir dir helfen können...",
+    "messageHint": "Mindestens 10 Zeichen",
+    "send": "Nachricht senden",
+    "sending": "Wird gesendet...",
+    "success": "Nachricht gesendet!",
+    "successDetail": "Danke für deine Kontaktaufnahme. Wir antworten innerhalb von 24-48 Stunden.",
+    "error": "Sendefehler. Bitte versuche es erneut.",
+    "walletConnected": "Wallet verbunden",
+    "walletIncluded": "Wir werden deine Wallet in die Nachricht aufnehmen:",
+    "otherWays": "Andere Kontaktmöglichkeiten",
+    "emailLabel": "E-Mail",
+    "responseTime": "Antwortzeit",
+    "responseTimeValue": "24-48 Werktage",
+    "requiredFields": "* Pflichtfelder",
+    "validation": {
+      "nameRequired": "Name ist erforderlich",
+      "nameTooShort": "Name muss mindestens 2 Zeichen haben",
+      "emailRequired": "E-Mail ist erforderlich",
+      "emailInvalid": "Gib eine gültige E-Mail ein",
+      "messageRequired": "Nachricht ist erforderlich",
+      "messageTooShort": "Nachricht muss mindestens 10 Zeichen haben",
+      "formErrors": "Bitte korrigiere die Formularfehler"
+    }
+  },
+  "calculator": {
+    "title": "Rentenrechner",
+    "titleFull": "Rentenrechner",
+    "titleShort": "Rechner",
+    "subtitle": "Simuliere deinen personalisierten Rentenplan",
+    "configurePlan": "Konfiguriere deinen Plan",
+    "currentAge": "Aktuelles Alter",
+    "retirementAge": "Gewünschtes Rentenalter",
+    "initialCapital": "Anfangskapital (USDC)",
+    "monthlyContribution": "Monatlicher Beitrag (USDC)",
+    "expectedReturn": "Erwartete Jahresrendite (%)",
+    "frequency": "Beitragsfrequenz",
+    "frequencyMonthly": "Monatlich",
+    "frequencyQuarterly": "Vierteljährlich",
+    "frequencyAnnual": "Jährlich",
+    "yearsReceivingIncome": "Jahre mit Einkommenserhalt",
+    "ageLabel": "Jahre",
+    "monthlyDeposit": "Monatliche Ersparnisse (USDC)",
+    "currentSavings": "Aktuelle Ersparnisse (USDC)",
+    "interestRate": "Erwarteter Jahreszinssatz (%)",
+    "calculate": "Berechnen",
+    "dataError": "Fehler beim Laden der Daten. Bitte versuche es erneut.",
+    "growthProjection": "Wachstumsprognose",
+    "fillFormToSeeChart": "Fülle das Formular aus, um deine Prognose zu sehen",
+    "depositSummary": "Erste Einzahlungsübersicht",
+    "totalDeposit": "Gesamteinzahlung",
+    "daoFee": "Ethernal-Gebühr (5%)",
+    "goesToTreasury": "Geht an das Protokoll-Treasury",
+    "forDefi": "Für deinen DeFi-Fonds",
+    "netToFund": "Netto in deinem Fonds",
+    "fundReady": "Dein Fonds wird bereit sein in",
+    "lastStep": "Letzter Schritt",
+    "monthlySavingsRequired": "Erforderliche monatliche Ersparnisse",
+    "createContract": "Vertrag erstellen",
+    "createOnArbitrum": "Auf Arbitrum erstellen",
+    "walletWillOpen": "Deine Wallet wird zum Unterzeichnen geöffnet",
+    "getTestTokens": "Test-Token erhalten",
+    "getTestTokensDesc": "Du benötigst Testnet-USDC, um deinen Fonds zu erstellen",
+    "howToStart": "Wie fange ich an?",
+    "testnetOnly": "Nur Testnet für jetzt",
+    "testnetOnlyDesc": "Wir sind auf Arbitrum Sepolia. Fonds haben keinen realen Wert.",
+    "step1Title": "Verbinde deine Wallet",
+    "step1Desc": "MetaMask, WalletConnect oder jede kompatible Wallet",
+    "step2Title": "Testnet-USDC erhalten",
+    "step2Desc": "Verwende den Faucet, um Test-Token zu erhalten",
+    "step3Title": "Konfiguriere deinen Plan",
+    "step3Desc": "Lege dein Alter, Ersparnisse und Rentenziele fest",
+    "step4Title": "Erstelle deinen Fonds",
+    "step4Desc": "Deploye deinen persönlichen Vertrag auf der Blockchain",
+    "validation": {
+      "ageRequired": "Aktuelles Alter ist erforderlich",
+      "ageTooHigh": "Aktuelles Alter muss unter 80 Jahren liegen",
+      "retirementAgeTooLow": "Rentenalter muss mindestens 5 Jahre größer als das aktuelle sein",
+      "minYears": "Du musst Einkommen für mindestens 5 Jahre erhalten",
+      "contributionRequired": "Monatlicher Beitrag muss größer als 0 sein",
+      "rateRange": "Jahreszins muss zwischen 0% und 50% liegen"
+    },
+    "results": {
+      "projected": "Rentenprognose",
+      "monthlyIncome": "Geschätztes monatliches Einkommen",
+      "totalSaved": "Gesamt gespart",
+      "yearsCovered": "Abgedeckte Jahre"
+    }
+  },
+  "createFund": {
+    "title": "Meinen Fonds erstellen",
+    "subtitle": "Berechneter Plan · Arbitrum Sepolia",
+    "steps": {
+      "review": "Überprüfung",
+      "balance": "Guthaben",
+      "approve": "Genehmigen",
+      "create": "Erstellen",
+      "success": "Fertig!"
+    },
+    "review": {
+      "title": "Planparameter",
+      "initialDeposit": "Ersteinzahlung",
+      "monthlyDeposit": "Monatliche Ersparnisse",
+      "currentAge": "Aktuelles / Rentenalter",
+      "desiredIncome": "Gewünschtes monatliches Einkommen",
+      "yearsPayments": "Jahre mit Einkommenserhalt",
+      "interestRate": "Erwarteter Jahreszinssatz",
+      "timelock": "Sicherheits-Timelock",
+      "breakdown": {
+        "title": "Erste Einzahlungsaufschlüsselung",
+        "fromWallet": "Aus deiner Wallet",
+        "fee": "Ethernal-Gebühr (5%)",
+        "netToFund": "Netto in deinem DeFi-Fonds"
+      },
+      "investment": {
+        "title": "Investitionsmethode",
+        "subtitle": "Wähle, wie du deine Rentenersparnisse wachsen lassen möchtest",
+        "selectError": "Wähle eine Investitionsmethode, um fortzufahren."
+      },
+      "immutability": "Sobald der Vertrag erstellt ist, können diese Parameter nicht mehr geändert werden. Der {years}-Timelock ist dauerhaft.",
+      "continue": "Guthaben prüfen"
+    },
+    "balance": {
+      "title": "Guthabenüberprüfung",
+      "subtitle": "Wir prüfen deine Wallet on-chain. Kein Gas, keine Transaktion.",
+      "yourBalance": "Dein USDC-Guthaben",
+      "required": "Erforderlich",
+      "insufficient": "Unzureichend",
+      "sufficient": "Ausreichend",
+      "missing": "Dir fehlen {amount}",
+      "allowance": {
+        "title": "Aktuelle Genehmigung",
+        "alreadyApproved": "Bereits genehmigt",
+        "requiresApproval": "Genehmigung erforderlich",
+        "needApproval": "Du musst eine Genehmigungs-Tx unterzeichnen (1 Mal)."
+      },
+      "nextSteps": {
+        "title": "Erforderliche nächste Schritte",
+        "approve": "Genehmigen — ERC-20 approve für die Factory",
+        "create": "Fonds erstellen — factory.createFund + Ersteinzahlung"
+      },
+      "insufficientBalance": "Unzureichendes Guthaben. Hol mehr USDC aus dem Rechner-Faucet, bevor du fortfährst.",
+      "refresh": "Aktualisieren",
+      "continueApprove": "Weiter zur Genehmigung",
+      "continueCreate": "Weiter zur Fondserstellung"
+    },
+    "approve": {
+      "title": "USDC autorisieren",
+      "subtitle": "Erlaube der Factory, deine Token einmalig zu verschieben",
+      "whatIs": {
+        "title": "Was ist Approve?",
+        "description": "Auf Ethereum erfordern ERC-20-Token (wie USDC), dass du einen Vertrag explizit autorisierst, bevor er sie verschieben kann. Es ist ein Sicherheitsstandard: Der Vertrag kann nur bis zu dem von dir genehmigten Betrag ausgeben.",
+        "note": "Diese Genehmigung verschiebt keine Gelder. Die Verschiebung erfolgt im nächsten Schritt."
+      },
+      "details": {
+        "contract": "Empfängervertrag",
+        "token": "Token",
+        "amount": "Zu autorisierender Betrag"
+      },
+      "button": "USDC genehmigen",
+      "waiting": "Warten…",
+      "next": "Weiter zur Fondserstellung"
+    },
+    "create": {
+      "title": "Den Fonds erstellen",
+      "subtitle": "Die Factory deployt deinen persönlichen Vertrag und führt die Ersteinzahlung durch",
+      "summary": {
+        "title": "Transaktionsübersicht",
+        "initialDeposit": "Ersteinzahlung",
+        "fee": "Ethernal-Gebühr (5%)",
+        "netToFund": "Netto in deinem Fonds",
+        "protocol": "DeFi-Protokoll",
+        "timelock": "Timelock"
+      },
+      "button": "Meinen Fonds erstellen",
+      "processing": "Verarbeitung…"
+    },
+    "success": {
+      "title": "Fonds erstellt!",
+      "subtitle": "Dein persönlicher Vertrag lebt auf der Blockchain.",
+      "txHash": "Transaktions-Hash",
+      "fundAddress": "Fondsadresse",
+      "nextSteps": {
+        "title": "Nächste Schritte",
+        "step1": "Leiste monatliche Einzahlungen von {amount}, um dein Ziel zu erreichen.",
+        "step2": "Überwache deinen Fortschritt und DeFi-Renditen vom Dashboard aus.",
+        "step3": "Wenn der Timelock abläuft, kannst du den geplanten Rückzug starten."
+      },
+      "goToDashboard": "Zum Dashboard",
+      "redirecting": "Automatische Weiterleitung in {seconds}s…"
+    },
+    "back": {
+      "toCalculator": "Zurück zum Rechner",
+      "previous": "Vorheriger Schritt"
+    }
+  },
+  "dashboard": {
+    "title": "Dein Ethernal-Dashboard",
+    "welcome": "Willkommen, {address}",
+    "subtitle": "Verwalte deine finanzielle Zukunft auf der Blockchain",
+    "refresh": "Daten aktualisieren",
+    "personalFund": {
+      "title": "Mein persönlicher Fonds",
+      "active": "Aktiv",
+      "noFund": "Kein Fonds",
+      "currentBalance": "Aktuelles Guthaben",
+      "fundStatus": "Fondsstatus",
+      "retired": "Im Ruhestand",
+      "saving": "Sparend",
+      "progress": {
+        "title": "Fortschritt zum Ziel",
+        "current": "Aktuell",
+        "projected": "Prognostiziert",
+        "target": "Ziel",
+        "monthsRemaining": "{months} Monate bis zum Timelock verbleibend"
+      },
+      "stats": {
+        "principal": "Kapital",
+        "monthlyDeposit": "Monatliche Einzahlung",
+        "totalDeposits": "Gesamteinzahlungen",
+        "retirementAge": "Rentenalter",
+        "years": "Jahre"
+      },
+      "contractAddress": "Vertragsadresse",
+      "viewOnArbiscan": "Auf Arbiscan anzeigen",
+      "timelock": {
+        "ends": "Timelock endet:",
+        "never": "Niemals",
+        "daysRemaining": "{days} Tage verbleibend"
+      },
+      "actions": {
+        "deposit": "Einzahlung vornehmen",
+        "startRetirement": "Rente starten",
+        "createFund": "Meinen Fonds erstellen"
+      },
+      "noFundMessage": "Du hast noch keinen Rentenfonds"
+    },
+    "defiInvestments": {
+      "title": "DeFi-Investitionen",
+      "description": "Deine Gelder können in genehmigten DeFi-Protokollen investiert werden, um Renditen zu erzielen",
+      "viewOpportunities": "Möglichkeiten ansehen"
+    },
+    "preferences": {
+      "title": "Meine Einstellungen",
+      "subtitle": "Konfiguriere dein on-chain Investitionsprofil. Diese Parameter bestimmen, wie deine Einzahlungen geleitet werden.",
+      "currentConfig": "Aktuelle Konfiguration: ",
+      "risk": {
+        "title": "Risikoniveau",
+        "conservador": "Konservativ",
+        "moderado": "Moderat",
+        "agresivo": "Aggressiv",
+        "conservador_desc": "Geringes Risiko, stabile Renditen und Kapitalschutz",
+        "moderado_desc": "Balance zwischen Wachstum und Stabilität, ideal für langfristig",
+        "agresivo_desc": "Maximales Renditepotenzial mit höherem Risikoexposure"
+      },
+      "protocol": {
+        "title": "Bevorzugtes Protokoll",
+        "noProtocols": "Keine aktiven Protokolle registriert",
+        "verified": "Verifiziert",
+        "apy": "APY"
+      },
+      "saveSuccess": "Einstellungen on-chain gespeichert",
+      "saveError": "Fehler beim Speichern der Einstellungen",
+      "saveButton": "Konfiguration speichern",
+      "saving": "Wird gespeichert..."
+    },
+    "strategy": {
+      "title": "Protokoll-Registry",
+      "subtitle": "Strategie zur Einzahlungsweiterleitung und Metriken verifizierter Protokolle.",
+      "types": {
+        "concentrado": "Konzentriert",
+        "diversificado": "Diversifiziert",
+        "hibrido": "Hybrid",
+        "concentrado_desc": "Alles im besten verfügbaren Protokoll gemäß deinem Profil",
+        "diversificado_desc": "Verteilung auf mehrere Protokolle zur Risikominderung",
+        "hibrido_desc": "Dynamische Kombination angepasst an die Marktperformance"
+      },
+      "saveSuccess": "Strategie on-chain gespeichert",
+      "saveButton": "Strategie speichern",
+      "saving": "Wird gespeichert...",
+      "activeProtocols": "Aktive Protokolle",
+      "verified": "verifiziert",
+      "viewMore": "{count} weitere anzeigen",
+      "noProtocols": "Noch keine Protokolle registriert"
+    },
+    "teamContent": {
+      "title": "Vom Ethernal-Team",
+      "subtitle": "Finanzempfehlungen und Bildungskurse, veröffentlicht vom Admin."
+    },
+    "support": {
+      "title": "Brauchst du Hilfe?",
+      "description": "Kontaktiere das Ethernal-Team für Fragen zu deinem Rentenplan oder Anlagestrategien",
+      "contact": "Ethernal kontaktieren",
+      "documentation": "Dokumentation anzeigen"
+    },
+    "depositModal": {
+      "title": "Einzahlung vornehmen",
+      "monthly": "Monatlich",
+      "custom": "Benutzerdefiniert",
+      "monthlyAmount": "Konfigurierte monatliche Einzahlung",
+      "amountLabel": "Betrag in USDC",
+      "amountPlaceholder": "z.B.: 500.00",
+      "amountError": "Gib einen gültigen Betrag ein (maximal 6 Dezimalstellen)",
+      "insufficientBalance": "Unzureichendes USDC-Guthaben. Du benötigst {amount} mehr.",
+      "twoTransactions": "Es werden 2 Transaktionen benötigt: USDC-Genehmigung und Einzahlung.",
+      "status": {
+        "approving": "Warte auf Genehmigung in deiner Wallet...",
+        "approvingConfirming": "Genehmigung on-chain bestätigen...",
+        "executing": "Warte auf Einzahlung in deiner Wallet...",
+        "confirming": "Einzahlung on-chain bestätigen..."
+      },
+      "buttons": {
+        "approveAndDeposit": "Genehmigen und einzahlen",
+        "confirmDeposit": "Einzahlung bestätigen",
+        "processing": "Verarbeitung...",
+        "cancel": "Abbrechen"
+      }
+    }
+  },
+  "errors": {
+    "somethingWrong": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "networkError": "Netzwerkfehler. Überprüfe deine Verbindung.",
+    "walletRequired": "Verbinde deine Wallet, um fortzufahren",
+    "wrongNetwork": "Falsches Netzwerk. Wechsle zu Arbitrum Sepolia",
+    "wrongNetworkTitle": "Falsches Netzwerk",
+    "wrongNetworkMessage": "Wechsle zu {network} (Chain ID {chainId}), um fortzufahren.",
+    "alreadyHaveFund": "Du hast bereits einen Fonds",
+    "alreadyHaveFundMessage": "Du kannst nur einen Fonds pro Wallet haben. Dein Fonds: {address}",
+    "approvalPending": "Genehmigung ausstehend. Warte, bis die Genehmigung bestätigt wird, bevor du fortfährst."
+  },
+  "faucet": {
+    "connectWallet": "Verbinde deine Wallet, um Test-USDC zu erhalten.",
+    "success": {
+      "title": "Token erhalten!",
+      "amount": "USDC erhalten: {amount} USDC",
+      "balance": "Aktuelles Guthaben: {balance} USDC"
+    },
+    "error": {
+      "title": "Fehler beim Anfordern von Token",
+      "rateLimit": "Anfragelimit erreicht",
+      "rateLimitMessage": "Der Faucet erlaubt eine Anfrage alle 24 Stunden pro Wallet."
+    },
+    "info": {
+      "mockUSDC": "MockUSDC",
+      "forFund": "für deinen Fonds",
+      "ethGas": "ETH-Gas",
+      "forTransactions": "für Transaktionen"
+    },
+    "button": "Test-USDC erhalten",
+    "minting": "USDC wird geminted…",
+    "disclaimer": "USDC auf Arbitrum Sepolia · Limit: 1 Anfrage / 24h pro Wallet"
+  },
+  "network": {
+    "wrongDetected": "Falsches Netzwerk erkannt",
+    "youAreOn": "Du bist auf {network}. Wechsle zu {expected}.",
+    "switchButton": "Zu {network} wechseln"
+  },
+  "loading": {
+    "ethernal": "Ethernal wird geladen",
+    "connecting": "Verbindung zur Blockchain...",
+    "dashboard": "Dein Dashboard wird geladen..."
+  },
+  "createContract": {
+    "factoryAddressNotConfigured": "Factory-Adresse für dieses Netzwerk nicht konfiguriert"
+  },
+  "feeModal": {
+    "headerLabel": "Vergleichsanalyse",
+    "title": "Deine Rente, ohne Zwischenhändler.",
+    "subtitle": "Berechne, wie viel mehr du ansammelst, wenn Gebühren für dich arbeiten, nicht gegen dich.",
+    "monthlyDeposit": "Monatliche Einzahlung",
+    "horizon": "Horizont",
+    "years": "{{count}} Jahre",
+    "yearsMin": "5 Jahre",
+    "yearsMax": "40 Jahre",
+    "ethFeeLabel": "Einmalige Gebühr: 3% pro Einzahlung",
+    "ethApy": "DeFi: ~{{apy}} APY (Aave)",
+    "extra": "EXTRA",
+    "corpName": "Unternehmensfonds",
+    "corpFeeLabel": "Verwaltung 1,5% + Admin 0,5% + Einstieg 3%",
+    "corpApy": "Brutto: ~{{apy}} (netto viel weniger)",
+    "year1": "Jahr 1",
+    "yearMid": "Jahr {{year}}",
+    "yearEnd": "Jahr {{year}}",
+    "tabResults": "Ergebnisse",
+    "tabBreakdown": "Vergleich",
+    "tabFees": "Gebühren",
+    "colMetric": "Kennzahl",
+    "colCorp": "Untern.",
+    "row": {
+      "finalCapital": "Endkapital",
+      "feesPaid": "Gezahlte Gebühren",
+      "returnOnCapital": "Kapitalrendite",
+      "entryFee": "Einstiegsgebühr",
+      "ethEntry": "3% einmalig",
+      "corpEntry": "3% pro Einzahlung",
+      "annualFee": "Jährliche Verwaltungsgebühr",
+      "exitFee": "Austrittsgebühr",
+      "ethExit": "0% (normal)",
+      "corpExit": "1% + Strafe",
+      "transparency": "Transparenz",
+      "ethTransparency": "100% on-chain",
+      "corpTransparency": "Prospekt + Prüfung",
+      "custody": "Verwahrung",
+      "ethCustody": "Smart contract",
+      "corpCustody": "Finanzinstitut"
+    },
+    "ethStructureTitle": "Ethernal — Einfache Struktur",
+    "corpStructureTitle": "Unternehmens — Typische Struktur",
+    "ethFees": [
+      {
+        "label": "Einzahlungsgebühr",
+        "value": "3% · Geht an on-chain Treasury",
+        "desc": "Keine versteckten Gebühren, keine Jahresverwaltung, keine Standard-Ausstiegsstrafen."
+      },
+      {
+        "label": "Vorzeitige Auszahlung",
+        "value": "7% · Nur vor dem Timelock",
+        "desc": "Entmutigt Kurzfristigkeit. Wenn du bis zur Fälligkeit wartest, sind es 0%."
+      },
+      {
+        "label": "Gas (Arbitrum L2)",
+        "value": "~$0,01-$0,10 pro Tx",
+        "desc": "Praktisch vernachlässigbar im Vergleich zu jeder traditionellen Alternative."
+      }
+    ],
+    "corpFees": [
+      {
+        "label": "Ausgabeaufschlag",
+        "value": "3% auf jede Einzahlung",
+        "desc": "Erhebt ab dem ersten Euro, vor der Investition."
+      },
+      {
+        "label": "Jährliche Verwaltungsgebühr (TER)",
+        "value": "1,5% auf den Saldo",
+        "desc": "Wird auch dann erhoben, wenn der Fonds negativ performt."
+      },
+      {
+        "label": "Verwaltungsgebühr",
+        "value": "0,5% jährlich",
+        "desc": "Betriebskosten werden an den Anleger weitergegeben."
+      },
+      {
+        "label": "Performance-Gebühr",
+        "value": "20% auf Gewinne",
+        "desc": "Nur im Prospekt sichtbar, selten in den Abrechnungen."
+      },
+      {
+        "label": "Austritts-/Rücknahmegebühr",
+        "value": "1% bei Auszahlung",
+        "desc": "Strafe für die Liquidation deiner Position."
+      }
+    ],
+    "disclaimer": "Orientierungssimulation · Reale DeFi-Renditen können variieren · Keine Finanzberatung"
+  }
+}

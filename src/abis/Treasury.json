@@ -1,0 +1,1052 @@
+{
+  "contractName": "Treasury",
+  "address": "0x0a743430067AFC5B69B0F8fF542fdbdAD206A748",
+  "abi": [
+    {
+      "name": "FeeReceived",
+      "inputs": [
+        {
+          "name": "fundAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "totalFromFund",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "EarlyRetirementRequested",
+      "inputs": [
+        {
+          "name": "fundAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "requester",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "EarlyRetirementApproved",
+      "inputs": [
+        {
+          "name": "fundAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "approver",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "EarlyRetirementRejected",
+      "inputs": [
+        {
+          "name": "fundAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "FeesWithdrawn",
+      "inputs": [
+        {
+          "name": "recipient",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "remainingBalance",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "ManagerAdded",
+      "inputs": [
+        {
+          "name": "manager",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "addedBy",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "ManagerRemoved",
+      "inputs": [
+        {
+          "name": "manager",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "removedBy",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "FeePercentageUpdated",
+      "inputs": [
+        {
+          "name": "oldFee",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "newFee",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "updatedBy",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "FundDeactivated",
+      "inputs": [
+        {
+          "name": "fundAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "AdminPushed",
+      "inputs": [
+        {
+          "name": "targetContract",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "newAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "pushedBy",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "AdminChanged",
+      "inputs": [
+        {
+          "name": "oldAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "newAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "EmergencyWithdraw",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "recipient",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "isUSDC",
+          "type": "bool",
+          "indexed": false
+        },
+        {
+          "name": "feesAdjusted",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "configure",
+      "inputs": [
+        {
+          "name": "_factory",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "changeAdmin",
+      "inputs": [
+        {
+          "name": "_newAdmin",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "pushAdmin",
+      "inputs": [
+        {
+          "name": "_targetContract",
+          "type": "address"
+        },
+        {
+          "name": "_newAdmin",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "addTreasuryManager",
+      "inputs": [
+        {
+          "name": "_manager",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "removeTreasuryManager",
+      "inputs": [
+        {
+          "name": "_manager",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "updateFeePercentage",
+      "inputs": [
+        {
+          "name": "_newFee",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "recordFee",
+      "inputs": [
+        {
+          "name": "_fundAddress",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "deactivateFund",
+      "inputs": [
+        {
+          "name": "_fundAddress",
+          "type": "address"
+        },
+        {
+          "name": "_reason",
+          "type": "string"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "requestEarlyRetirement",
+      "inputs": [
+        {
+          "name": "_fundAddress",
+          "type": "address"
+        },
+        {
+          "name": "_reason",
+          "type": "string"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "processEarlyRetirement",
+      "inputs": [
+        {
+          "name": "_fundAddress",
+          "type": "address"
+        },
+        {
+          "name": "_approve",
+          "type": "bool"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "withdrawFees",
+      "inputs": [
+        {
+          "name": "_recipient",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "emergencyWithdraw",
+      "inputs": [
+        {
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "name": "_recipient",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "calculateFee",
+      "inputs": [
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getTreasuryBalance",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getTotalFeesCollected",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getTotalFeesAllTime",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getFundFeeRecord",
+      "inputs": [
+        {
+          "name": "_fundAddress",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "components": [
+            {
+              "name": "fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "totalFeesPaid",
+              "type": "uint256"
+            },
+            {
+              "name": "lastFeeTimestamp",
+              "type": "uint256"
+            },
+            {
+              "name": "feeCount",
+              "type": "uint256"
+            },
+            {
+              "name": "isActive",
+              "type": "bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getFundCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getActiveFundCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getEarlyRetirementRequest",
+      "inputs": [
+        {
+          "name": "_fundAddress",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "components": [
+            {
+              "name": "fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "requester",
+              "type": "address"
+            },
+            {
+              "name": "reason",
+              "type": "string"
+            },
+            {
+              "name": "approved",
+              "type": "bool"
+            },
+            {
+              "name": "rejected",
+              "type": "bool"
+            },
+            {
+              "name": "processed",
+              "type": "bool"
+            },
+            {
+              "name": "requestTimestamp",
+              "type": "uint256"
+            },
+            {
+              "name": "processedTimestamp",
+              "type": "uint256"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getRequestStats",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getTreasuryStats",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "components": [
+            {
+              "name": "totalFeesCollectedUSDC",
+              "type": "uint256"
+            },
+            {
+              "name": "totalFeesCollectedAllTime",
+              "type": "uint256"
+            },
+            {
+              "name": "totalFundsRegistered",
+              "type": "uint256"
+            },
+            {
+              "name": "activeFundsCount",
+              "type": "uint256"
+            },
+            {
+              "name": "totalEarlyRetirementRequests",
+              "type": "uint256"
+            },
+            {
+              "name": "approvedEarlyRetirements",
+              "type": "uint256"
+            },
+            {
+              "name": "rejectedEarlyRetirements",
+              "type": "uint256"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "isTreasuryManager",
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getManagerCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "fallback"
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "usdc",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "factory",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "fundFeeRecords",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "components": [
+            {
+              "name": "fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "totalFeesPaid",
+              "type": "uint256"
+            },
+            {
+              "name": "lastFeeTimestamp",
+              "type": "uint256"
+            },
+            {
+              "name": "feeCount",
+              "type": "uint256"
+            },
+            {
+              "name": "isActive",
+              "type": "bool"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "fundCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "isFundRegistered",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "activeFundsCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "earlyRetirementRequests",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "components": [
+            {
+              "name": "fundAddress",
+              "type": "address"
+            },
+            {
+              "name": "requester",
+              "type": "address"
+            },
+            {
+              "name": "reason",
+              "type": "string"
+            },
+            {
+              "name": "approved",
+              "type": "bool"
+            },
+            {
+              "name": "rejected",
+              "type": "bool"
+            },
+            {
+              "name": "processed",
+              "type": "bool"
+            },
+            {
+              "name": "requestTimestamp",
+              "type": "uint256"
+            },
+            {
+              "name": "processedTimestamp",
+              "type": "uint256"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "requestCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "pendingRequestsCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "approvedCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "rejectedCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "totalFeesCollectedUSDC",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "totalFeesCollectedAllTime",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "totalFeesWithdrawn",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "treasuryManagers",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "managerCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "feePercentage",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_usdc",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "constructorArgs": "0000000000000000000000006e1371974d923397ece9ee7525ac50ad7087c77f"
+}

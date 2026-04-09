@@ -1,0 +1,591 @@
+{
+  "common": {
+    "error": "Errore",
+    "loading": "Caricamento...",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "close": "Chiudi",
+    "back": "Indietro",
+    "next": "Continua",
+    "finish": "Termina",
+    "confirm": "Conferma",
+    "yes": "Sì",
+    "no": "No",
+    "wallet": "Wallet",
+    "copy": "Copia",
+    "copied": "Copiato!"
+  },
+  "nav": {
+    "home": "Home",
+    "calculator": "Calcolatore",
+    "dashboard": "Dashboard",
+    "contact": "Contatto",
+    "connectWallet": "Connetti Wallet",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu"
+  },
+  "wallet": {
+    "connectedWallet": "Wallet Connessa",
+    "balance": "Saldo",
+    "network": "Rete",
+    "unknownNetwork": "Rete sconosciuta",
+    "switchTo": "Passa a",
+    "correctNetwork": "Rete corretta ✓",
+    "connectedTo": "Connesso a",
+    "wrongNetwork": "Rete errata",
+    "viewFullAccount": "Visualizza account completo",
+    "disconnect": "Disconnetti",
+    "needTestEth": "Hai bisogno di ETH di test?",
+    "yourWallet": "La tua Wallet",
+    "language": "Lingua",
+    "copyAddress": "Copia indirizzo",
+    "viewOnExplorer": "Visualizza su explorer",
+    "account": "Account"
+  },
+  "footer": {
+    "tagline": "Pianifica la tua pensione su blockchain in modo sicuro e trasparente",
+    "quickLinks": "Link rapidi",
+    "followUs": "Seguici",
+    "copyright": "Ethernal. Tutti i diritti riservati.",
+    "privacy": "Informativa sulla privacy",
+    "terms": "Termini di utilizzo",
+    "disclaimer": "Avviso legale",
+    "builtOn": "Costruito su Arbitrum · Sicuro · Trasparente · Decentralizzato"
+  },
+  "hero": {
+    "title": "Il tuo futuro finanziario su Blockchain",
+    "subtitle": "Pianifica la tua pensione con Ethernal: Sicuro, Trasparente e Decentralizzato su Arbitrum",
+    "ctaDisconnected": "Inizia ora",
+    "ctaConnected": "Vai al Calcolatore"
+  },
+  "features": {
+    "title": "Perché Ethernal?",
+    "security": {
+      "title": "Sicurezza e Controllo",
+      "description": "I tuoi fondi sono in smart contract verificati. Solo tu hai il controllo."
+    },
+    "education": {
+      "title": "Educazione Finanziaria",
+      "description": "Impara su DeFi e strategie pensionistiche mentre risparmi."
+    },
+    "fees": {
+      "title": "Commissioni Basse",
+      "description": "Nessun intermediario. Commissioni fino a 10x inferiori ai fondi tradizionali."
+    }
+  },
+  "about": {
+    "title": "Informazioni su Ethernal",
+    "description": "Ethernal combina la sicurezza della blockchain con la pianificazione finanziaria tradizionale per offrire un'esperienza pensionistica decentralizzata, trasparente e accessibile a tutti."
+  },
+  "survey": {
+    "title": "Sondaggio su Pensione e Blockchain",
+    "subtitle": "Aiutaci a capire come percepisci la pensione e la tecnologia blockchain",
+    "bannerText": "Aiutaci a migliorare! Rispondi al nostro breve sondaggio su pensione e blockchain.",
+    "bannerCta": "Partecipa al sondaggio",
+    "question1": "Quanti anni hai?",
+    "question2": "Ti fidi dei sistemi pensionistici tradizionali (fondi pensione)?",
+    "question3": "Quanto conosci la blockchain/DeFi?",
+    "question4": "Quanto sei preoccupato per il tuo futuro finanziario in pensione?",
+    "question5": "Hai attualmente un piano pensionistico?",
+    "question6": "Valori in pensione: sicurezza o crescita?",
+    "question7": "Ti interesserebbe un piano pensionistico basato su blockchain?",
+    "ageOptions": {
+      "18-24": "18-24 anni",
+      "25-34": "25-34 anni",
+      "35-44": "35-44 anni",
+      "45-54": "45-54 anni",
+      "55-64": "55-64 anni",
+      "65+": "65+ anni"
+    },
+    "rating": {
+      "stronglyDisagree": "Fortemente in disaccordo",
+      "disagree": "In disaccordo",
+      "neutral": "Neutrale",
+      "agree": "D'accordo",
+      "stronglyAgree": "Fortemente d'accordo"
+    },
+    "selectAge": "Seleziona la tua età",
+    "answerAll": "Rispondi a tutte le domande",
+    "submitting": "Invio in corso...",
+    "submit": "Invia risposte",
+    "errorTitle": "Errore di invio",
+    "required": "Campo obbligatorio"
+  },
+  "followUp": {
+    "successTitle": "Sondaggio completato!",
+    "successMessage": "Grazie per la tua partecipazione. Le tue risposte ci aiutano a migliorare.",
+    "question1": "Vuoi ricevere informazioni su Ethernal?",
+    "yesInterested": "Sì, voglio ricevere aggiornamenti",
+    "notNow": "No, grazie",
+    "question2": "Il tuo indirizzo email",
+    "emailPlaceholder": "tuaemail@esempio.com",
+    "finish": "Termina",
+    "thankYou": "Grazie!",
+    "willContact": "Ti contatteremo presto con aggiornamenti.",
+    "helpImprove": "La tua opinione ci aiuta a migliorare.",
+    "pleaseIndicate": "Indica la tua preferenza",
+    "enterEmail": "Inserisci il tuo indirizzo email"
+  },
+  "contact": {
+    "title": "Contattaci",
+    "subtitle": "Domande? Il nostro team è qui per aiutarti",
+    "name": "Nome completo",
+    "namePlaceholder": "Mario Rossi",
+    "email": "Indirizzo email",
+    "subject": "Oggetto",
+    "subjectPlaceholder": "Es.: Domanda sul mio fondo",
+    "message": "Messaggio",
+    "messagePlaceholder": "Dicci come possiamo aiutarti...",
+    "messageHint": "Minimo 10 caratteri",
+    "send": "Invia messaggio",
+    "sending": "Invio in corso...",
+    "success": "Messaggio inviato!",
+    "successDetail": "Grazie per averci contattato. Ti risponderemo entro 24-48 ore.",
+    "error": "Errore di invio. Riprova.",
+    "walletConnected": "Wallet connessa",
+    "walletIncluded": "Includeremo la tua wallet nel messaggio:",
+    "otherWays": "Altri metodi di contatto",
+    "emailLabel": "Email",
+    "responseTime": "Tempo di risposta",
+    "responseTimeValue": "24-48 ore lavorative",
+    "requiredFields": "* Campi obbligatori",
+    "validation": {
+      "nameRequired": "Il nome è obbligatorio",
+      "nameTooShort": "Il nome deve avere almeno 2 caratteri",
+      "emailRequired": "L'email è obbligatoria",
+      "emailInvalid": "Inserisci un'email valida",
+      "messageRequired": "Il messaggio è obbligatorio",
+      "messageTooShort": "Il messaggio deve avere almeno 10 caratteri",
+      "formErrors": "Correggi gli errori del modulo"
+    }
+  },
+  "calculator": {
+    "title": "Calcolatore Pensionistico",
+    "titleFull": "Calcolatore Pensionistico",
+    "titleShort": "Calcolatore",
+    "subtitle": "Simula il tuo piano pensionistico personalizzato",
+    "configurePlan": "Configura il tuo piano",
+    "currentAge": "Età attuale",
+    "retirementAge": "Età pensionistica desiderata",
+    "initialCapital": "Capitale iniziale (USDC)",
+    "monthlyContribution": "Contributo mensile (USDC)",
+    "expectedReturn": "Rendimento annuo atteso (%)",
+    "frequency": "Frequenza dei contributi",
+    "frequencyMonthly": "Mensile",
+    "frequencyQuarterly": "Trimestrale",
+    "frequencyAnnual": "Annuale",
+    "yearsReceivingIncome": "Anni di percepimento del reddito",
+    "ageLabel": "anni",
+    "monthlyDeposit": "Risparmio mensile (USDC)",
+    "currentSavings": "Risparmi attuali (USDC)",
+    "interestRate": "Tasso di interesse annuo atteso (%)",
+    "calculate": "Calcola",
+    "dataError": "Errore nel caricamento dei dati. Riprova.",
+    "growthProjection": "Proiezione di crescita",
+    "fillFormToSeeChart": "Compila il modulo per vedere la tua proiezione",
+    "depositSummary": "Riepilogo primo deposito",
+    "totalDeposit": "Totale da depositare",
+    "daoFee": "Commissione Ethernal (5%)",
+    "goesToTreasury": "Va al treasury del protocollo",
+    "forDefi": "Per il tuo fondo DeFi",
+    "netToFund": "Netto nel tuo fondo",
+    "fundReady": "Il tuo fondo sarà pronto in",
+    "lastStep": "Ultimo passaggio",
+    "monthlySavingsRequired": "Risparmio mensile richiesto",
+    "createContract": "Crea contratto",
+    "createOnArbitrum": "Crea su Arbitrum",
+    "walletWillOpen": "La tua wallet si aprirà per firmare",
+    "getTestTokens": "Ottieni token di test",
+    "getTestTokensDesc": "Hai bisogno di USDC testnet per creare il tuo fondo",
+    "howToStart": "Come iniziare?",
+    "testnetOnly": "Solo testnet per ora",
+    "testnetOnlyDesc": "Siamo su Arbitrum Sepolia. I fondi non hanno valore reale.",
+    "step1Title": "Connetti la tua wallet",
+    "step1Desc": "MetaMask, WalletConnect o qualsiasi wallet compatibile",
+    "step2Title": "Ottieni USDC testnet",
+    "step2Desc": "Usa il faucet per ricevere token di test",
+    "step3Title": "Configura il tuo piano",
+    "step3Desc": "Imposta la tua età, risparmi e obiettivi pensionistici",
+    "step4Title": "Crea il tuo fondo",
+    "step4Desc": "Distribuisci il tuo contratto personale sulla blockchain",
+    "validation": {
+      "ageRequired": "L'età attuale è obbligatoria",
+      "ageTooHigh": "L'età attuale deve essere inferiore a 80 anni",
+      "retirementAgeTooLow": "L'età pensionistica deve essere almeno 5 anni superiore all'attuale",
+      "minYears": "Devi ricevere reddito per almeno 5 anni",
+      "contributionRequired": "Il contributo mensile deve essere maggiore di 0",
+      "rateRange": "Il tasso annuo deve essere tra 0% e 50%"
+    },
+    "results": {
+      "projected": "Proiezione pensionistica",
+      "monthlyIncome": "Reddito mensile stimato",
+      "totalSaved": "Totale risparmiato",
+      "yearsCovered": "Anni coperti"
+    }
+  },
+  "createFund": {
+    "title": "Crea il Mio Fondo",
+    "subtitle": "Piano calcolato · Arbitrum Sepolia",
+    "steps": {
+      "review": "Revisione",
+      "balance": "Saldo",
+      "approve": "Approva",
+      "create": "Crea",
+      "success": "Fatto!"
+    },
+    "review": {
+      "title": "Parametri del Piano",
+      "initialDeposit": "Deposito iniziale",
+      "monthlyDeposit": "Risparmio mensile",
+      "currentAge": "Età attuale / pensionistica",
+      "desiredIncome": "Reddito mensile desiderato",
+      "yearsPayments": "Anni di percepimento del reddito",
+      "interestRate": "Tasso annuo atteso",
+      "timelock": "Timelock di sicurezza",
+      "breakdown": {
+        "title": "Dettaglio primo deposito",
+        "fromWallet": "Dalla tua wallet",
+        "fee": "Commissione Ethernal (5%)",
+        "netToFund": "Netto nel tuo fondo DeFi"
+      },
+      "investment": {
+        "title": "Metodo di Investimento",
+        "subtitle": "Scegli come vuoi far crescere i tuoi risparmi pensionistici",
+        "selectError": "Seleziona un metodo di investimento per continuare."
+      },
+      "immutability": "Una volta creato il contratto, questi parametri non potranno essere modificati. Il timelock di {years} è permanente.",
+      "continue": "Verifica Saldo"
+    },
+    "balance": {
+      "title": "Verifica del Saldo",
+      "subtitle": "Controlliamo la tua wallet on-chain. Nessun gas, nessuna transazione.",
+      "yourBalance": "Il tuo Saldo USDC",
+      "required": "Richiesto",
+      "insufficient": "Insufficiente",
+      "sufficient": "Sufficiente",
+      "missing": "Ti mancano {amount}",
+      "allowance": {
+        "title": "Allowance Attuale",
+        "alreadyApproved": "Già approvato",
+        "requiresApproval": "Richiede approvazione",
+        "needApproval": "Dovrai firmare una tx di approvazione (1 volta)."
+      },
+      "nextSteps": {
+        "title": "Prossimi passi richiesti",
+        "approve": "Approva — ERC-20 approve per la Factory",
+        "create": "Crea fondo — factory.createFund + deposito iniziale"
+      },
+      "insufficientBalance": "Saldo insufficiente. Ottieni più USDC dal faucet del calcolatore prima di continuare.",
+      "refresh": "Aggiorna",
+      "continueApprove": "Continua all'Approvazione",
+      "continueCreate": "Continua alla Creazione del Fondo"
+    },
+    "approve": {
+      "title": "Autorizza USDC",
+      "subtitle": "Permetti alla Factory di spostare i tuoi token una sola volta",
+      "whatIs": {
+        "title": "Cos'è l'Approve?",
+        "description": "Su Ethereum, i token ERC-20 (come USDC) richiedono che tu autorizzi esplicitamente un contratto prima che possa spostarli. È uno standard di sicurezza: il contratto può spendere solo fino all'importo che approvi.",
+        "note": "Questa approvazione non sposta alcun fondo. Lo spostamento avviene nel passaggio successivo."
+      },
+      "details": {
+        "contract": "Contratto destinatario",
+        "token": "Token",
+        "amount": "Importo da autorizzare"
+      },
+      "button": "Approva USDC",
+      "waiting": "In attesa…",
+      "next": "Continua alla Creazione del Fondo"
+    },
+    "create": {
+      "title": "Crea il Fondo",
+      "subtitle": "La factory distribuirà il tuo contratto personale ed effettuerà il deposito iniziale",
+      "summary": {
+        "title": "Riepilogo transazione",
+        "initialDeposit": "Deposito iniziale",
+        "fee": "Commissione Ethernal (5%)",
+        "netToFund": "Netto nel tuo fondo",
+        "protocol": "Protocollo DeFi",
+        "timelock": "Timelock"
+      },
+      "button": "Crea il Mio Fondo",
+      "processing": "Elaborazione…"
+    },
+    "success": {
+      "title": "Fondo Creato!",
+      "subtitle": "Il tuo contratto personale vive sulla blockchain.",
+      "txHash": "Hash Transazione",
+      "fundAddress": "Indirizzo del Fondo",
+      "nextSteps": {
+        "title": "Prossimi passi",
+        "step1": "Effettua depositi mensili di {amount} per raggiungere il tuo obiettivo.",
+        "step2": "Monitora i tuoi progressi e i rendimenti DeFi dal Dashboard.",
+        "step3": "Alla scadenza del timelock, potrai avviare il prelievo programmato."
+      },
+      "goToDashboard": "Vai al Dashboard",
+      "redirecting": "Reindirizzamento automatico in {seconds}s…"
+    },
+    "back": {
+      "toCalculator": "Torna al Calcolatore",
+      "previous": "Passaggio precedente"
+    }
+  },
+  "dashboard": {
+    "title": "Il tuo Dashboard Ethernal",
+    "welcome": "Benvenuto, {address}",
+    "subtitle": "Gestisci il tuo futuro finanziario sulla blockchain",
+    "refresh": "Aggiorna Dati",
+    "personalFund": {
+      "title": "Il Mio Fondo Personale",
+      "active": "Attivo",
+      "noFund": "Nessun Fondo",
+      "currentBalance": "Saldo Attuale",
+      "fundStatus": "Stato del Fondo",
+      "retired": "In Pensione",
+      "saving": "Risparmiando",
+      "progress": {
+        "title": "Progresso verso l'obiettivo",
+        "current": "Attuale",
+        "projected": "Proiettato",
+        "target": "Obiettivo",
+        "monthsRemaining": "{months} mesi rimanenti al timelock"
+      },
+      "stats": {
+        "principal": "Capitale",
+        "monthlyDeposit": "Deposito Mensile",
+        "totalDeposits": "Depositi Totali",
+        "retirementAge": "Età Pensionistica",
+        "years": "anni"
+      },
+      "contractAddress": "Indirizzo Contratto",
+      "viewOnArbiscan": "Visualizza su Arbiscan",
+      "timelock": {
+        "ends": "Timelock termina:",
+        "never": "Mai",
+        "daysRemaining": "{days} giorni rimanenti"
+      },
+      "actions": {
+        "deposit": "Effettua Deposito",
+        "startRetirement": "Avvia Pensione",
+        "createFund": "Crea Il Mio Fondo"
+      },
+      "noFundMessage": "Non hai ancora un fondo pensionistico"
+    },
+    "defiInvestments": {
+      "title": "Investimenti DeFi",
+      "description": "I tuoi fondi possono essere investiti in protocolli DeFi approvati per generare rendimenti",
+      "viewOpportunities": "Visualizza Opportunità"
+    },
+    "preferences": {
+      "title": "Le Mie Preferenze",
+      "subtitle": "Configura il tuo profilo di investimento on-chain. Questi parametri determinano come vengono indirizzati i tuoi depositi.",
+      "currentConfig": "Config attuale: ",
+      "risk": {
+        "title": "Livello di Rischio",
+        "conservador": "Conservativo",
+        "moderado": "Moderato",
+        "agresivo": "Aggressivo",
+        "conservador_desc": "Basso rischio, rendimenti stabili e protezione del capitale",
+        "moderado_desc": "Equilibrio tra crescita e stabilità, ideale per il lungo termine",
+        "agresivo_desc": "Massimo potenziale di rendimento con maggiore esposizione al rischio"
+      },
+      "protocol": {
+        "title": "Protocollo Preferito",
+        "noProtocols": "Nessun protocollo attivo registrato",
+        "verified": "Verificato",
+        "apy": "APY"
+      },
+      "saveSuccess": "Preferenze salvate on-chain",
+      "saveError": "Errore nel salvataggio delle preferenze",
+      "saveButton": "Salva Configurazione",
+      "saving": "Salvataggio..."
+    },
+    "strategy": {
+      "title": "Protocol Registry",
+      "subtitle": "Strategia di instradamento dei depositi e metriche dei protocolli verificati.",
+      "types": {
+        "concentrado": "Concentrato",
+        "diversificado": "Diversificato",
+        "hibrido": "Ibrido",
+        "concentrado_desc": "Tutto nel miglior protocollo disponibile secondo il tuo profilo",
+        "diversificado_desc": "Distribuzione su più protocolli per ridurre il rischio",
+        "hibrido_desc": "Combinazione dinamica adattata alle performance del mercato"
+      },
+      "saveSuccess": "Strategia salvata on-chain",
+      "saveButton": "Salva Strategia",
+      "saving": "Salvataggio...",
+      "activeProtocols": "Protocolli Attivi",
+      "verified": "verificati",
+      "viewMore": "Visualizza altri {count}",
+      "noProtocols": "Nessun protocollo registrato ancora"
+    },
+    "teamContent": {
+      "title": "Dal Team Ethernal",
+      "subtitle": "Raccomandazioni finanziarie e corsi educativi pubblicati dall'Admin."
+    },
+    "support": {
+      "title": "Hai bisogno di aiuto?",
+      "description": "Contatta il team Ethernal per domande sul tuo piano pensionistico o strategie di investimento",
+      "contact": "Contatta Ethernal",
+      "documentation": "Visualizza Documentazione"
+    },
+    "depositModal": {
+      "title": "Effettua Deposito",
+      "monthly": "Mensile",
+      "custom": "Personalizzato",
+      "monthlyAmount": "Deposito mensile configurato",
+      "amountLabel": "Importo in USDC",
+      "amountPlaceholder": "Es.: 500.00",
+      "amountError": "Inserisci un importo valido (massimo 6 decimali)",
+      "insufficientBalance": "Saldo USDC insufficiente. Ti servono {amount} in più.",
+      "twoTransactions": "Saranno necessarie 2 transazioni: approvazione USDC e deposito.",
+      "status": {
+        "approving": "In attesa di approvazione nella tua wallet...",
+        "approvingConfirming": "Conferma approvazione on-chain...",
+        "executing": "In attesa di deposito nella tua wallet...",
+        "confirming": "Conferma deposito on-chain..."
+      },
+      "buttons": {
+        "approveAndDeposit": "Approva e Deposita",
+        "confirmDeposit": "Conferma Deposito",
+        "processing": "Elaborazione...",
+        "cancel": "Annulla"
+      }
+    }
+  },
+  "errors": {
+    "somethingWrong": "Qualcosa è andato storto. Riprova.",
+    "networkError": "Errore di rete. Controlla la connessione.",
+    "walletRequired": "Connetti la tua wallet per continuare",
+    "wrongNetwork": "Rete errata. Passa ad Arbitrum Sepolia",
+    "wrongNetworkTitle": "Rete Errata",
+    "wrongNetworkMessage": "Passa a {network} (Chain ID {chainId}) per continuare.",
+    "alreadyHaveFund": "Hai già un Fondo",
+    "alreadyHaveFundMessage": "Puoi avere solo un fondo per wallet. Il tuo fondo: {address}",
+    "approvalPending": "Approvazione in sospeso. Aspetta che l'approvazione si confermi prima di continuare."
+  },
+  "faucet": {
+    "connectWallet": "Connetti la tua wallet per ricevere USDC di test.",
+    "success": {
+      "title": "Token ricevuti!",
+      "amount": "USDC ricevuto: {amount} USDC",
+      "balance": "Saldo attuale: {balance} USDC"
+    },
+    "error": {
+      "title": "Errore nella richiesta di token",
+      "rateLimit": "Limite di richieste raggiunto",
+      "rateLimitMessage": "Il faucet consente una richiesta ogni 24 ore per wallet."
+    },
+    "info": {
+      "mockUSDC": "MockUSDC",
+      "forFund": "per il tuo fondo",
+      "ethGas": "ETH gas",
+      "forTransactions": "per le transazioni"
+    },
+    "button": "Ricevi USDC di Test",
+    "minting": "USDC in fase di minting…",
+    "disclaimer": "USDC su Arbitrum Sepolia · Limite: 1 richiesta / 24h per wallet"
+  },
+  "network": {
+    "wrongDetected": "Rete Errata Rilevata",
+    "youAreOn": "Sei su {network}. Passa a {expected}.",
+    "switchButton": "Passa a {network}"
+  },
+  "loading": {
+    "ethernal": "Caricamento Ethernal",
+    "connecting": "Connessione alla blockchain...",
+    "dashboard": "Caricamento del tuo Dashboard..."
+  },
+  "createContract": {
+    "factoryAddressNotConfigured": "Indirizzo factory non configurato per questa rete"
+  },
+  "feeModal": {
+    "headerLabel": "Analisi comparativa",
+    "title": "La tua pensione, senza intermediari.",
+    "subtitle": "Calcola quanto di più accumuli quando le commissioni lavorano per te, non contro di te.",
+    "monthlyDeposit": "Deposito mensile",
+    "horizon": "Orizzonte",
+    "years": "{{count}} anni",
+    "yearsMin": "5 anni",
+    "yearsMax": "40 anni",
+    "ethFeeLabel": "Commissione unica: 3% per deposito",
+    "ethApy": "DeFi: ~{{apy}} APY (Aave)",
+    "extra": "IN PIÙ",
+    "corpName": "Fondo Aziendale",
+    "corpFeeLabel": "Gestione 1,5% + Admin 0,5% + Ingresso 3%",
+    "corpApy": "Lordo: ~{{apy}} (netto molto meno)",
+    "year1": "Anno 1",
+    "yearMid": "Anno {{year}}",
+    "yearEnd": "Anno {{year}}",
+    "tabResults": "Risultati",
+    "tabBreakdown": "Confronto",
+    "tabFees": "Commissioni",
+    "colMetric": "Metrica",
+    "colCorp": "Az.",
+    "row": {
+      "finalCapital": "Capitale finale",
+      "feesPaid": "Commissioni pagate",
+      "returnOnCapital": "Rendimento sul capitale",
+      "entryFee": "Commissione d'ingresso",
+      "ethEntry": "3% unica",
+      "corpEntry": "3% ogni deposito",
+      "annualFee": "Commissione annua gestione",
+      "exitFee": "Commissione di uscita",
+      "ethExit": "0% (normale)",
+      "corpExit": "1% + penale",
+      "transparency": "Trasparenza",
+      "ethTransparency": "100% on-chain",
+      "corpTransparency": "Prospetto + revisione",
+      "custody": "Custodia",
+      "ethCustody": "Smart contract",
+      "corpCustody": "Ente finanziario"
+    },
+    "ethStructureTitle": "Ethernal — Struttura semplice",
+    "corpStructureTitle": "Aziendale — Struttura tipica",
+    "ethFees": [
+      {
+        "label": "Commissione di deposito",
+        "value": "3% · Va al Treasury on-chain",
+        "desc": "Nessuna commissione nascosta, nessuna gestione annuale, nessuna penale di uscita standard."
+      },
+      {
+        "label": "Prelievo anticipato",
+        "value": "7% · Solo prima del timelock",
+        "desc": "Scoraggia il breve termine. Se aspetti la scadenza, è 0%."
+      },
+      {
+        "label": "Gas (Arbitrum L2)",
+        "value": "~$0,01-$0,10 per tx",
+        "desc": "Praticamente trascurabile rispetto a qualsiasi alternativa tradizionale."
+      }
+    ],
+    "corpFees": [
+      {
+        "label": "Commissione d'ingresso",
+        "value": "3% su ogni deposito",
+        "desc": "Addebita dal primo euro, prima di investire."
+      },
+      {
+        "label": "Commissione annua di gestione (TER)",
+        "value": "1,5% sul saldo",
+        "desc": "Addebitata anche se il fondo performa negativamente."
+      },
+      {
+        "label": "Commissione amministrativa",
+        "value": "0,5% annuo",
+        "desc": "Costi operativi trasferiti all'investitore."
+      },
+      {
+        "label": "Commissione di performance",
+        "value": "20% sui guadagni",
+        "desc": "Visibile solo nel prospetto, raramente negli estratti conto."
+      },
+      {
+        "label": "Commissione di uscita/rimborso",
+        "value": "1% al prelievo",
+        "desc": "Penale per liquidare la posizione."
+      }
+    ],
+    "disclaimer": "Simulazione indicativa · I rendimenti DeFi reali possono variare · Non è consulenza finanziaria"
+  }
+}
