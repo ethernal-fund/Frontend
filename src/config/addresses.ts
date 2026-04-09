@@ -30,7 +30,7 @@ const OFFICIAL_USDC: Record<number, `0x${string}`> = {
 }
 
 export const MOCK_USDC: Record<number, `0x${string}`> = {
-  421614: '0x6e1371974D923397ecE9eE7525ac50ad7087c77f', // Arbitrum Sepolia
+  421614: '0x62F7FB943348d9e3e238b7043278B6895428E4d9', // Arbitrum Sepolia
   80002:  '0xDA7610fD028bA2958d1Bb3dcB43F2d5d2Fb2A29d', // Polygon Amoy
 }
 
