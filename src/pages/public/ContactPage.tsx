@@ -34,6 +34,7 @@ const ContactPage: React.FC = () => {
 
   const validateEmail = (email: string): boolean =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
 
@@ -302,6 +303,7 @@ const ContactPage: React.FC = () => {
               </p>
             </div>
           </div>
+
         </div>
       </div>
     </>
