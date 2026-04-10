@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as Sentry from '@sentry/react';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import { Web3Provider }       from '@/config/web3';
 import { RetirementProvider } from '@/components/context/RetirementContext';
