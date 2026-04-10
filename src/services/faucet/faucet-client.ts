@@ -1,6 +1,6 @@
 export interface FaucetRequest {
   address: string;                    // Ethereum address (checksum)
-  turnstile_token?: string;           // Cloudflare Turnstile (opcional)
+  turnstile_token?: string;           
 }
 
 export interface FaucetResponse {

@@ -251,7 +251,6 @@ const CalculatorPage = () => {
                 />
               </div>
 
-              {/* Inline result summary (reemplaza ResultBox) */}
               {result && (
                 <div className="mt-6 bg-gray-light border border-gray-200 rounded-xl p-5">
                   <p className="text-xs font-semibold uppercase tracking-widest text-gray-medium mb-4">Result</p>
@@ -277,7 +276,6 @@ const CalculatorPage = () => {
                 </div>
               )}
 
-              {/* Inline deposit preview (reemplaza DepositPreview) */}
               {result && (
                 <div className="mt-4 grid grid-cols-3 gap-3 bg-gray-light border border-gray-200 rounded-xl p-4">
                   <PreviewCell label="Principal"          value={formatCurrency(inputs.principal)} />

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useConnection, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 import { Droplets, CheckCircle, AlertCircle, Loader2, ExternalLink, RefreshCw } from 'lucide-react';
+import { useWallet } from '@/hooks/web3/useWallet';
 import { useFaucet } from '@/hooks/web3/useFaucet';
 import type { FaucetResponse } from '@/services/faucet/faucet-client';
 
@@ -13,7 +14,7 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 const EXPLORER_URL = import.meta.env.VITE_EXPLORER_URL || 'https://sepolia.arbiscan.io';
 
 export function FaucetButton({ className = '' }: FaucetButtonProps) {
-  const { address, isConnected } = useConnection();
+  const { address, isConnected } = useWallet();
   const chainId                  = useChainId();
   const { requestTokens, loading, error: faucetError, clearError } = useFaucet();
 
@@ -21,6 +22,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
   const [result,   setResult]   = useState<FaucetResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Reset al cambiar wallet o red
   useEffect(() => {
     setStatus('idle');
     setResult(null);
@@ -29,7 +31,9 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
   }, [address, chainId]);
 
   const handleRequest = async () => {
-    if (!address || !isConnected) return;
+    // Doble guard: useWallet ya retorna safeAddress (undefined si inválida),
+    // pero validamos de nuevo para seguridad en tiempo de ejecución.
+    if (!address || !isConnected || !address.startsWith('0x') || address.length !== 42) return;
 
     setStatus('loading');
     setResult(null);
@@ -62,6 +66,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     clearError();
   };
 
+  // Wallet no conectada
   if (!isConnected || !address) {
     return (
       <div className={`bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 ${className}`}>
@@ -75,6 +80,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     );
   }
 
+  // Éxito
   if (status === 'success' && result) {
     const explorerUrl = result.tx_hash
       ? `${EXPLORER_URL}/tx/${result.tx_hash}`
@@ -91,7 +97,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
                 USDC recibido: <strong>{result.amount.toLocaleString()} USDC</strong>
               </p>
             )}
-            {result.balance !== null && result.balance !== undefined && (
+            {result.balance != null && (
               <p className="text-emerald-600 text-xs mt-0.5">
                 Balance actual: {result.balance.toLocaleString()} USDC
               </p>
@@ -124,10 +130,11 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     );
   }
 
+  // Error
   if (status === 'error') {
     const isRateLimit =
-      errorMsg?.toLowerCase().includes('rate') ||
-      errorMsg?.toLowerCase().includes('limit') ||
+      errorMsg?.toLowerCase().includes('rate')   ||
+      errorMsg?.toLowerCase().includes('limit')  ||
       errorMsg?.toLowerCase().includes('espera') ||
       errorMsg?.toLowerCase().includes('24');
 
@@ -158,6 +165,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     );
   }
 
+  // Estado idle / loading — CTA principal
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Wallet info */}
@@ -168,7 +176,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
         </span>
       </div>
 
-      {/* What you'll receive */}
+      {/* Lo que vas a recibir */}
       <div className="grid grid-cols-2 gap-2">
         <div className="bg-white/70 rounded-xl p-3 border border-blue-100 text-center">
           <p className="text-xs text-gray-500 mb-0.5">MockUSDC</p>
@@ -182,13 +190,13 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
         </div>
       </div>
 
-      {/* Main CTA */}
+      {/* CTA principal */}
       <button
         onClick={handleRequest}
         disabled={loading || status === 'loading'}
         className="w-full inline-flex items-center justify-center gap-3 px-5 py-3.5 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all transform hover:scale-105 disabled:scale-100 shadow-lg"
       >
-        {(loading || status === 'loading') ? (
+        {loading || status === 'loading' ? (
           <>
             <Loader2 size={20} className="animate-spin" />
             Minteando USDC…
