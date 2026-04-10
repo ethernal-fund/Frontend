@@ -1,10 +1,6 @@
-import { supabase }  from '@/lib/supabase';
-import { ApiError }  from '@/lib/api';
-import type { SupabaseClient } from '@supabase/supabase-js';
-
-const db = supabase as unknown as SupabaseClient;
-
-// ─── Contact ────────────────────────────────────────────────────────────────
+// services/api.ts — COMPLETO CORREGIDO
+import { getSupabase } from '@/lib/supabase';
+import { ApiError }    from '@/lib/api';
 
 export interface ContactPayload {
   name:           string;
@@ -16,24 +12,23 @@ export interface ContactPayload {
 
 export const contactService = {
   async submitContact(payload: ContactPayload): Promise<void> {
-    const row = {
-      name:           payload.name,
-      email:          payload.email,
-      subject:        payload.subject ?? null,
-      message:        payload.message,
-      wallet_address: payload.walletAddress ?? null,
-    };
+    const db = getSupabase(); // lanza error descriptivo si no está configurado
 
     const { error } = await db
-      .from('contact_messages')   // ✅ tabla correcta
-      .insert(row) as { error: { message: string; code: string } | null };
+      .from('contact_messages')
+      .insert({
+        name:           payload.name,
+        email:          payload.email,
+        subject:        payload.subject ?? null,
+        message:        payload.message,
+        wallet_address: payload.walletAddress ?? null,
+      });
 
     if (error) throw new ApiError(error.message, undefined, error.code);
   },
 };
 
-// ─── Survey ─────────────────────────────────────────────────────────────────
-
+// Survey 
 export interface SurveyCreate {
   age:                      string;
   trust_traditional:        number;
@@ -53,30 +48,30 @@ let _lastSurveyId: number | null = null;
 
 export const surveyService = {
   async createSurvey(payload: SurveyCreate): Promise<{ id: number }> {
-    const { data, error } = await (
-      db.from('anonymous_surveys')  // ✅ tabla correcta
-        .insert({ ...payload })
-        .select('id')
-        .single()
-    ) as { data: { id: number } | null; error: { message: string } | null };
+    const db = getSupabase();
+
+    const { data, error } = await db
+      .from('anonymous_surveys')
+      .insert({ ...payload })
+      .select('id')
+      .single();
 
     if (error || !data) throw new ApiError(error?.message ?? 'Survey insert failed');
 
-    _lastSurveyId = data.id;
-    return { id: data.id };
+    _lastSurveyId = (data as { id: number }).id;
+    return { id: (data as { id: number }).id };
   },
 
   async createFollowUp(payload: FollowUpCreate): Promise<void> {
-    const row = {
-      survey_id:       _lastSurveyId,
-      wants_more_info: payload.wants_more_info,
-      email:           payload.email ?? null,
-    };
+    const db = getSupabase();
 
-    const { error } = await (
-      db.from('survey_followups')   // ✅ tabla correcta
-        .insert(row)
-    ) as { error: { message: string; code: string } | null };
+    const { error } = await db
+      .from('survey_followups')
+      .insert({
+        survey_id:       _lastSurveyId,
+        wants_more_info: payload.wants_more_info,
+        email:           payload.email ?? null,
+      });
 
     if (error) throw new ApiError(error.message, undefined, error.code);
 
