@@ -1,12 +1,12 @@
-import React        from 'react'
+import React                                           from 'react'
 import { WagmiProvider, cookieStorage, createStorage } from 'wagmi'
-import type { Transport }      from 'wagmi'
-import { WagmiAdapter }        from '@reown/appkit-adapter-wagmi'
-import { createAppKit }        from '@reown/appkit/react'
-import { QueryClientProvider } from '@tanstack/react-query'
-import type { Chain }          from 'wagmi/chains'
-import { queryClient }         from '@/lib/queryClient'
-import env                     from '@/lib/env'
+import type { Transport }                              from 'wagmi'
+import { WagmiAdapter }                                from '@reown/appkit-adapter-wagmi'
+import { createAppKit }                                from '@reown/appkit/react'
+import { QueryClientProvider }                         from '@tanstack/react-query'
+import type { Chain }                                  from 'wagmi/chains'
+import { queryClient }                                 from '@/lib/queryClient'
+import env                                             from '@/lib/env'
 
 import {
   ACTIVE_CHAINS,
@@ -16,9 +16,7 @@ import {
   getChainById,
 } from './chains'
 
-const projectId = env.walletConnectProjectId
-
-if (!projectId) {
+if (!env.walletConnectProjectId) {
   throw new Error(
     '[web3] VITE_WALLETCONNECT_PROJECT_ID is required — https://cloud.reown.com',
   )
@@ -32,7 +30,14 @@ if (!env.alchemyApiKey && import.meta.env.DEV) {
   console.warn('[web3] VITE_ALCHEMY_API_KEY not set — using public RPCs (rate-limited).')
 }
 
-const wagmiChains = ACTIVE_CHAINS as unknown as [Chain, ...Chain[]]
+if (ACTIVE_CHAINS.length === 0) {
+  throw new Error(
+    '[web3] No active chains configured — check addresses.ts deployments.',
+  )
+}
+
+const projectId    = env.walletConnectProjectId
+const wagmiChains  = ACTIVE_CHAINS as unknown as [Chain, ...Chain[]]
 const activeTransports = Object.fromEntries(
   ACTIVE_CHAINS
     .filter(c => TRANSPORT_MAP[c.id] !== undefined)
@@ -97,5 +102,3 @@ if (import.meta.env.DEV) {
   console.log('Infura  :', env.infuraApiKey  ? '✅ set' : '⚠️  not set')
   console.groupEnd()
 }
-
-export { queryClient }

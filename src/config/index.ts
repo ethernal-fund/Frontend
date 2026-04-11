@@ -24,7 +24,7 @@ export {
 export type {
   ChainMetadata,
   SupportedChain,
-  SupportedChainId,      
+  SupportedChainId,
 } from '@/config/chains'
 
 export {
@@ -55,19 +55,16 @@ export {
   CONTRACT_ADDRESSES,
   ZERO_ADDRESS,
   MOCK_USDC,
-  // USDC helpers
   getOfficialUSDC,
   getMockUSDC,
   getUSDCForChain,
   hasMockUSDC,
   getCurrentUSDCType,
-  // Contract address resolution
   getContractAddresses,
   getContractAddress,
   isValidAddress,
   isContractDeployed,
   areMainContractsDeployed,
-  // Deployment introspection
   getDeployedContracts,
   getPendingContracts,
   getDeploymentProgress,
@@ -78,22 +75,23 @@ export type {
   ContractName,
 } from '@/config/addresses'
 
-// ── Named Arbitrum Sepolia addresses ──────────────────────────────────────────
-// These are convenience constants derived from CONTRACT_ADDRESSES[421614].
-// Admin pages and legacy consumers import them by name.
-// Defined inline here to avoid adding noise to addresses.ts.
-import { CONTRACT_ADDRESSES as _CA } from '@/config/addresses'
+import { CONTRACT_ADDRESSES as _CA, ZERO_ADDRESS as _ZERO } from '@/config/addresses'
 
-const _arb = _CA[421614]!
+const _arb = _CA[421614]
+if (!_arb) {
+  throw new Error(
+    '[config/index] Missing CONTRACT_ADDRESSES entry for Arbitrum Sepolia (421614).',
+  )
+}
 
 export const TREASURY_ADDRESS:          `0x${string}` = _arb.treasury
 export const FACTORY_ADDRESS:           `0x${string}` = _arb.personalFundFactory
 export const USDC_ADDRESS:              `0x${string}` = _arb.usdc
-export const PROTOCOL_REGISTRY_ADDRESS: `0x${string}` = _arb.protocolRegistry    ?? '0x0000000000000000000000000000000000000000'
-export const USER_PREFERENCES_ADDRESS:  `0x${string}` = _arb.userPreferences     ?? '0x0000000000000000000000000000000000000000'
-export const DATETIME_ADDRESS:          `0x${string}` = _arb.dateTime            ?? '0x0000000000000000000000000000000000000000'
-export const MOCK_USDC_ADDRESS:         `0x${string}` = _arb.mockDeFiProtocol    ?? '0x0000000000000000000000000000000000000000'
 export const OFFICIAL_USDC_ADDRESS:     `0x${string}` = _arb.usdc
+export const MOCK_DEFI_PROTOCOL_ADDRESS:`0x${string}` = _arb.mockDeFiProtocol    ?? _ZERO  
+export const PROTOCOL_REGISTRY_ADDRESS: `0x${string}` = _arb.protocolRegistry    ?? _ZERO
+export const USER_PREFERENCES_ADDRESS:  `0x${string}` = _arb.userPreferences     ?? _ZERO
+export const DATETIME_ADDRESS:          `0x${string}` = _arb.dateTime            ?? _ZERO
 
 export {
   DEPOSIT_FEE,
