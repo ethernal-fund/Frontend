@@ -80,16 +80,19 @@ function AnimatedNumber({ value }: { value: number }) {
 }
 
 function MiniChart({ ethH, corpH }: { ethH: SimResult['history']; corpH: SimResult['history'] }) {
-  const maxVal = Math.max(...ethH.map(h => h.balance), ...corpH.map(h => h.balance));
+  const CHART_H = 100;
+  const maxVal  = Math.max(...ethH.map(h => h.balance), ...corpH.map(h => h.balance));
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '5px', height: '100px' }}>
+    <div style={{ position: 'relative', height: `${CHART_H}px`, display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
       {ethH.map((e, i) => {
         const c = corpH[i];
         if (!c) return null;
+        const ethPx  = Math.max(4, (e.balance / maxVal) * CHART_H);
+        const corpPx = Math.max(4, (c.balance / maxVal) * CHART_H);
         return (
-          <div key={i} style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: '2px' }}>
-            <div style={{ flex: 1, minHeight: 4, height: `${(e.balance / maxVal) * 100}%`, background: 'linear-gradient(to top,#00c896,#00e5b0)', borderRadius: '3px 3px 0 0', transition: 'height .5s cubic-bezier(.34,1.56,.64,1)' }} />
-            <div style={{ flex: 1, minHeight: 4, height: `${(c.balance / maxVal) * 100}%`, background: 'linear-gradient(to top,#ff4d6d,#ff8099)', borderRadius: '3px 3px 0 0', transition: 'height .5s cubic-bezier(.34,1.56,.64,1)' }} />
+          <div key={i} style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: '2px', height: '100%' }}>
+            <div style={{ flex: 1, height: `${ethPx}px`, background: 'linear-gradient(to top,#00c896,#00e5b0)', borderRadius: '3px 3px 0 0', transition: 'height .5s cubic-bezier(.34,1.56,.64,1)' }} />
+            <div style={{ flex: 1, height: `${corpPx}px`, background: 'linear-gradient(to top,#ff4d6d,#ff8099)', borderRadius: '3px 3px 0 0', transition: 'height .5s cubic-bezier(.34,1.56,.64,1)' }} />
           </div>
         );
       })}

@@ -587,5 +587,150 @@
       }
     ],
     "disclaimer": "Simulación orientativa · Rendimiento DeFi real puede variar · No es asesoría financiera"
+  },
+  "legal": {
+    "badge":      "Documento Legal",
+    "version":    "Versión {{version}}",
+    "effective":  "Vigente desde {{date}}",
+    "toc":        "Contenido",
+    "backToHome": "Volver al inicio",
+
+    "privacy": {
+      "title": "Política de Privacidad",
+      "s1":  { "title": "Introducción", "body": "La presente Política de Privacidad describe cómo FondoRetiro DeFi (en adelante, 'el Protocolo') trata la información de los usuarios que interactúan con los contratos inteligentes desplegados en blockchain pública. Al utilizar el Protocolo, usted reconoce haber leído, comprendido y aceptado los términos aquí establecidos." },
+      "s2":  {
+        "title": "Información registrada en Blockchain",
+        "b1": "Dirección de billetera (wallet) del usuario.",
+        "b2": "Montos depositados, retirados y transferidos (en USDC u otros tokens ERC-20 configurados).",
+        "b3": "Dirección del fondo personal creado mediante PersonalFundFactory.",
+        "b4": "Parámetros del fondo: edad declarada, edad de jubilación, depósito mensual, capital inicial, protocolo DeFi seleccionado y período de timelock.",
+        "b5": "Protocolo de inversión seleccionado (MockAaveAdapter, MockOndoAdapter u otros registrados en ProtocolRegistry).",
+        "b6": "Configuración de preferencias del usuario en UserPreferences (estrategia, tolerancia al riesgo, autocompounding).",
+        "b7": "Marcas de tiempo (timestamps) de todas las transacciones.",
+        "b8": "Eventos emitidos: FundCreated, Deposited, Withdrawn, UserConfigUpdated, DepositRouted, entre otros."
+      },
+      "s3":  {
+        "title": "Información que NO recopilamos",
+        "b1": "Nombre, apellido, documento de identidad ni datos personales identificables fuera de la blockchain.",
+        "b2": "Dirección física, correo electrónico, número telefónico ni datos de contacto.",
+        "b3": "Información biométrica o financiera fuera de las operaciones en blockchain.",
+        "b4": "Cookies, identificadores de dispositivo ni datos de navegación o sesión web.",
+        "b5": "Datos de geolocalización."
+      },
+      "s4":  { "title": "Carácter público de los datos", "body": "Toda transacción en blockchain pública es, por naturaleza, pública, permanente e inmutable. Cualquier persona puede consultar el historial de transacciones de una dirección de billetera mediante exploradores de bloques. El Protocolo no puede eliminar, modificar ni ocultar información ya registrada." },
+      "s5":  {
+        "title": "Uso de la información",
+        "b1": "Calcular y ejecutar depósitos, retiros y distribución de rendimientos.",
+        "b2": "Verificar condiciones de timelock y elegibilidad de retiro.",
+        "b3": "Enrutar depósitos hacia los protocolos DeFi seleccionados vía UserPreferences.",
+        "b4": "Registrar el historial de contribuciones al fondo de retiro.",
+        "b5": "Calcular proyecciones financieras internas."
+      },
+      "s6":  { "title": "Datos de terceros", "body": "El Protocolo interactúa con protocolos DeFi de terceros (Aave v3, Ondo USDY) cuyas propias políticas de privacidad aplican de manera independiente. Revisá dichas políticas antes de seleccionar un protocolo." },
+      "s7":  { "title": "Seguridad", "body": "La seguridad del Protocolo se basa en la inmutabilidad de los contratos inteligentes y controles de acceso mediante roles de administrador y contratos autorizados. El usuario es el único responsable de la seguridad de su clave privada." },
+      "s8":  {
+        "title": "Derechos del usuario",
+        "b1": "Acceder libremente a toda la información pública de su fondo mediante cualquier explorador de bloques.",
+        "b2": "Revocar el acceso de contratos autorizados a través de revokeContract en UserPreferences.",
+        "b3": "Seleccionar y modificar su protocolo e estrategia de inversión, sujeto a condiciones de timelock."
+      },
+      "s9":  { "title": "Cambios en esta Política", "body": "Esta Política puede actualizarse para reflejar cambios en el Protocolo o en la normativa aplicable. Los cambios se publicarán en el repositorio oficial del proyecto." },
+      "s10": { "title": "Contacto", "body": "Para consultas relacionadas con esta Política, comunicate a través de los canales oficiales del proyecto o a contact@ethernal.fund." }
+    },
+
+    "terms": {
+      "title": "Términos y Condiciones de Uso",
+      "s1":  { "title": "Aceptación de los Términos", "body": "Al interactuar con los contratos inteligentes de FondoRetiro DeFi, incluyendo PersonalFundFactory, PersonalFund, Treasury, UserPreferences y ProtocolRegistry, el usuario acepta íntegra e incondicionalmente los presentes Términos y Condiciones de Uso." },
+      "s2":  {
+        "title": "Descripción del Protocolo",
+        "b1": "Creación de fondos personales de retiro a través de PersonalFundFactory.",
+        "b2": "Depósito y retiro de USDC u otros activos estables configurados por el administrador.",
+        "b3": "Enrutamiento automático o manual de depósitos hacia protocolos DeFi registrados.",
+        "b4": "Gestión de preferencias de usuario y estrategias de inversión vía UserPreferences.",
+        "b5": "Cálculo de proyecciones financieras de retiro.",
+        "b6": "Aplicación de períodos de bloqueo (timelock) configurables entre 1 y 40 años."
+      },
+      "s3":  {
+        "title": "Requisitos de Elegibilidad",
+        "b1": "Tener entre 18 y 70 años de edad declarada.",
+        "b2": "Declarar una edad de retiro mínima de 60 años.",
+        "b3": "Proveer un capital inicial dentro del rango mínimo y máximo configurado.",
+        "b4": "Comprometerse con un depósito mensual mínimo configurado.",
+        "b5": "Seleccionar un protocolo de inversión activo y aprobado en el ProtocolRegistry.",
+        "b6": "No tener un fondo activo previo (un usuario puede poseer un solo fondo activo simultáneamente)."
+      },
+      "s4":  {
+        "title": "Naturaleza de los Contratos Inteligentes",
+        "b1": "Los contratos inteligentes ejecutan reglas de forma autónoma, determinista e inmutable una vez desplegados.",
+        "b2": "Ningún intermediario humano puede revertir, cancelar o modificar transacciones ya confirmadas.",
+        "b3": "Los contratos pueden contener errores o vulnerabilidades. El uso implica asumir este riesgo.",
+        "b4": "La interacción requiere el pago de gas fees, cuyo costo varía y es responsabilidad exclusiva del usuario."
+      },
+      "s5":  {
+        "title": "Período de Timelock y Retiro",
+        "b1": "Los fondos quedarán bloqueados durante el período de timelock seleccionado al crear el fondo (1 a 40 años).",
+        "b2": "Durante el timelock, no es posible retirar fondos salvo condiciones de emergencia previstas en el contrato.",
+        "b3": "Al vencimiento del timelock, el usuario podrá retirar según las reglas de distribución configuradas.",
+        "b4": "El Protocolo no garantiza ningún rendimiento. Las tasas son estimaciones de los protocolos DeFi subyacentes."
+      },
+      "s6":  {
+        "title": "Rol del Administrador",
+        "b1": "Configuración de parámetros del sistema (rangos de capital, comisiones, protocolos habilitados).",
+        "b2": "Autorización y revocación de contratos en UserPreferences.",
+        "b3": "Actualización de contratos auxiliares (DateTime, UserPreferences).",
+        "b4": "Recuperación de tokens enviados por error (función recoverTokens)."
+      },
+      "s7":  {
+        "title": "Riesgos Asociados",
+        "b1": "Riesgo de smart contract: errores, exploits o vulnerabilidades en el código.",
+        "b2": "Riesgo de protocolo DeFi: los protocolos de terceros pueden sufrir fallas o hacks.",
+        "b3": "Riesgo regulatorio: la normativa aplicable puede cambiar y afectar la legalidad del uso.",
+        "b4": "Riesgo de custodia: la pérdida de la clave privada implica pérdida permanente del acceso.",
+        "b5": "Riesgo de liquidez: durante el timelock, los fondos no son líquidos.",
+        "b6": "Riesgo de mercado: el valor de los activos estables puede verse afectado por condiciones extremas.",
+        "b7": "Riesgo de red: congestión, forks o interrupciones pueden afectar la ejecución de transacciones."
+      },
+      "s8":  { "title": "Limitación de Responsabilidad", "body": "En la máxima medida permitida por la ley, el Protocolo, sus desarrolladores, contribuidores y el administrador no serán responsables por ningún daño directo, indirecto, incidental o punitivo que resulte del uso o la imposibilidad de uso del Protocolo." },
+      "s9":  { "title": "Propiedad Intelectual", "body": "El código fuente de los contratos inteligentes está disponible en el repositorio oficial bajo la licencia publicada. El usuario puede auditar y estudiar el código conforme a los términos de dicha licencia." },
+      "s10": { "title": "Modificaciones al Protocolo", "body": "Los Términos y el Protocolo pueden ser actualizados. Las nuevas versiones entrarán en vigor desde su publicación en el repositorio oficial. El uso continuado implica la aceptación de los nuevos términos." },
+      "s11": { "title": "Ley Aplicable", "body": "Los presentes Términos se rigen por la legislación de la jurisdicción donde el Protocolo tiene su sede de desarrollo. Cualquier disputa se someterá a los tribunales competentes de dicha jurisdicción." }
+    },
+
+    "disclaimer": {
+      "title":   "Aviso Legal y Descargo de Responsabilidad",
+      "warning": "AVISO IMPORTANTE: LEA ESTE DOCUMENTO ÍNTEGRAMENTE ANTES DE INTERACTUAR CON EL PROTOCOLO.",
+      "s1":  { "title": "Naturaleza del Proyecto", "body": "FondoRetiro DeFi es un proyecto de infraestructura financiera descentralizada (DeFi) basado en contratos inteligentes en blockchain pública. NO es una entidad financiera regulada, banco, aseguradora ni fondo garantizado por ningún Estado. Las versiones actuales incluyen contratos simulados (Mock) para entornos de prueba que NO generan rendimientos reales." },
+      "s2":  { "title": "No Constituye Asesoramiento Financiero", "body": "Ningún contenido, funcionalidad, proyección ni cálculo del Protocolo constituye asesoramiento financiero, de inversión, legal, impositivo o de cualquier otra naturaleza profesional. Consultá con asesores calificados antes de tomar cualquier decisión de inversión basada en el Protocolo." },
+      "s3":  {
+        "title": "Riesgos de Pérdida Total de Fondos",
+        "b1": "Vulnerabilidades, errores (bugs) o exploits en contratos inteligentes de este Protocolo o de los subyacentes.",
+        "b2": "Ataques de reentrada, manipulación de oráculos, flash loan attacks u otros vectores DeFi.",
+        "b3": "Pérdida o compromiso de la clave privada asociada a la billetera del usuario.",
+        "b4": "Forks, ataques del 51% u otras disrupciones en la red blockchain subyacente.",
+        "b5": "Pérdida del valor del activo USDC u otros stablecoins en caso de depeg.",
+        "b6": "Cambios regulatorios que impidan el acceso o uso del Protocolo.",
+        "b7": "Fallas o insolvencia de los protocolos DeFi de terceros integrados."
+      },
+      "s4":  { "title": "Sin Garantía de Rendimiento", "body": "El Protocolo no garantiza ningún rendimiento, tasa de interés ni preservación del capital. Los rendimientos mostrados son estimaciones basadas en contratos mock y no representan compromisos contractuales. En producción, los rendimientos dependerán exclusivamente del desempeño de los protocolos DeFi seleccionados." },
+      "s5":  {
+        "title": "Responsabilidad del Usuario",
+        "b1": "La custodia y seguridad de su clave privada y wallet.",
+        "b2": "La verificación de las direcciones de contrato con las que interactúa.",
+        "b3": "La comprensión de los parámetros configurados y sus implicancias financieras.",
+        "b4": "El cumplimiento de las obligaciones fiscales según la legislación de su jurisdicción.",
+        "b5": "La verificación del estado regulatorio del uso de protocolos DeFi en su país.",
+        "b6": "La correcta aprobación (approve) de USDC antes de realizar depósitos."
+      },
+      "s6":  { "title": "Ausencia de Seguro de Depósitos", "body": "Los fondos depositados no están cubiertos por ningún sistema de seguro de depósitos, garantía estatal ni mecanismo equivalente. En caso de pérdida de fondos, el usuario no tendrá derecho a reclamación ante ningún organismo de protección." },
+      "s7":  { "title": "Uso en Jurisdicciones Restringidas", "body": "El Protocolo puede no estar disponible o ser ilegal en determinadas jurisdicciones. El usuario es el único responsable de verificar si su uso está permitido en su país o región de residencia." },
+      "s8":  {
+        "title": "Contratos en Entorno de Prueba",
+        "b1": "MockAaveAdapter: 0x3833088891bEcE92e2c492Fd459Cd025dc7b849D",
+        "b2": "MockOndoAdapter: 0x9177D9BCbE0e6c3aD4ad9361c7CAe69FAd439198",
+        "b3": "MockDeFiProtocol: 0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71"
+      },
+      "s9":  { "title": "Descargo General", "body": "EN LA MÁXIMA MEDIDA PERMITIDA POR LA LEY, EL PROTOCOLO, SUS DESARROLLADORES, CONTRIBUIDORES, AUDITORES Y ADMINISTRADOR SE DESLINDAN DE TODA RESPONSABILIDAD POR DAÑOS, PÉRDIDAS O PERJUICIOS QUE SURJAN DEL USO O LA IMPOSIBILIDAD DE USO DEL PROTOCOLO. EL USO ES BAJO EXCLUSIVO RIESGO DEL USUARIO." },
+      "s10": { "title": "Vigencia", "body": "Este Aviso Legal está vigente desde la fecha indicada en el encabezado y se actualiza conjuntamente con los Términos y Condiciones de Uso." }
+    }
   }
 }

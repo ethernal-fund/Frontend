@@ -587,5 +587,201 @@
       }
     ],
     "disclaimer": "Indicative simulation · Real DeFi returns may vary · Not financial advice"
+  },
+  "legal": {
+    "badge": "Legal Document",
+    "version": "Version {{version}}",
+    "effective": "Effective from {{date}}",
+    "toc": "Table of Contents",
+    "backToHome": "Back to Home",
+    "privacy": {
+      "title": "Privacy Policy",
+      "s1": {
+        "title": "Introduction",
+        "body": "This Privacy Policy describes how FondoRetiro DeFi (hereinafter, 'the Protocol') handles information from users who interact with the smart contracts deployed on the public blockchain. By using the Protocol, you acknowledge that you have read, understood, and accepted the terms set forth herein."
+      },
+      "s2": {
+        "title": "Information Recorded on Blockchain",
+        "b1": "User wallet address.",
+        "b2": "Amounts deposited, withdrawn, and transferred (in USDC or other configured ERC-20 tokens).",
+        "b3": "Address of the personal fund created through PersonalFundFactory.",
+        "b4": "Fund parameters: declared age, retirement age, monthly deposit, initial capital, selected DeFi protocol, and timelock period.",
+        "b5": "Selected investment protocol (MockAaveAdapter, MockOndoAdapter, or others registered in ProtocolRegistry).",
+        "b6": "User preference settings in UserPreferences (strategy, risk tolerance, autocompounding).",
+        "b7": "Timestamps of all transactions.",
+        "b8": "Emitted events: FundCreated, Deposited, Withdrawn, UserConfigUpdated, DepositRouted, among others."
+      },
+      "s3": {
+        "title": "Information We Do NOT Collect",
+        "b1": "Name, surname, identity document, or personally identifiable data outside the blockchain.",
+        "b2": "Physical address, email, phone number, or contact details.",
+        "b3": "Biometric or financial information outside blockchain operations.",
+        "b4": "Cookies, device identifiers, or web browsing/session data.",
+        "b5": "Geolocation data."
+      },
+      "s4": {
+        "title": "Public Nature of Data",
+        "body": "Every transaction on a public blockchain is, by nature, public, permanent, and immutable. Anyone can consult the transaction history of a wallet address through block explorers. The Protocol cannot delete, modify, or hide information already recorded."
+      },
+      "s5": {
+        "title": "Use of Information",
+        "b1": "Calculate and execute deposits, withdrawals, and yield distribution.",
+        "b2": "Verify timelock conditions and withdrawal eligibility.",
+        "b3": "Route deposits to selected DeFi protocols via UserPreferences.",
+        "b4": "Record the history of contributions to the retirement fund.",
+        "b5": "Calculate internal financial projections."
+      },
+      "s6": {
+        "title": "Third-Party Data",
+        "body": "The Protocol interacts with third-party DeFi protocols (Aave v3, Ondo USDY) whose own privacy policies apply independently. Review those policies before selecting a protocol."
+      },
+      "s7": {
+        "title": "Security",
+        "body": "The Protocol's security is based on the immutability of smart contracts and access controls through administrator roles and authorized contracts. The user is solely responsible for the security of their private key."
+      },
+      "s8": {
+        "title": "User Rights",
+        "b1": "Freely access all public information about their fund through any block explorer.",
+        "b2": "Revoke access of authorized contracts through revokeContract in UserPreferences.",
+        "b3": "Select and modify their investment protocol and strategy, subject to timelock conditions."
+      },
+      "s9": {
+        "title": "Changes to this Policy",
+        "body": "This Policy may be updated to reflect changes in the Protocol or applicable regulations. Changes will be published in the official project repository."
+      },
+      "s10": {
+        "title": "Contact",
+        "body": "For inquiries related to this Policy, contact us through the official project channels or at contact@ethernal.fund."
+      }
+    },
+    "terms": {
+      "title": "Terms and Conditions of Use",
+      "s1": {
+        "title": "Acceptance of Terms",
+        "body": "By interacting with the FondoRetiro DeFi smart contracts, including PersonalFundFactory, PersonalFund, Treasury, UserPreferences, and ProtocolRegistry, the user fully and unconditionally accepts these Terms and Conditions of Use."
+      },
+      "s2": {
+        "title": "Protocol Description",
+        "b1": "Creation of personal retirement funds through PersonalFundFactory.",
+        "b2": "Deposit and withdrawal of USDC or other stable assets configured by the administrator.",
+        "b3": "Automatic or manual routing of deposits to registered DeFi protocols.",
+        "b4": "Management of user preferences and investment strategies via UserPreferences.",
+        "b5": "Calculation of retirement financial projections.",
+        "b6": "Application of configurable lock-up periods (timelock) between 1 and 40 years."
+      },
+      "s3": {
+        "title": "Eligibility Requirements",
+        "b1": "Be between 18 and 70 years of declared age.",
+        "b2": "Declare a minimum retirement age of 60 years.",
+        "b3": "Provide initial capital within the configured minimum and maximum range.",
+        "b4": "Commit to a configured minimum monthly deposit.",
+        "b5": "Select an active and approved investment protocol in the ProtocolRegistry.",
+        "b6": "Not have a previously active fund (a user may hold only one active fund simultaneously)."
+      },
+      "s4": {
+        "title": "Nature of Smart Contracts",
+        "b1": "Smart contracts execute rules autonomously, deterministically, and immutably once deployed.",
+        "b2": "No human intermediary can reverse, cancel, or modify already confirmed transactions.",
+        "b3": "Contracts may contain errors or vulnerabilities. Use implies assuming this risk.",
+        "b4": "Interaction requires payment of gas fees, the cost of which varies and is the sole responsibility of the user."
+      },
+      "s5": {
+        "title": "Timelock Period and Withdrawal",
+        "b1": "Funds will be locked during the timelock period selected when creating the fund (1 to 40 years).",
+        "b2": "During the timelock, it is not possible to withdraw funds except under emergency conditions provided for in the contract.",
+        "b3": "Upon expiration of the timelock, the user may withdraw according to the configured distribution rules.",
+        "b4": "The Protocol does not guarantee any returns. Rates are estimates from the underlying DeFi protocols."
+      },
+      "s6": {
+        "title": "Administrator Role",
+        "b1": "Configuration of system parameters (capital ranges, fees, enabled protocols).",
+        "b2": "Authorization and revocation of contracts in UserPreferences.",
+        "b3": "Update of auxiliary contracts (DateTime, UserPreferences).",
+        "b4": "Recovery of tokens sent by mistake (recoverTokens function)."
+      },
+      "s7": {
+        "title": "Associated Risks",
+        "b1": "Smart contract risk: errors, exploits, or vulnerabilities in the code.",
+        "b2": "DeFi protocol risk: third-party protocols may suffer failures or hacks.",
+        "b3": "Regulatory risk: applicable regulations may change and affect the legality of use.",
+        "b4": "Custody risk: loss of the private key implies permanent loss of access.",
+        "b5": "Liquidity risk: during the timelock, funds are not liquid.",
+        "b6": "Market risk: the value of stable assets may be affected by extreme conditions.",
+        "b7": "Network risk: congestion, forks, or interruptions may affect transaction execution."
+      },
+      "s8": {
+        "title": "Limitation of Liability",
+        "body": "To the maximum extent permitted by law, the Protocol, its developers, contributors, and administrator shall not be liable for any direct, indirect, incidental, or punitive damages resulting from the use or inability to use the Protocol."
+      },
+      "s9": {
+        "title": "Intellectual Property",
+        "body": "The source code of the smart contracts is available in the official repository under the published license. The user may audit and study the code in accordance with the terms of said license."
+      },
+      "s10": {
+        "title": "Modifications to the Protocol",
+        "body": "The Terms and the Protocol may be updated. New versions will take effect from their publication in the official repository. Continued use implies acceptance of the new terms."
+      },
+      "s11": {
+        "title": "Applicable Law",
+        "body": "These Terms are governed by the law of the jurisdiction where the Protocol has its development headquarters. Any dispute shall be submitted to the competent courts of said jurisdiction."
+      }
+    },
+    "disclaimer": {
+      "title": "Legal Notice and Disclaimer",
+      "warning": "IMPORTANT NOTICE: READ THIS DOCUMENT IN ITS ENTIRETY BEFORE INTERACTING WITH THE PROTOCOL.",
+      "s1": {
+        "title": "Nature of the Project",
+        "body": "FondoRetiro DeFi is a decentralized financial infrastructure (DeFi) project based on smart contracts on a public blockchain. It is NOT a regulated financial entity, bank, insurer, or state-guaranteed fund. Current versions include simulated contracts (Mock) for test environments that do NOT generate real returns."
+      },
+      "s2": {
+        "title": "Does Not Constitute Financial Advice",
+        "body": "No content, functionality, projection, or calculation of the Protocol constitutes financial, investment, legal, tax, or any other professional advice. Consult qualified advisors before making any investment decision based on the Protocol."
+      },
+      "s3": {
+        "title": "Risks of Total Loss of Funds",
+        "b1": "Vulnerabilities, bugs, or exploits in smart contracts of this Protocol or the underlying ones.",
+        "b2": "Reentrancy attacks, oracle manipulation, flash loan attacks, or other DeFi vectors.",
+        "b3": "Loss or compromise of the private key associated with the user's wallet.",
+        "b4": "Forks, 51% attacks, or other disruptions to the underlying blockchain network.",
+        "b5": "Loss of value of USDC or other stablecoins in the event of depeg.",
+        "b6": "Regulatory changes that prevent access to or use of the Protocol.",
+        "b7": "Failures or insolvency of integrated third-party DeFi protocols."
+      },
+      "s4": {
+        "title": "No Performance Guarantee",
+        "body": "The Protocol does not guarantee any returns, interest rates, or capital preservation. Returns shown are estimates based on mock contracts and do not represent contractual commitments. In production, returns will depend exclusively on the performance of the selected DeFi protocols."
+      },
+      "s5": {
+        "title": "User Responsibility",
+        "b1": "Custody and security of their private key and wallet.",
+        "b2": "Verification of contract addresses they interact with.",
+        "b3": "Understanding of configured parameters and their financial implications.",
+        "b4": "Compliance with tax obligations under the laws of their jurisdiction.",
+        "b5": "Verification of the regulatory status of DeFi protocol use in their country.",
+        "b6": "Correct approval (approve) of USDC before making deposits."
+      },
+      "s6": {
+        "title": "No Deposit Insurance",
+        "body": "Deposited funds are not covered by any deposit insurance system, state guarantee, or equivalent mechanism. In the event of loss of funds, the user shall have no right to claim before any protection body."
+      },
+      "s7": {
+        "title": "Use in Restricted Jurisdictions",
+        "body": "The Protocol may not be available or may be illegal in certain jurisdictions. The user is solely responsible for verifying whether its use is permitted in their country or region of residence."
+      },
+      "s8": {
+        "title": "Contracts in Test Environment",
+        "b1": "MockAaveAdapter: 0x3833088891bEcE92e2c492Fd459Cd025dc7b849D",
+        "b2": "MockOndoAdapter: 0x9177D9BCbE0e6c3aD4ad9361c7CAe69FAd439198",
+        "b3": "MockDeFiProtocol: 0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71"
+      },
+      "s9": {
+        "title": "General Disclaimer",
+        "body": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE PROTOCOL, ITS DEVELOPERS, CONTRIBUTORS, AUDITORS, AND ADMINISTRATOR DISCLAIM ALL LIABILITY FOR DAMAGES, LOSSES, OR HARM ARISING FROM THE USE OR INABILITY TO USE THE PROTOCOL. USE IS AT THE USER'S SOLE RISK."
+      },
+      "s10": {
+        "title": "Effective Date",
+        "body": "This Legal Notice is effective from the date indicated in the header and is updated together with the Terms and Conditions of Use."
+      }
+    }
   }
 }
