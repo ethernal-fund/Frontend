@@ -44,11 +44,6 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-gray-400 hover:text-yellow-400 transition text-sm">
-                  {t('nav.dashboard')}
-                </Link>
-              </li>
-              <li>
                 <Link to="/contact" className="text-gray-400 hover:text-yellow-400 transition text-sm">
                   {t('nav.contact')}
                 </Link>
@@ -61,16 +56,16 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold mb-4">{t('footer.followUs')}</h3>
             <div className="flex gap-4 mb-4">
               <a
-                href="https://github.com/ethernalllc-fund"
+                href="https://github.com/ethernal-fund"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-green-600 transition"
                 aria-label="GitHub"
-              >
+              >"
                 <Github size={20} />
               </a>
               <a
-                href="https://twitter.com/ethernialfund"
+                href="https://x.com/EthernalFund"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-green-600 transition"
