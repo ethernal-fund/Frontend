@@ -105,7 +105,7 @@ export function useDeployFund() {
     const monthly      = toUsdcBigInt(result.monthlyGross);
     const desired      = toUsdcBigInt(calculator.desiredMonthlyIncome);
     const rateBps      = BigInt(Math.round(calculator.apyPercent * 100));
-    const timelockYears = 0n; // Contract interprets 0 as "use protocol default" (see minTimelockYears on-chain)
+    const timelockYears = 0n; 
 
     setStatus('deploying');
     setErrorMsg(null);

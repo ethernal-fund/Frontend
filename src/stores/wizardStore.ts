@@ -66,6 +66,9 @@ export const useWizardStore = create<WizardStore>()(
       setTxHash: (hash) =>
         set((s) => { s.txHash = hash; }, false, 'wizard/setTxHash'),
     })),
-    { name: 'WizardStore' },
+    {
+      name:    'WizardStore',
+      enabled: import.meta.env.DEV,
+    },
   ),
 );

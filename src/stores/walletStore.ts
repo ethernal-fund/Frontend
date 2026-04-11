@@ -1,29 +1,43 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { create }           from 'zustand'
+import { devtools }         from 'zustand/middleware'
+import { watchAccount }     from '@wagmi/core'
+import type { GetAccountReturnType } from '@wagmi/core'
+import { wagmiConfig }      from '@/config/wagmi'
+import type { Address }     from 'viem'
 
 interface WalletState {
-  address:   `0x${string}` | null;
-  chainId:   number | null;
-  connected: boolean;
-
-  // Actions — called by wagmi hooks in providers, not manually
-  setWallet: (address: `0x${string}` | null, chainId: number | null) => void;
-  disconnect: () => void;
+  address:        Address | undefined
+  chainId:        number | undefined
+  isConnected:    boolean
+  isReconnecting: boolean
 }
 
 export const useWalletStore = create<WalletState>()(
   devtools(
-    (set) => ({
-      address:   null,
-      chainId:   null,
-      connected: false,
-
-      setWallet: (address, chainId) =>
-        set({ address, chainId, connected: address !== null }, false, 'wallet/set'),
-
-      disconnect: () =>
-        set({ address: null, chainId: null, connected: false }, false, 'wallet/disconnect'),
+    () => ({
+      address:        undefined,
+      chainId:        undefined,
+      isConnected:    false,
+      isReconnecting: false,
     }),
-    { name: 'WalletStore' },
+    {
+      name:    'WalletStore',
+      enabled: import.meta.env.DEV,
+    },
   ),
-);
+)
+
+watchAccount(wagmiConfig, {
+  onChange(account: GetAccountReturnType) {
+    useWalletStore.setState(
+      {
+        address:        account.address,
+        chainId:        account.chainId,
+        isConnected:    account.status === 'connected',
+        isReconnecting: account.status === 'reconnecting',
+      },
+      false,
+      'wallet/sync',
+    )
+  },
+})

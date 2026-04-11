@@ -1,40 +1,41 @@
-import { useAppKit, useAppKitAccount, useAppKitNetwork } from '@reown/appkit/react'
-import { useDisconnect, useConnection } from 'wagmi'
-import type { Chain, Address } from 'viem'
+import { useAppKit }           from '@reown/appkit/react'
+import { useConnection, useDisconnect } from 'wagmi'
+import type { Address }        from 'viem'
 
 export interface WalletState {
-  address: Address | undefined
-  isConnected: boolean
-  chainId: number | undefined
-  chain: Chain | undefined
-  openModal: () => void
-  openAccount: () => void
+  address:      Address | undefined
+  isConnected:  boolean
+  chainId:      number | undefined
+  openModal:    () => void
+  openAccount:  () => void
   openNetworks: () => void
-  disconnect: () => void
+  disconnect:   () => void
   shortAddress: string | undefined
-  connect: () => void
+  connect:      () => void
 }
 
 export function useWallet(): WalletState {
-  const { open } = useAppKit()
-  const { address, isConnected } = useAppKitAccount()
-  const { chainId: rawChainId } = useAppKitNetwork()
-  const { chain } = useConnection()
+  const { open }       = useAppKit()
+  const {
+    address,
+    isConnected,
+    chainId,
+  } = useConnection()
+
   const { disconnect } = useDisconnect()
+
   const safeAddress = address && address.startsWith('0x') && address.length === 42
     ? (address as Address)
     : undefined
 
-  const chainId = rawChainId != null ? Number(rawChainId) : undefined
   const openModalFn = () => open()
 
   return {
-    address: safeAddress,
+    address:      safeAddress,
     isConnected,
     chainId,
-    chain,
-    openModal: openModalFn,
-    openAccount: () => open({ view: 'Account' }),
+    openModal:    openModalFn,
+    openAccount:  () => open({ view: 'Account' }),
     openNetworks: () => open({ view: 'Networks' }),
     disconnect,
     shortAddress: safeAddress
