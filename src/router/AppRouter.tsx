@@ -23,6 +23,11 @@ const ContactPage    = lazy(() => import('@/pages/public/ContactPage'));
 const SurveyPage     = lazy(() => import('@/pages/public/SurveyPage'));
 const NotFoundPage   = lazy(() => import('@/pages/public/NotFoundPage'));
 
+// Legal (public, sin Navbar/Footer propios — LegalPage los omite)
+const PrivacyPage    = lazy(() => import('@/pages/legal/PrivacyPage'));
+const TermsPage      = lazy(() => import('@/pages/legal/TermsPage'));
+const DisclaimerPage = lazy(() => import('@/pages/legal/DisclaimerPage'));
+
 // User (wallet required)
 const DashboardPage  = lazy(() => import('@/pages/user/DashboardPage'));
 const CreateFundPage = lazy(() => import('@/pages/user/CoursesPage'));
@@ -61,6 +66,11 @@ function AppShell() {
             <Route path={ROUTES.CALCULATOR} element={<CalculatorPage />} />
             <Route path={ROUTES.CONTACT}    element={<ContactPage />}    />
             <Route path={ROUTES.SURVEY}     element={<SurveyPage />}     />
+
+            {/* Legal */}
+            <Route path={ROUTES.PRIVACY}    element={<PrivacyPage />}    />
+            <Route path={ROUTES.TERMS}      element={<TermsPage />}      />
+            <Route path={ROUTES.DISCLAIMER} element={<DisclaimerPage />} />
 
             {/* User — wallet required */}
             <Route

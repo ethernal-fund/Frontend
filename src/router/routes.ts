@@ -18,6 +18,11 @@ export const ROUTES = {
   ADMIN_CONTRACTS:      '/admin/contracts',
   ADMIN_CONTACT:        '/admin/contact',
 
+  // Legal
+  PRIVACY:     '/privacy',
+  TERMS:       '/terms',
+  DISCLAIMER:  '/disclaimer',
+
   // Legacy redirects (do not remove — linked from external sites / emails)
   LEGACY_ADMIN_LOGIN:  '/admin/login',
   LEGACY_GOVERNANCE:   '/governance',
@@ -117,5 +122,23 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     navbar: true,
     footer: false,
     title: 'Admin — Messages',
+  },
+  [ROUTES.PRIVACY]: {
+    guard: 'public',
+    navbar: false,
+    footer: false,
+    title: 'Privacy Policy',
+  },
+  [ROUTES.TERMS]: {
+    guard: 'public',
+    navbar: false,
+    footer: false,
+    title: 'Terms of Service',
+  },
+  [ROUTES.DISCLAIMER]: {
+    guard: 'public',
+    navbar: false,
+    footer: false,
+    title: 'Disclaimer',
   },
 };
