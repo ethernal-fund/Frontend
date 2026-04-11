@@ -35,6 +35,7 @@ createRoot(container).render(
     <Web3Provider>
       <RetirementProvider>
         <AppRouter />
+        <SpeedInsights />
       </RetirementProvider>
     </Web3Provider>
   </StrictMode>,
