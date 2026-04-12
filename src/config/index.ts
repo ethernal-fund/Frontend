@@ -84,14 +84,22 @@ if (!_arb) {
   )
 }
 
-export const TREASURY_ADDRESS:          `0x${string}` = _arb.treasury
-export const FACTORY_ADDRESS:           `0x${string}` = _arb.personalFundFactory
-export const USDC_ADDRESS:              `0x${string}` = _arb.usdc
-export const OFFICIAL_USDC_ADDRESS:     `0x${string}` = _arb.usdc
-export const MOCK_DEFI_PROTOCOL_ADDRESS:`0x${string}` = _arb.mockDeFiProtocol    ?? _ZERO  
-export const PROTOCOL_REGISTRY_ADDRESS: `0x${string}` = _arb.protocolRegistry    ?? _ZERO
-export const USER_PREFERENCES_ADDRESS:  `0x${string}` = _arb.userPreferences     ?? _ZERO
-export const DATETIME_ADDRESS:          `0x${string}` = _arb.dateTime            ?? _ZERO
+// Core contracts
+export const TREASURY_ADDRESS:           `0x${string}` = _arb.treasury
+export const FACTORY_ADDRESS:            `0x${string}` = _arb.personalFundFactory
+export const PROTOCOL_REGISTRY_ADDRESS:  `0x${string}` = _arb.protocolRegistry ?? _ZERO
+export const USER_PREFERENCES_ADDRESS:   `0x${string}` = _arb.userPreferences  ?? _ZERO
+export const DATETIME_ADDRESS:           `0x${string}` = _arb.dateTime         ?? _ZERO
+
+// USDC — resolveUSDC already selects MockUSDC on testnet chains
+export const USDC_ADDRESS:               `0x${string}` = _arb.usdc
+export const OFFICIAL_USDC_ADDRESS:      `0x${string}` = _arb.usdc
+export const MOCK_USDC_ADDRESS:          `0x${string}` = _arb.usdc  
+
+// Mock protocol contracts (testnet DeFi simulators)
+export const MOCK_DEFI_PROTOCOL_ADDRESS: `0x${string}` = _arb.mockDeFiProtocol ?? _ZERO
+export const MOCK_AAVE_ADAPTER_ADDRESS:  `0x${string}` = _arb.mockAaveAdapter  ?? _ZERO
+export const MOCK_ONDO_ADAPTER_ADDRESS:  `0x${string}` = _arb.mockOndoAdapter  ?? _ZERO
 
 export {
   DEPOSIT_FEE,
