@@ -32,7 +32,8 @@ export {
   wagmiAdapter,
   modal,
   Web3Provider,
-} from '@/config/web3'
+  useDisconnectWallet,
+} from '@/config/web3/index'                 
 
 export { queryClient } from '@/lib/queryClient'
 
@@ -94,7 +95,7 @@ export const DATETIME_ADDRESS:           `0x${string}` = _arb.dateTime         ?
 // USDC — resolveUSDC already selects MockUSDC on testnet chains
 export const USDC_ADDRESS:               `0x${string}` = _arb.usdc
 export const OFFICIAL_USDC_ADDRESS:      `0x${string}` = _arb.usdc
-export const MOCK_USDC_ADDRESS:          `0x${string}` = _arb.usdc  
+export const MOCK_USDC_ADDRESS:          `0x${string}` = _arb.usdc
 
 // Mock protocol contracts (testnet DeFi simulators)
 export const MOCK_DEFI_PROTOCOL_ADDRESS: `0x${string}` = _arb.mockDeFiProtocol ?? _ZERO
