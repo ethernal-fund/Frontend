@@ -1,6 +1,6 @@
 {
   "contractName": "PersonalFundFactory",
-  "address": "0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A",
+  "address": "0x484E6C3ad67fF018D433e2503343f48002ABD0CA",
   "abi": [
     {
       "name": "FundCreated",
@@ -729,5 +729,5 @@
       "outputs": []
     }
   ],
-  "constructorArgs": "000000000000000000000000b9357c7c7938f2336ea2a01063cb1c6edb697f9e0000000000000000000000000a743430067afc5b69b0f8ff542fdbdad206a748"
+  "constructorArgs": "000000000000000000000000cf02c2cedd9d9884c2306ddbe2611ea1cb7d6e3c000000000000000000000000dfe1dc5744e56a06e86505e6bf607c8aea4f0486"
 }

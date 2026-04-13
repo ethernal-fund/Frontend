@@ -41,16 +41,16 @@ export const CONTRACT_ADDRESSES: Record<number, ContractAddresses> = {
 
   // ✅ ARBITRUM SEPOLIA — deployed 2026-04-02
   421614: {
-    personalFundFactory: '0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A',
+    personalFundFactory: '0x484E6C3ad67fF018D433e2503343f48002ABD0CA',
     usdc:                resolveUSDC(421614),
-    treasury:            '0x0a743430067AFC5B69B0F8fF542fdbdAD206A748',
-    protocolRegistry:    '0xa76322A970EA80B0ebbB9c5213a2F3A1ee53118f',
-    userPreferences:     '0x1c3d7f6C47C7d8EA4bc29864fFB966F2B5896704',
-    dateTime:            '0xe4A76Bc0CbEC3F4B1297C754985Aed9Fb9b2AaE9',
-    // personalFund:        '0xb9357c7c7938f2336eA2A01063cb1C6EDB697F9E',
-    mockDeFiProtocol:    '0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71',
-    mockAaveAdapter:     '0x3833088891bEcE92e2c492Fd459Cd025dc7b849D',
-    mockOndoAdapter:     '0x9177D9BCbE0e6c3aD4ad9361c7CAe69FAd439198',
+    treasury:            '0xdfe1DC5744E56A06e86505e6Bf607C8Aea4F0486',
+    protocolRegistry:    '0x7105291d638F4998De24f53e0959432Ba170f41D',
+    userPreferences:     '0x0f619474EeCF03a96Cb1eF78C32f940cF0fDe0df',
+    dateTime:            '0xfa81514902c50f0af34C543151b9D6aC8660e108',
+    // personalFund:        '0xCf02C2cedd9D9884C2306ddBe2611Ea1CB7D6E3c',
+    mockDeFiProtocol:    '0x05698Ea1b8523D214D2AfddE55746e88442716E1',
+    mockAaveAdapter:     '0x0cb22CD53Ec4D2897b603d304be658d2c1cB22Da',
+    mockOndoAdapter:     '0x65681a2094b097Bfa09A3b8cbf80c95A5696BcD7',
   },
 
   // ✅ POLYGON AMOY — deployed 2026-03-08

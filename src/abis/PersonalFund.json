@@ -1,6 +1,6 @@
 {
   "contractName": "PersonalFund",
-  "address": "0xb9357c7c7938f2336eA2A01063cb1C6EDB697F9E",
+  "address": "0xCf02C2cedd9D9884C2306ddBe2611Ea1CB7D6E3c",
   "abi": [
     {
       "name": "Initialized",

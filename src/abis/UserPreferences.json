@@ -1,6 +1,6 @@
 {
   "contractName": "UserPreferences",
-  "address": "0x1c3d7f6C47C7d8EA4bc29864fFB966F2B5896704",
+  "address": "0x0f619474EeCF03a96Cb1eF78C32f940cF0fDe0df",
   "abi": [
     {
       "name": "UserConfigUpdated",
@@ -712,5 +712,5 @@
       "outputs": []
     }
   ],
-  "constructorArgs": "0000000000000000000000000a743430067afc5b69b0f8ff542fdbdad206a748"
+  "constructorArgs": "000000000000000000000000dfe1dc5744e56a06e86505e6bf607c8aea4f0486"
 }

@@ -1,11 +1,11 @@
 {
   "network": "arbitrum-sepolia",
   "chain_id": 421614,
-  "generated": "2026-04-02T14:41:45.077968+00:00",
-  "usdc": "0x6e1371974D923397ecE9eE7525ac50ad7087c77f",
+  "generated": "2026-04-12T21:08:28.521195+00:00",
+  "usdc": "0x62F7FB943348d9e3e238b7043278B6895428E4d9",
   "contracts": {
     "DateTime": {
-      "address": "0xe4A76Bc0CbEC3F4B1297C754985Aed9Fb9b2AaE9",
+      "address": "0xfa81514902c50f0af34C543151b9D6aC8660e108",
       "abi": [
         {
           "stateMutability": "view",
@@ -277,7 +277,7 @@
       ]
     },
     "Treasury": {
-      "address": "0x0a743430067AFC5B69B0F8fF542fdbdAD206A748",
+      "address": "0xdfe1DC5744E56A06e86505e6Bf607C8Aea4F0486",
       "abi": [
         {
           "name": "FeeReceived",
@@ -1327,7 +1327,7 @@
       ]
     },
     "ProtocolRegistry": {
-      "address": "0xa76322A970EA80B0ebbB9c5213a2F3A1ee53118f",
+      "address": "0x7105291d638F4998De24f53e0959432Ba170f41D",
       "abi": [
         {
           "name": "ProtocolAdded",
@@ -2256,7 +2256,7 @@
       ]
     },
     "UserPreferences": {
-      "address": "0x1c3d7f6C47C7d8EA4bc29864fFB966F2B5896704",
+      "address": "0x0f619474EeCF03a96Cb1eF78C32f940cF0fDe0df",
       "abi": [
         {
           "name": "UserConfigUpdated",
@@ -2970,7 +2970,7 @@
       ]
     },
     "MockDeFiProtocol": {
-      "address": "0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71",
+      "address": "0x05698Ea1b8523D214D2AfddE55746e88442716E1",
       "abi": [
         {
           "name": "Deposited",
@@ -3156,7 +3156,7 @@
       ]
     },
     "MockAaveAdapter": {
-      "address": "0x3833088891bEcE92e2c492Fd459Cd025dc7b849D",
+      "address": "0x0cb22CD53Ec4D2897b603d304be658d2c1cB22Da",
       "abi": [
         {
           "name": "Deposited",
@@ -3369,7 +3369,7 @@
       ]
     },
     "MockOndoAdapter": {
-      "address": "0x9177D9BCbE0e6c3aD4ad9361c7CAe69FAd439198",
+      "address": "0x65681a2094b097Bfa09A3b8cbf80c95A5696BcD7",
       "abi": [
         {
           "name": "Deposited",
@@ -3582,7 +3582,7 @@
       ]
     },
     "PersonalFund": {
-      "address": "0xb9357c7c7938f2336eA2A01063cb1C6EDB697F9E",
+      "address": "0xCf02C2cedd9D9884C2306ddBe2611Ea1CB7D6E3c",
       "abi": [
         {
           "name": "Initialized",
@@ -5132,7 +5132,7 @@
       ]
     },
     "PersonalFundFactory": {
-      "address": "0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A",
+      "address": "0x484E6C3ad67fF018D433e2503343f48002ABD0CA",
       "abi": [
         {
           "name": "FundCreated",
