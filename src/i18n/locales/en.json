@@ -783,5 +783,40 @@
         "body": "This Legal Notice is effective from the date indicated in the header and is updated together with the Terms and Conditions of Use."
       }
     }
+  },
+  "fund": {
+    "Calculator": "Calculator",
+    "inputs": "Configure your retirement plan",
+    "Desired Income": "Desired Monthly Income",
+    "Payment Years": "Payment Years",
+    "Current Age": "Current Age",
+    "Retirement Age": "Retirement Age",
+    "Apy": "Expected APY (%)",
+    "Principal": "Initial Principal (USDC)",
+    "result": "Result",
+    "corpus": "Required Corpus",
+    "Monthly Needed": "Monthly Needed",
+    "Total Deposit": "Total Deposited",
+    "Years Left": "Years to Retirement",
+    "Fund at Retirement": "Est. Fund at Retirement",
+    "Income for": "Income For",
+    "Fee Row": "Platform Fee",
+    "Initial Deposit": "Initial Deposit Breakdown",
+    "First Monthly": "First Monthly",
+    "Total Approve": "Total to Approve",
+    "Select Protocol": "Select Protocol →",
+    "monthlyTooLow": "Monthly deposit must be at least ${{min}} USDC"
+  },
+  "wizard": {
+    "Select Protocol": "Select Protocol",
+    "Approve And Deploy": "Approve & Deploy",
+    "Deploy": "Deploy",
+    "approveUsdc": "Approve USDC",
+    "approving": "Approving…",
+    "approved": "Approved ✓",
+    "deployFund": "Deploy Fund",
+    "deploying": "Deploying…",
+    "viewOnExplorer": "View on Explorer",
+    "Calcular": "Calculate"
   }
 }

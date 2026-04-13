@@ -783,5 +783,40 @@
         "body": "Este Aviso Legal está vigente desde a data indicada no cabeçalho e é atualizado conjuntamente com os Termos e Condições de Uso."
       }
     }
+  },
+  "fund": {
+    "Calculator": "Calculadora",
+    "inputs": "Configure seu plano de aposentadoria",
+    "Desired Income": "Renda Mensal Desejada",
+    "Payment Years": "Anos de Pagamento",
+    "Current Age": "Idade Atual",
+    "Retirement Age": "Idade de Aposentadoria",
+    "Apy": "APY Esperado (%)",
+    "Principal": "Capital Inicial (USDC)",
+    "result": "Resultado",
+    "corpus": "Corpus Necessário",
+    "Monthly Needed": "Depósito Mensal",
+    "Total Deposit": "Total Depositado",
+    "Years Left": "Anos até a Aposentadoria",
+    "Fund at Retirement": "Fundo Est. na Aposentadoria",
+    "Income for": "Renda por",
+    "Fee Row": "Taxa da Plataforma",
+    "Initial Deposit": "Detalhamento do Primeiro Depósito",
+    "First Monthly": "Primeira Mensalidade",
+    "Total Approve": "Total a Aprovar",
+    "Select Protocol": "Selecionar Protocolo →",
+    "monthlyTooLow": "O depósito mensal deve ser de pelo menos ${{min}} USDC"
+  },
+  "wizard": {
+    "Select Protocol": "Selecionar Protocolo",
+    "Approve And Deploy": "Aprovar e Implementar",
+    "Deploy": "Implementar",
+    "approveUsdc": "Aprovar USDC",
+    "approving": "Aprovando…",
+    "approved": "Aprovado ✓",
+    "deployFund": "Criar Fundo",
+    "deploying": "Implementando…",
+    "viewOnExplorer": "Ver no Explorer",
+    "Calcular": "Calcular"
   }
 }

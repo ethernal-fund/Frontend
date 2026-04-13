@@ -783,5 +783,40 @@
         "body": "Dieser Rechtliche Hinweis gilt ab dem im Header angegebenen Datum und wird zusammen mit den Nutzungsbedingungen aktualisiert."
       }
     }
+  },
+  "fund": {
+    "Calculator": "Rechner",
+    "inputs": "Rente konfigurieren",
+    "Desired Income": "Gewünschtes Monatseinkommen",
+    "Payment Years": "Auszahlungsjahre",
+    "Current Age": "Aktuelles Alter",
+    "Retirement Age": "Rentenalter",
+    "Apy": "Erwarteter APY (%)",
+    "Principal": "Startkapital (USDC)",
+    "result": "Ergebnis",
+    "corpus": "Benötigtes Kapital",
+    "Monthly Needed": "Monatlicher Bedarf",
+    "Total Deposit": "Gesamt eingezahlt",
+    "Years Left": "Jahre bis zur Rente",
+    "Fund at Retirement": "Geschätzter Fondswert",
+    "Income for": "Einkommen für",
+    "Fee Row": "Plattformgebühr",
+    "Initial Deposit": "Ersteinzahlung – Aufschlüsselung",
+    "First Monthly": "Erste Monatsrate",
+    "Total Approve": "Gesamtbetrag genehmigen",
+    "Select Protocol": "Protokoll auswählen →",
+    "monthlyTooLow": "Die monatliche Einzahlung muss mindestens ${{min}} USDC betragen"
+  },
+  "wizard": {
+    "Select Protocol": "Protokoll auswählen",
+    "Approve And Deploy": "Genehmigen & Bereitstellen",
+    "Deploy": "Bereitstellen",
+    "approveUsdc": "USDC genehmigen",
+    "approving": "Wird genehmigt…",
+    "approved": "Genehmigt ✓",
+    "deployFund": "Fonds erstellen",
+    "deploying": "Wird bereitgestellt…",
+    "viewOnExplorer": "Im Explorer anzeigen",
+    "Calcular": "Berechnen"
   }
 }

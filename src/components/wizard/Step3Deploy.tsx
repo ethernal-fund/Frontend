@@ -1,6 +1,7 @@
 import { useTranslation }   from 'react-i18next';
 import { useChainId }       from 'wagmi';
-import { ExternalLink, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { useNavigate }      from 'react-router-dom';
+import { ExternalLink, CheckCircle, Loader2, AlertCircle, LayoutDashboard } from 'lucide-react';
 import { useWizardStore }   from '@/stores/wizardStore';
 import { useDeployFund }    from '@/hooks/useDeployFund';
 import { fmtUsdc }          from '@/lib/calculator';
@@ -13,7 +14,8 @@ interface Step3Props {
 
 export function Step3Deploy({ onBack }: Step3Props) {
   const { t } = useTranslation();
-  const chainId = useChainId();
+  const chainId  = useChainId();
+  const navigate = useNavigate();
   const { calculator, result, selectedProtocol, approved, prevStep } = useWizardStore();
   const { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund } = useDeployFund();
 
@@ -58,7 +60,7 @@ export function Step3Deploy({ onBack }: Step3Props) {
           className={cn(
             'w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base transition',
             approved
-              ? 'bg-(--surface2) border border-(--success) text-(--success) cursor-default'
+              ? 'bg-[#22c55e] border border-[#22c55e] text-white cursor-default shadow-[0_0_12px_#22c55e55]'
               : 'bg-(--accent) text-(--bg) hover:opacity-90 disabled:opacity-50 disabled:cursor-wait',
           )}
         >
@@ -134,6 +136,20 @@ export function Step3Deploy({ onBack }: Step3Props) {
           className="text-sm text-(--muted) hover:text-(--text) transition"
         >
           ← Back to Protocol
+        </button>
+      )}
+
+      {/* Dashboard CTA — appears after successful deploy */}
+      {isSuccess && (
+        <button
+          onClick={() => navigate('/dashboard')}
+          className={cn(
+            'w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base transition',
+            'bg-[#22c55e] text-white hover:bg-[#16a34a] shadow-[0_0_16px_#22c55e44]',
+          )}
+        >
+          <LayoutDashboard size={18} />
+          Dashboard
         </button>
       )}
     </div>

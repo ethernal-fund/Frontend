@@ -783,5 +783,40 @@
         "body": "Il presente Avviso Legale è in vigore dalla data indicata nell'intestazione e viene aggiornato contestualmente ai Termini e Condizioni d'Uso."
       }
     }
+  },
+  "fund": {
+    "Calculator": "Calcolatore",
+    "inputs": "Configura il tuo piano pensionistico",
+    "Desired Income": "Reddito Mensile Desiderato",
+    "Payment Years": "Anni di Pagamento",
+    "Current Age": "Età Attuale",
+    "Retirement Age": "Età Pensionabile",
+    "Apy": "APY Atteso (%)",
+    "Principal": "Capitale Iniziale (USDC)",
+    "result": "Risultato",
+    "corpus": "Corpus Necessario",
+    "Monthly Needed": "Deposito Mensile",
+    "Total Deposit": "Totale Depositato",
+    "Years Left": "Anni alla Pensione",
+    "Fund at Retirement": "Fondo Stimato alla Pensione",
+    "Income for": "Reddito per",
+    "Fee Row": "Commissione Piattaforma",
+    "Initial Deposit": "Dettaglio Primo Deposito",
+    "First Monthly": "Prima Rata Mensile",
+    "Total Approve": "Totale da Approvare",
+    "Select Protocol": "Seleziona Protocollo →",
+    "monthlyTooLow": "Il deposito mensile deve essere almeno ${{min}} USDC"
+  },
+  "wizard": {
+    "Select Protocol": "Seleziona Protocollo",
+    "Approve And Deploy": "Approva e Distribuisci",
+    "Deploy": "Distribuisci",
+    "approveUsdc": "Approva USDC",
+    "approving": "Approvazione in corso…",
+    "approved": "Approvato ✓",
+    "deployFund": "Crea Fondo",
+    "deploying": "Distribuzione in corso…",
+    "viewOnExplorer": "Visualizza su Explorer",
+    "Calcular": "Calcola"
   }
 }

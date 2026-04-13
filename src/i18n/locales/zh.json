@@ -783,5 +783,40 @@
         "body": "本法律声明自标题中所注明的日期起生效，并与使用条款与条件同步更新。"
       }
     }
+  },
+  "fund": {
+    "Calculator": "计算器",
+    "inputs": "配置您的退休计划",
+    "Desired Income": "期望月收入",
+    "Payment Years": "领取年限",
+    "Current Age": "当前年龄",
+    "Retirement Age": "退休年龄",
+    "Apy": "预期年化收益率 (%)",
+    "Principal": "初始本金 (USDC)",
+    "result": "计算结果",
+    "corpus": "所需本金总额",
+    "Monthly Needed": "每月所需存款",
+    "Total Deposit": "累计存入",
+    "Years Left": "距退休年数",
+    "Fund at Retirement": "退休时预计基金总额",
+    "Income for": "领取收入",
+    "Fee Row": "平台手续费",
+    "Initial Deposit": "首次存款明细",
+    "First Monthly": "首月存款",
+    "Total Approve": "授权总额",
+    "Select Protocol": "选择协议 →",
+    "monthlyTooLow": "每月存款至少需要 ${{min}} USDC"
+  },
+  "wizard": {
+    "Select Protocol": "选择协议",
+    "Approve And Deploy": "授权并部署",
+    "Deploy": "部署",
+    "approveUsdc": "授权 USDC",
+    "approving": "授权中…",
+    "approved": "已授权 ✓",
+    "deployFund": "创建基金",
+    "deploying": "部署中…",
+    "viewOnExplorer": "在浏览器中查看",
+    "Calcular": "计算"
   }
 }
