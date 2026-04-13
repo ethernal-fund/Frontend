@@ -9,10 +9,11 @@ import { getExplorerUrl, getExplorerAddressUrl } from '@/config/chains';
 import { cn }               from '@/lib/cn';
 
 interface Step3Props {
-  onBack: () => void;
+  onBack:      () => void;
+  onSuccess:   () => void;   // cierra el modal antes de navegar
 }
 
-export function Step3Deploy({ onBack }: Step3Props) {
+export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
   const { t } = useTranslation();
   const chainId  = useChainId();
   const navigate = useNavigate();
@@ -142,7 +143,13 @@ export function Step3Deploy({ onBack }: Step3Props) {
       {/* Dashboard CTA — appears after successful deploy */}
       {isSuccess && (
         <button
-          onClick={() => navigate('/dashboard')}
+          onClick={() => {
+            onSuccess();   // cierra y resetea el modal
+            navigate('/dashboard', {
+              state:   { newFundAddr: fundAddr },
+              replace: true,
+            });
+          }}
           className={cn(
             'w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base transition',
             'bg-[#22c55e] text-white hover:bg-[#16a34a] shadow-[0_0_16px_#22c55e44]',

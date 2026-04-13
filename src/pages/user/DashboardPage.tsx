@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate }                                        from 'react-router-dom';
+import { useNavigate, useLocation }                           from 'react-router-dom';
 import {
   useReadContract,
   useReadContracts,
@@ -202,6 +202,7 @@ function CountdownTimer({ targetDate }: { targetDate: Date | null }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 const DashboardPage: React.FC = () => {
   const navigate        = useNavigate();
+  const location        = useLocation();
   const { address }     = useAccount();
 
   // ── 1. Leer dirección del fondo desde el Factory ──────────────────────────
@@ -352,6 +353,19 @@ const DashboardPage: React.FC = () => {
     ]);
   }, [refetchFund, refetchFundData, refetchProtocols]);
 
+  // ── 5b. Al llegar desde el wizard con un deploy exitoso, forzar refetch ───
+  useEffect(() => {
+    const state = location.state as { newFundAddr?: string } | null;
+    if (!state?.newFundAddr) return;
+    // Limpiar el state del router para que no se dispare de nuevo al recargar
+    window.history.replaceState({}, '');
+    // Dar un tick para que wagmi registre el bloque nuevo, luego refrescar
+    const timer = setTimeout(() => { void refetchAll(); }, 500);
+    return () => clearTimeout(timer);
+  // Solo al montar / cuando cambia el state del router
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
+
   // ── 6. Write contracts ────────────────────────────────────────────────────
   const { writeContract: writeConfig,   isPending: isWritingConfig,   data: configTxHash } = useWriteContract();
   const { writeContract: writeStrategy, isPending: isWritingStrategy, data: stratTxHash  } = useWriteContract();
@@ -476,10 +490,11 @@ const DashboardPage: React.FC = () => {
           </p>
           <button
             onClick={() => { void refetchAll(); }}
-            className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2 mx-auto"
+            disabled={isLoading}
+            className="mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2 mx-auto"
           >
-            <RefreshCw size={20} />
-            Actualizar Datos
+            <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
+            {isLoading ? 'Actualizando...' : 'Actualizar Datos'}
           </button>
         </div>
 

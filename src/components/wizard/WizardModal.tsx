@@ -34,8 +34,12 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
 
   function handleClose() {
     onClose();
-    // Pequeño delay para que la animación cierre antes de resetear
     setTimeout(() => reset(), 300);
+  }
+
+  function handleSuccess() {
+    onClose();   // cierra el modal de inmediato
+    reset();     // resetea sin delay — ya no importa, el modal está cerrado
   }
 
   if (!open) return null;
@@ -85,7 +89,7 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
             <Step2SelectProtocol onNext={() => {}} onBack={() => {}} />
           )}
           {step === 3 && (
-            <Step3Deploy onBack={() => {}} />
+            <Step3Deploy onBack={() => {}} onSuccess={handleSuccess} />
           )}
         </div>
       </div>
