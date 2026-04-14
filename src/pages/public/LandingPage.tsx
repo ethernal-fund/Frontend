@@ -6,10 +6,220 @@ import { useTranslation } from 'react-i18next';
 import SEO from '@/components/common/SEO';
 import { FeeComparisonModal } from '@/components/marketing/FeeComparisonModal';
 
+type OGLocale = 'es' | 'en' | 'pt' | 'zh' | 'fr' | 'de' | 'it';
+
+interface OGImageProps {
+  locale: OGLocale;
+  logoUrl?: string;
+}
+
+const OG_COPY: Record<OGLocale, { title: string; subtitle: string; cta: string }> = {
+  en: {
+    title: 'Your Retirement on the Blockchain',
+    subtitle: 'Decentralized, transparent and low-fee savings — powered by Arbitrum.',
+    cta: 'Start saving →',
+  },
+  es: {
+    title: 'Tu Jubilación en la Blockchain',
+    subtitle: 'Ahorro descentralizado, transparente y sin comisiones abusivas — sobre Arbitrum.',
+    cta: 'Empezar a ahorrar →',
+  },
+  pt: {
+    title: 'Sua Aposentadoria na Blockchain',
+    subtitle: 'Poupança descentralizada, transparente e com taxas baixas — no Arbitrum.',
+    cta: 'Comece a poupar →',
+  },
+  zh: {
+    title: '区块链上的退休储蓄',
+    subtitle: '去中心化、透明且低费用的储蓄——由 Arbitrum 驱动。',
+    cta: '开始储蓄 →',
+  },
+  fr: {
+    title: 'Votre Retraite sur la Blockchain',
+    subtitle: 'Épargne décentralisée, transparente et à faibles frais — propulsée par Arbitrum.',
+    cta: 'Commencer →',
+  },
+  de: {
+    title: 'Ihre Rente auf der Blockchain',
+    subtitle: 'Dezentrales, transparentes und günstiges Sparen — mit Arbitrum.',
+    cta: 'Jetzt sparen →',
+  },
+  it: {
+    title: 'Il Tuo Pensionamento sulla Blockchain',
+    subtitle: 'Risparmio decentralizzato, trasparente e a basse commissioni — su Arbitrum.',
+    cta: 'Inizia a risparmiare →',
+  },
+};
+
+export const OGImage: React.FC<OGImageProps> = ({ locale, logoUrl }) => {
+  const copy = OG_COPY[locale];
+
+  return (
+    <div
+      style={{
+        width: 1200,
+        height: 630,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        padding: '64px 80px',
+        background: 'linear-gradient(135deg, #1f2937 0%, #14532d 100%)',
+        fontFamily: 'system-ui, sans-serif',
+        color: '#ffffff',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      {/* Decorative circles */}
+      <div
+        style={{
+          position: 'absolute',
+          top: -120,
+          right: -120,
+          width: 480,
+          height: 480,
+          borderRadius: '50%',
+          background: 'rgba(134,239,172,0.08)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: -80,
+          left: -80,
+          width: 320,
+          height: 320,
+          borderRadius: '50%',
+          background: 'rgba(134,239,172,0.05)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Header row: logo + BETA badge */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        {logoUrl && (
+          <img
+            src={logoUrl}
+            alt="Logo"
+            style={{ height: 48, width: 'auto', objectFit: 'contain' }}
+          />
+        )}
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.12em',
+            padding: '4px 10px',
+            borderRadius: 999,
+            background: '#15803d',
+            color: '#dcfce7',
+          }}
+        >
+          BETA
+        </span>
+      </div>
+
+      {/* Main copy */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 24 }}>
+        <h1
+          style={{
+            fontSize: 64,
+            fontWeight: 800,
+            lineHeight: 1.1,
+            margin: 0,
+            maxWidth: 900,
+          }}
+        >
+          {copy.title}
+        </h1>
+        <p
+          style={{
+            fontSize: 26,
+            color: '#d1fae5',
+            margin: 0,
+            maxWidth: 780,
+            lineHeight: 1.5,
+          }}
+        >
+          {copy.subtitle}
+        </p>
+      </div>
+
+      {/* Footer row */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <span
+          style={{
+            fontSize: 20,
+            fontWeight: 600,
+            color: '#86efac',
+            letterSpacing: '0.02em',
+          }}
+        >
+          {copy.cta}
+        </span>
+        <div
+          style={{
+            display: 'flex',
+            gap: 10,
+            alignItems: 'center',
+          }}
+        >
+          {(['🔒', '🎓', '📈'] as const).map((emoji, i) => (
+            <span
+              key={i}
+              style={{
+                fontSize: 28,
+                background: 'rgba(255,255,255,0.08)',
+                borderRadius: 12,
+                padding: '6px 12px',
+              }}
+            >
+              {emoji}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const exportOGImage = async (locale: OGLocale): Promise<void> => {
+  const { toPng } = await import('html-to-image');
+  const node = document.getElementById(`og-${locale}`);
+  if (!node) {
+    console.warn(`[exportOGImage] Node #og-${locale} not found. Make sure OGImagePortal is mounted.`);
+    return;
+  }
+  const dataUrl = await toPng(node, { width: 1200, height: 630, pixelRatio: 1 });
+  const link = document.createElement('a');
+  link.download = `og-image-${locale}.png`;
+  link.href = dataUrl;
+  link.click();
+};
+
+const ALL_LOCALES: OGLocale[] = ['es', 'en', 'pt', 'zh', 'fr', 'de', 'it'];
+const OGImagePortal: React.FC<{ logoUrl?: string }> = ({ logoUrl }) => (
+  <div aria-hidden="true" style={{ position: 'absolute', left: -9999, top: 0, pointerEvents: 'none' }}>
+    {ALL_LOCALES.map(locale => (
+      <div key={locale} id={`og-${locale}`}>
+        <OGImage locale={locale} logoUrl={logoUrl} />
+      </div>
+    ))}
+  </div>
+);
+
 const HomePage: React.FC = () => {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { isConnected, disconnect, openModal } = useWallet();
-  const { t }     = useTranslation();
+  const { t, i18n } = useTranslation();
   const [feeModalOpen, setFeeModalOpen] = useState(false);
 
   useEffect(() => {
@@ -36,7 +246,12 @@ const HomePage: React.FC = () => {
         title={t('hero.title')}
         description={t('hero.subtitle')}
         keywords={['retirement', 'blockchain', 'DeFi', 'Arbitrum', 'decentralized', 'savings', 'ethereum', 'vyper', 'fund']}
+        locale={i18n.language}
       />
+
+      {/* Off-screen OG frames — only needed during local export; safe to keep in prod
+          since it's aria-hidden and outside the viewport. Remove after committing PNGs. */}
+      {import.meta.env.DEV && <OGImagePortal logoUrl="/logo.png" />}
 
       <div className="pt-4">
 

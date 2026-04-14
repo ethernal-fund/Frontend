@@ -7,7 +7,7 @@ interface OGContent {
   tagline: string;
   pillars: [string, string, string];
   cta: string;
-  font: string; // Google Fonts family name
+  font: string; 
 }
 
 const OG_CONTENT: Record<OGLocale, OGContent> = {
@@ -342,32 +342,3 @@ export const OGImage: React.FC<OGImageProps> = ({
 };
 
 export default OGImage;
-
-
-// ─── Guía de exportación ─────────────────────────────────────────────────────
-//
-// Instalá: npm install html-to-image
-//
-// import { toPng } from 'html-to-image';
-//
-// const exportOG = async (locale: OGLocale) => {
-//   const node = document.getElementById(`og-${locale}`);
-//   if (!node) return;
-//   const dataUrl = await toPng(node, {
-//     width: 1200,
-//     height: 630,
-//     pixelRatio: 1,
-//   });
-//   const link = document.createElement('a');
-//   link.download = `og-image-${locale}.png`;
-//   link.href = dataUrl;
-//   link.click();
-// };
-//
-// Renderizá todos los locales off-screen:
-// const LOCALES: OGLocale[] = ['es', 'en', 'pt', 'zh', 'fr', 'de', 'it'];
-// {LOCALES.map(locale => (
-//   <div key={locale} id={`og-${locale}`} style={{ position: 'absolute', left: -9999 }}>
-//     <OGImage locale={locale} logoUrl="/logo.png" />
-//   </div>
-// ))}
