@@ -818,5 +818,9 @@
     "deploying": "Implementando…",
     "viewOnExplorer": "Ver no Explorer",
     "Calcular": "Calcular"
+  },
+  "beta": {
+    "bannerText": "Versão beta — seu feedback nos ajuda a melhorar.",
+    "bannerCta": "Compartilhe sua opinião →"
   }
 }

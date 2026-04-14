@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useLocation }                           from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   useReadContract,
   useReadContracts,
   useWriteContract,
   useWaitForTransactionReceipt,
-  useAccount,
+  useConnection,
 } from 'wagmi';
-import { format }                                            from 'date-fns';
+import { format } from 'date-fns';
 import {
   Wallet, Shield, TrendingUp, DollarSign, Clock,
   CheckCircle, AlertCircle, ArrowRight, RefreshCw, Sparkles,
@@ -18,12 +18,10 @@ import {
 import { USER_PREFERENCES_ABI } from '@/config/abis';
 import { USER_PREFERENCES_ADDRESS } from '@/config';
 
-// ─── Contract addresses (Arbitrum Sepolia) ───────────────────────────────────
-const FACTORY_ADDRESS          = '0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A' as const;
+const FACTORY_ADDRESS           = '0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A' as const;
 const PROTOCOL_REGISTRY_ADDRESS = '0xa76322A970EA80B0ebbB9c5213a2F3A1ee53118f' as const;
-const ARBISCAN_BASE            = 'https://sepolia.arbiscan.io/address/';
+const ARBISCAN_BASE             = 'https://sepolia.arbiscan.io/address/';
 
-// ─── ABIs (minimal) ──────────────────────────────────────────────────────────
 const FACTORY_ABI = [
   {
     name: 'getUserFund',
@@ -77,7 +75,6 @@ const REGISTRY_ABI = [
   },
 ] as const;
 
-// ─── Types ───────────────────────────────────────────────────────────────────
 type Protocol = {
   protocolAddress: `0x${string}`;
   riskLevel:       number;
@@ -89,47 +86,47 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
 
 const RISK_LEVELS = [
   {
-    value:      0,
-    label:      'Conservador',
-    description:'Bajo riesgo, rendimientos estables y protección del capital',
-    color:      'emerald',
-    icon:       Shield,
-    gradient:   'from-emerald-50 to-teal-50',
-    border:     'border-emerald-300',
-    badge:      'bg-emerald-100 text-emerald-800',
-    btnActive:  'bg-emerald-600 text-white shadow-lg shadow-emerald-200',
-    btnInactive:'bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50',
+    value:       0,
+    label:       'Conservador',
+    description: 'Bajo riesgo, rendimientos estables y protección del capital',
+    color:       'emerald',
+    icon:        Shield,
+    gradient:    'from-emerald-50 to-teal-50',
+    border:      'border-emerald-300',
+    badge:       'bg-emerald-100 text-emerald-800',
+    btnActive:   'bg-emerald-600 text-white shadow-lg shadow-emerald-200',
+    btnInactive: 'bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50',
   },
   {
-    value:      1,
-    label:      'Moderado',
-    description:'Balance entre crecimiento y estabilidad, ideal para largo plazo',
-    color:      'blue',
-    icon:       BarChart3,
-    gradient:   'from-blue-50 to-indigo-50',
-    border:     'border-blue-300',
-    badge:      'bg-blue-100 text-blue-800',
-    btnActive:  'bg-blue-600 text-white shadow-lg shadow-blue-200',
-    btnInactive:'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50',
+    value:       1,
+    label:       'Moderado',
+    description: 'Balance entre crecimiento y estabilidad, ideal para largo plazo',
+    color:       'blue',
+    icon:        BarChart3,
+    gradient:    'from-blue-50 to-indigo-50',
+    border:      'border-blue-300',
+    badge:       'bg-blue-100 text-blue-800',
+    btnActive:   'bg-blue-600 text-white shadow-lg shadow-blue-200',
+    btnInactive: 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50',
   },
   {
-    value:      2,
-    label:      'Agresivo',
-    description:'Máximo potencial de rendimiento con mayor exposición al riesgo',
-    color:      'violet',
-    icon:       Zap,
-    gradient:   'from-violet-50 to-purple-50',
-    border:     'border-violet-300',
-    badge:      'bg-violet-100 text-violet-800',
-    btnActive:  'bg-violet-600 text-white shadow-lg shadow-violet-200',
-    btnInactive:'bg-white text-violet-700 border border-violet-200 hover:bg-violet-50',
+    value:       2,
+    label:       'Agresivo',
+    description: 'Máximo potencial de rendimiento con mayor exposición al riesgo',
+    color:       'violet',
+    icon:        Zap,
+    gradient:    'from-violet-50 to-purple-50',
+    border:      'border-violet-300',
+    badge:       'bg-violet-100 text-violet-800',
+    btnActive:   'bg-violet-600 text-white shadow-lg shadow-violet-200',
+    btnInactive: 'bg-white text-violet-700 border border-violet-200 hover:bg-violet-50',
   },
 ] as const;
 
 const STRATEGY_TYPES = [
-  { value: 0, label: 'Concentrado',  description: 'Todo en el mejor protocolo disponible según tu perfil',             icon: Target   },
-  { value: 1, label: 'Diversificado',description: 'Distribución entre múltiples protocolos para reducir riesgo',       icon: PieChart },
-  { value: 2, label: 'Híbrido',      description: 'Combinación dinámica ajustada al rendimiento del mercado',          icon: Activity },
+  { value: 0, label: 'Concentrado',   description: 'Todo en el mejor protocolo disponible según tu perfil',        icon: Target   },
+  { value: 1, label: 'Diversificado', description: 'Distribución entre múltiples protocolos para reducir riesgo',  icon: PieChart },
+  { value: 2, label: 'Híbrido',       description: 'Combinación dinámica ajustada al rendimiento del mercado',     icon: Activity },
 ] as const;
 
 const ADMIN_CONTENT = [
@@ -151,9 +148,8 @@ const ADMIN_CONTENT = [
     summary: 'Compound Finance actualizó sus parámetros de colateral. Usuarios con estrategia Agresiva deben revisar su exposición.',
     date: 'Feb 8, 2025', icon: AlertTriangle, color: 'amber',
   },
-];
+] as const;
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 function formatTimestamp(ts: bigint | undefined): string {
   if (!ts || ts === 0n) return 'Nunca';
   return format(new Date(Number(ts) * 1000), 'MMM dd, yyyy – HH:mm');
@@ -179,9 +175,9 @@ function riskLevelLabel(level: number): string {
   return RISK_LEVELS[level]?.label ?? 'Desconocido';
 }
 
-// ─── CountdownTimer ───────────────────────────────────────────────────────────
 function CountdownTimer({ targetDate }: { targetDate: Date | null }) {
   const [display, setDisplay] = useState('—');
+
   useEffect(() => {
     if (!targetDate) { setDisplay('—'); return; }
     const update = () => {
@@ -196,32 +192,36 @@ function CountdownTimer({ targetDate }: { targetDate: Date | null }) {
     const id = setInterval(update, 60_000);
     return () => clearInterval(id);
   }, [targetDate]);
+
   return <span>{display}</span>;
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 const DashboardPage: React.FC = () => {
-  const navigate        = useNavigate();
-  const location        = useLocation();
-  const { address }     = useAccount();
+  const navigate    = useNavigate();
+  const location    = useLocation();
+  const { address } = useConnection();
 
-  // ── 1. Leer dirección del fondo desde el Factory ──────────────────────────
   const {
-    data:    userFundAddress,
+    data:      userFundAddress,
     isLoading: isLoadingFund,
-    refetch: refetchFund,
+    refetch:   refetchFund,
   } = useReadContract({
     address:      FACTORY_ADDRESS,
     abi:          FACTORY_ABI,
     functionName: 'getUserFund',
     args:         address ? [address] : undefined,
-    query:        { enabled: !!address },
+    query: {
+      enabled:              !!address,
+      staleTime:            0,
+      gcTime:               0,
+      refetchOnMount:       true,
+      refetchOnWindowFocus: true,
+    },
   });
 
   const fundAddress = userFundAddress as `0x${string}` | undefined;
   const hasFund     = !!fundAddress && fundAddress !== ZERO_ADDRESS;
 
-  // ── 2. Leer todos los datos del PersonalFund desplegado ───────────────────
   const fundContracts = hasFund && fundAddress
     ? ([
         { address: fundAddress, abi: FUND_ABI, functionName: 'totalBalance'           },
@@ -237,25 +237,29 @@ const DashboardPage: React.FC = () => {
     : ([] as const);
 
   const {
-    data:    fundData,
+    data:      fundData,
     isLoading: isLoadingFundData,
-    refetch: refetchFundData,
+    refetch:   refetchFundData,
   } = useReadContracts({
     contracts: fundContracts as any,
-    query:     { enabled: hasFund },
+    query: {
+      enabled:              hasFund,
+      staleTime:            0,
+      gcTime:               0,
+      refetchOnMount:       true,
+      refetchOnWindowFocus: true,
+    },
   });
 
-  // Extraer valores del fondo (índices según el orden de fundContracts)
-  const balance            = fundData?.[0]?.result as bigint  | undefined;
-  const monthlyDeposit     = fundData?.[1]?.result as bigint  | undefined;
-  const retirementAge      = fundData?.[2]?.result as bigint  | undefined;
-  const timelockEnd        = fundData?.[3]?.result as bigint  | undefined;
-  const selectedProtocol   = fundData?.[4]?.result as string  | undefined;
-  const retirementStarted  = fundData?.[5]?.result as boolean | undefined;
-  const monthlyDepositCount= fundData?.[6]?.result as bigint  | undefined;
-  const lastMonthlyTime    = fundData?.[7]?.result as bigint  | undefined;
+  const balance             = fundData?.[0]?.result as bigint          | undefined;
+  const monthlyDeposit      = fundData?.[1]?.result as bigint          | undefined;
+  const retirementAge       = fundData?.[2]?.result as bigint          | undefined;
+  const timelockEnd         = fundData?.[3]?.result as bigint          | undefined;
+  const selectedProtocol    = fundData?.[4]?.result as `0x${string}`   | undefined;
+  const retirementStarted   = fundData?.[5]?.result as boolean         | undefined;
+  const monthlyDepositCount = fundData?.[6]?.result as bigint          | undefined;
+  const lastMonthlyTime     = fundData?.[7]?.result as bigint          | undefined;
 
-  // ── 3. Leer protocolos del Registry ──────────────────────────────────────
   const {
     data:    protocolListRaw,
     refetch: refetchProtocols,
@@ -266,24 +270,51 @@ const DashboardPage: React.FC = () => {
     query:        { enabled: true },
   });
 
-  // Construimos una lista de protocolos simplificada
-  // (el Registry devuelve solo direcciones; en una integración completa
-  //  harías multicall a getProtocol por cada una)
   const activeProtocols: Protocol[] = useMemo(() => {
     if (!protocolListRaw) return [];
     return (protocolListRaw as `0x${string}`[]).map((addr) => ({
       protocolAddress: addr,
-      riskLevel:       1,   // placeholder – reemplazar con multicall a getProtocol
+      riskLevel:       1,    // placeholder – reemplazar con multicall a getProtocol
       apy:             500n, // placeholder – 5.00 %
       isVerified:      true,
     }));
   }, [protocolListRaw]);
 
-  // ── 4. Estado local ───────────────────────────────────────────────────────
-  const [depositAmount,      setDepositAmount]      = useState('');
-  const [depositAmountError, setDepositAmountError] = useState<string | null>(null);
-  const [depositMode,        setDepositMode]        = useState<'monthly' | 'custom'>('monthly');
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const { data: userPreferencesRaw } = useReadContract({
+    address:      USER_PREFERENCES_ADDRESS,
+    abi:          USER_PREFERENCES_ABI,
+    functionName: 'getUserConfig',
+    args:         address ? [address] : undefined,
+    query: {
+      enabled:              !!address,
+      staleTime:            30_000,
+      refetchOnMount:       true,
+      refetchOnWindowFocus: true,
+    },
+  });
+
+  const { data: routingStrategyRaw } = useReadContract({
+    address:      USER_PREFERENCES_ADDRESS,
+    abi:          USER_PREFERENCES_ABI,
+    functionName: 'getRoutingStrategy',
+    args:         address ? [address] : undefined,
+    query: {
+      enabled:              !!address,
+      staleTime:            30_000,
+      refetchOnMount:       true,
+      refetchOnWindowFocus: true,
+    },
+  });
+
+  const userPreferences = useMemo(() => {
+    const config   = userPreferencesRaw  as { riskTolerance?: number; selectedProtocol?: `0x${string}`; autoCompound?: boolean } | undefined;
+    const strategy = routingStrategyRaw  as { strategyType?: number } | undefined;
+    return { userConfig: config, routingStrategy: strategy };
+  }, [userPreferencesRaw, routingStrategyRaw]);
+
+  const currentRisk     = userPreferences.userConfig?.riskTolerance    ?? 0;
+  const currentStrategy = userPreferences.routingStrategy?.strategyType ?? 0;
+  const currentProtocol = userPreferences.userConfig?.selectedProtocol  ?? ZERO_ADDRESS;
 
   const [pendingRisk,     setPendingRisk]     = useState<number | null>(null);
   const [pendingStrategy, setPendingStrategy] = useState<number | null>(null);
@@ -292,19 +323,14 @@ const DashboardPage: React.FC = () => {
   const [prefSaveOk,      setPrefSaveOk]      = useState(false);
   const [stratSaveOk,     setStratSaveOk]     = useState(false);
 
-  // Preferencias on-chain (aún usando objeto vacío como antes)
-  const userPreferences: {
-    userConfig?: { riskTolerance?: number; selectedProtocol?: `0x${string}`; autoCompound?: boolean };
-    routingStrategy?: { strategyType?: number };
-  } = {};
-
-  const currentRisk     = userPreferences.userConfig?.riskTolerance    ?? 0;
-  const currentStrategy = userPreferences.routingStrategy?.strategyType ?? 0;
-  const currentProtocol = userPreferences.userConfig?.selectedProtocol  ?? ZERO_ADDRESS;
-
   const effectiveRisk     = pendingRisk     ?? currentRisk;
   const effectiveStrategy = pendingStrategy ?? currentStrategy;
   const effectiveProtocol = pendingProtocol ?? (currentProtocol !== ZERO_ADDRESS ? currentProtocol : null);
+
+  const [depositAmount,      setDepositAmount]      = useState('');
+  const [depositAmountError, setDepositAmountError] = useState<string | null>(null);
+  const [depositMode,        setDepositMode]        = useState<'monthly' | 'custom'>('monthly');
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
 
   const monthlyDepositAmount = monthlyDeposit
     ? (Number(monthlyDeposit) / 1e6).toFixed(2)
@@ -328,8 +354,8 @@ const DashboardPage: React.FC = () => {
     const remainingSec    = timelockEnd && timelockEnd > nowSec ? timelockEnd - nowSec : 0n;
     const remainingMonths = Number(remainingSec) / (30 * 24 * 3600);
     const neededBalance   = monthly * 12 * 25; // fallback: 25 años
-    const projectedBalance   = currentBalance + monthly * remainingMonths;
-    const progressPercentage = neededBalance > 0
+    const projectedBalance    = currentBalance + monthly * remainingMonths;
+    const progressPercentage  = neededBalance > 0
       ? Math.min((currentBalance / neededBalance) * 100, 100)
       : 0;
     return {
@@ -343,8 +369,6 @@ const DashboardPage: React.FC = () => {
   }, [balance, monthlyDeposit, timelockEnd]);
 
   const isLoading = isLoadingFund || isLoadingFundData;
-
-  // ── 5. refetchAll: refresca todos los datos de la blockchain ─────────────
   const refetchAll = useCallback(async () => {
     await Promise.all([
       refetchFund(),
@@ -353,36 +377,67 @@ const DashboardPage: React.FC = () => {
     ]);
   }, [refetchFund, refetchFundData, refetchProtocols]);
 
-  // ── 5b. Al llegar desde el wizard con un deploy exitoso, forzar refetch ───
+  const [isPollingFund, setIsPollingFund] = useState(false);
+
   useEffect(() => {
     const state = location.state as { newFundAddr?: string } | null;
     if (!state?.newFundAddr) return;
-    // Limpiar el state del router para que no se dispare de nuevo al recargar
+
     window.history.replaceState({}, '');
-    // Dar un tick para que wagmi registre el bloque nuevo, luego refrescar
-    const timer = setTimeout(() => { void refetchAll(); }, 500);
-    return () => clearTimeout(timer);
-  // Solo al montar / cuando cambia el state del router
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setIsPollingFund(true);
+
+    let attempts = 0;
+    const MAX_ATTEMPTS = 10;
+
+    const poll = setInterval(async () => {
+      attempts++;
+      const result   = await refetchFund();
+      const newAddr  = result.data as string | undefined;
+      const resolved = !!newAddr && newAddr !== ZERO_ADDRESS;
+
+      if (resolved || attempts >= MAX_ATTEMPTS) {
+        clearInterval(poll);
+        setIsPollingFund(false);
+        if (resolved) void refetchFundData();
+      }
+    }, 2000);
+
+    return () => { clearInterval(poll); setIsPollingFund(false); };
   }, [location.state]);
 
-  // ── 6. Write contracts ────────────────────────────────────────────────────
-  const { writeContract: writeConfig,   isPending: isWritingConfig,   data: configTxHash } = useWriteContract();
-  const { writeContract: writeStrategy, isPending: isWritingStrategy, data: stratTxHash  } = useWriteContract();
+  useEffect(() => {
+    if (address) void refetchFund();
+  }, [address, refetchFund]);
 
-  const { isLoading: isConfirmingConfig } = useWaitForTransactionReceipt({
+  // ── Write contracts ────────────────────────────────────────────────────────
+  const { writeContract: writeConfig,   isPending: isWritingConfig,   data: configTxHash   } = useWriteContract();
+  const { writeContract: writeStrategy, isPending: isWritingStrategy, data: stratTxHash    } = useWriteContract();
+  const { isPending: isConfirmingConfig, isSuccess: isConfigConfirmed } = useWaitForTransactionReceipt({
     hash:  configTxHash,
     query: { enabled: Boolean(configTxHash) },
   });
-  const { isLoading: isConfirmingStrategy } = useWaitForTransactionReceipt({
+
+  const { isPending: isConfirmingStrategy, isSuccess: isStrategyConfirmed } = useWaitForTransactionReceipt({
     hash:  stratTxHash,
     query: { enabled: Boolean(stratTxHash) },
   });
 
+  useEffect(() => {
+    if (!isConfigConfirmed) return;
+    setPrefSaveOk(true);
+    const t = setTimeout(() => setPrefSaveOk(false), 3000);
+    return () => clearTimeout(t);
+  }, [isConfigConfirmed]);
+
+  useEffect(() => {
+    if (!isStrategyConfirmed) return;
+    setStratSaveOk(true);
+    const t = setTimeout(() => setStratSaveOk(false), 3000);
+    return () => clearTimeout(t);
+  }, [isStrategyConfirmed]);
+
   const isSavingPrefs    = isWritingConfig    || isConfirmingConfig;
   const isSavingStrategy = isWritingStrategy  || isConfirmingStrategy;
-
-  // ── 7. Handlers ───────────────────────────────────────────────────────────
   const handleOpenDepositModal = useCallback(() => {
     setDepositMode('monthly');
     setDepositAmount('');
@@ -415,10 +470,10 @@ const DashboardPage: React.FC = () => {
     console.log('[DashboardPage] Start retirement – pending implementation');
   }, []);
 
+  // ── Preference save handlers ───────────────────────────────────────────────
   const handleSaveUserConfig = useCallback(() => {
     if (!address) return;
     setPrefSaveError(null);
-    setPrefSaveOk(false);
     try {
       writeConfig({
         address:      USER_PREFERENCES_ADDRESS,
@@ -433,8 +488,6 @@ const DashboardPage: React.FC = () => {
       });
       setPendingRisk(null);
       setPendingProtocol(null);
-      setPrefSaveOk(true);
-      setTimeout(() => setPrefSaveOk(false), 3000);
     } catch (e) {
       setPrefSaveError((e as Error).message);
     }
@@ -442,23 +495,20 @@ const DashboardPage: React.FC = () => {
 
   const handleSaveStrategy = useCallback(() => {
     if (!address) return;
-    setStratSaveOk(false);
     try {
       writeStrategy({
         address:      USER_PREFERENCES_ADDRESS,
         abi:          USER_PREFERENCES_ABI,
         functionName: 'setRoutingStrategy',
-        args: [effectiveStrategy as 0 | 1 | 2, 50n, 10n],
+        args:         [effectiveStrategy as 0 | 1 | 2, 50n, 10n],
       });
+      // Reset pending selection immediately after submitting
       setPendingStrategy(null);
-      setStratSaveOk(true);
-      setTimeout(() => setStratSaveOk(false), 3000);
     } catch (e) {
       console.error('[DashboardPage] handleSaveStrategy:', e);
     }
   }, [address, effectiveStrategy, writeStrategy]);
 
-  // ── 8. Render ─────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
       <div className="min-h-screen bg-linear-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
@@ -473,6 +523,17 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 py-8 sm:py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
+
+        {/* ── Banner: verificando fondo recién deployado ── */}
+        {isPollingFund && (
+          <div className="mb-6 flex items-center gap-3 bg-indigo-50 border-2 border-indigo-200 rounded-2xl px-5 py-4">
+            <RefreshCw size={20} className="animate-spin text-indigo-600 shrink-0" />
+            <div>
+              <p className="font-bold text-indigo-800 text-sm">Verificando tu fondo en la blockchain...</p>
+              <p className="text-indigo-600 text-xs mt-0.5">Esto puede tomar unos segundos mientras se confirma la transacción.</p>
+            </div>
+          </div>
+        )}
 
         {/* ── Header ── */}
         <div className="text-center mb-8 sm:mb-12">
@@ -579,10 +640,10 @@ const DashboardPage: React.FC = () => {
                 {/* Stats grid */}
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { label: 'Depósito Mensual', value: formatUSDCDisplay(monthlyDeposit)             },
-                    { label: 'Total Depósitos',  value: monthlyDepositCount?.toString() ?? '0'        },
-                    { label: 'Edad de Retiro',   value: `${retirementAge?.toString() ?? '0'} años`    },
-                    { label: 'Protocolo',        value: selectedProtocol ? shortAddr(selectedProtocol) : '—' },
+                    { label: 'Depósito Mensual', value: formatUSDCDisplay(monthlyDeposit)                       },
+                    { label: 'Total Depósitos',  value: monthlyDepositCount?.toString() ?? '0'                  },
+                    { label: 'Edad de Retiro',   value: `${retirementAge?.toString() ?? '0'} años`              },
+                    { label: 'Protocolo',        value: selectedProtocol ? shortAddr(selectedProtocol) : '—'   },
                   ].map((stat) => (
                     <div key={stat.label} className="bg-gray-50 rounded-xl p-4">
                       <p className="text-gray-500 text-sm mb-1">{stat.label}</p>
@@ -591,7 +652,7 @@ const DashboardPage: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Deposit Cards */}
+                {/* Deposit cards */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-5 flex flex-col gap-4">
                     <div className="flex items-start justify-between gap-2">
@@ -726,7 +787,7 @@ const DashboardPage: React.FC = () => {
             {/* RIGHT SIDEBAR */}
             <div className="space-y-6 sm:space-y-8">
 
-              {/* Preferencias */}
+              {/* ── Preferencias ── */}
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-8">
                 <h3 className="text-2xl sm:text-3xl font-black text-gray-800 mb-2 flex items-center gap-3">
                   <Settings className="text-indigo-600" size={32} />
@@ -841,7 +902,7 @@ const DashboardPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Protocol Registry */}
+              {/* ── Protocol Registry ── */}
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-8">
                 <h3 className="text-2xl sm:text-3xl font-black text-gray-800 mb-2 flex items-center gap-3">
                   <Activity className="text-violet-600" size={32} />
@@ -942,7 +1003,7 @@ const DashboardPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Del equipo Ethernal */}
+              {/* ── Del equipo Ethernal ── */}
               <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-8">
                 <h3 className="text-xl sm:text-2xl font-black text-gray-800 mb-2 flex items-center gap-3">
                   <BookOpen className="text-pink-600" size={26} />
@@ -954,8 +1015,8 @@ const DashboardPage: React.FC = () => {
                 <div className="space-y-3">
                   {ADMIN_CONTENT.map((item) => {
                     const Icon = item.icon;
-                    const colorMap: Record<string, string> = { indigo: 'bg-indigo-50 border-indigo-200', pink: 'bg-pink-50 border-pink-200', amber: 'bg-amber-50 border-amber-200' };
-                    const iconColorMap: Record<string, string> = { indigo: 'text-indigo-600 bg-indigo-100', pink: 'text-pink-600 bg-pink-100', amber: 'text-amber-600 bg-amber-100' };
+                    const colorMap: Record<string, string>     = { indigo: 'bg-indigo-50 border-indigo-200', pink: 'bg-pink-50 border-pink-200', amber: 'bg-amber-50 border-amber-200' };
+                    const iconColorMap: Record<string, string> = { indigo: 'text-indigo-600 bg-indigo-100', pink: 'text-pink-600 bg-pink-100',   amber: 'text-amber-600 bg-amber-100'  };
                     return (
                       <div key={item.id} className={`border rounded-2xl p-4 ${colorMap[item.color]} transition hover:shadow-md cursor-pointer`}>
                         <div className="flex items-start gap-3">
@@ -977,7 +1038,7 @@ const DashboardPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Contacto */}
+              {/* ── Contacto ── */}
               <div className="bg-linear-to-r from-pink-50 to-purple-50 rounded-3xl shadow-2xl border-2 border-pink-200 p-6 sm:p-8">
                 <h3 className="text-xl sm:text-2xl font-black text-gray-800 mb-4 flex items-center gap-3">
                   <MessageCircle className="text-pink-600" size={28} />
@@ -1010,7 +1071,13 @@ const DashboardPage: React.FC = () => {
           <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-black text-gray-800">Realizar Depósito</h3>
-              <button onClick={handleCloseDepositModal} className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none" aria-label="Cerrar">×</button>
+              <button
+                onClick={handleCloseDepositModal}
+                className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none"
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
             </div>
 
             <div className="grid grid-cols-2 gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
@@ -1037,7 +1104,9 @@ const DashboardPage: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Monto en USDC</label>
                   <input
-                    type="number" min="0.01" step="0.01"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
                     value={depositAmount}
                     onChange={(e) => handleDepositAmountChange(e.target.value)}
                     placeholder="Ej: 500.00"

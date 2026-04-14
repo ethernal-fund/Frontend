@@ -35,10 +35,26 @@ const HomePage: React.FC = () => {
       <SEO
         title={t('hero.title')}
         description={t('hero.subtitle')}
-        keywords={['retirement', 'blockchain', 'DeFi', 'Arbitrum', 'decentralized', 'savings']}
+        keywords={['retirement', 'blockchain', 'DeFi', 'Arbitrum', 'decentralized', 'savings', 'ethereum', 'vyper', 'fund']}
       />
 
       <div className="pt-4">
+
+        {/* ── Beta Banner ── */}
+        <div className="flex items-center justify-center gap-3 px-4 py-2.5 bg-green-50 border-b border-green-200">
+          <span className="text-[10px] font-semibold tracking-widest px-2.5 py-0.5 rounded-full bg-green-700 text-green-50 select-none">
+            BETA
+          </span>
+          <span className="text-sm text-green-900">
+            {t('beta.bannerText')}
+          </span>
+          <Link
+            to="/survey"
+            className="text-sm font-semibold text-green-700 underline underline-offset-2 hover:text-green-800 transition-colors"
+          >
+            {t('beta.bannerCta')}
+          </Link>
+        </div>
 
         {/* Hero */}
         <section className="bg-linear-to-b from-gray-800 to-green-800 text-white py-20 px-4">
@@ -101,7 +117,7 @@ const HomePage: React.FC = () => {
 
                     {isInteractive && (
                       <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full group-hover:bg-green-100 transition">
-                        Ver comparativa de fees
+                        {t('features.fees.cta')}
                         <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     )}

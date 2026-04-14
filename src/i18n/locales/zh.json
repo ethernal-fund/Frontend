@@ -818,5 +818,9 @@
     "deploying": "部署中…",
     "viewOnExplorer": "在浏览器中查看",
     "Calcular": "计算"
+  },
+  "beta": {
+    "bannerText": "测试版本 — 您的反馈帮助我们改进。",
+    "bannerCta": "分享您的想法 →"
   }
 }
