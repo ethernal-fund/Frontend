@@ -331,7 +331,7 @@
     }
   },
   "dashboard": {
-    "title": "Tu Dashboard Ethernal",
+    "title": "Tu Dashboard ETHernal",
     "welcome": "Bienvenido, {address}",
     "subtitle": "Administra tu futuro financiero en blockchain",
     "refresh": "Actualizar Datos",
@@ -420,13 +420,13 @@
       "noProtocols": "Sin protocolos registrados aún"
     },
     "teamContent": {
-      "title": "Del Equipo Ethernal",
+      "title": "Del Equipo ETHernal",
       "subtitle": "Recomendaciones financieras y cursos de educación publicados por el Admin."
     },
     "support": {
       "title": "¿Necesitas ayuda?",
-      "description": "Contacta al equipo de Ethernal para preguntas sobre tu plan de retiro o estrategias de inversión",
-      "contact": "Contactar Ethernal",
+      "description": "Contacta al equipo de ETHernal para preguntas sobre tu plan de retiro o estrategias de inversión",
+      "contact": "Contactar ETHernal",
       "documentation": "Ver Documentación"
     },
     "depositModal": {
@@ -492,7 +492,7 @@
     "switchButton": "Cambiar a {network}"
   },
   "loading": {
-    "ethernal": "Cargando Ethernal",
+    "ethernal": "Cargando ETHernal",
     "connecting": "Conectando a blockchain...",
     "dashboard": "Cargando tu Dashboard..."
   },
@@ -540,7 +540,7 @@
       "ethCustody": "Smart contract",
       "corpCustody": "Entidad financiera"
     },
-    "ethStructureTitle": "Ethernal — Estructura simple",
+    "ethStructureTitle": "ETHernal — Estructura simple",
     "corpStructureTitle": "Corporativo — Estructura típica",
     "ethFees": [
       {
@@ -598,12 +598,12 @@
       "title": "Política de Privacidad",
       "s1": {
         "title": "Introducción",
-        "body": "La presente Política de Privacidad describe cómo FondoRetiro DeFi (en adelante, 'el Protocolo') trata la información de los usuarios que interactúan con los contratos inteligentes desplegados en blockchain pública. Al utilizar el Protocolo, usted reconoce haber leído, comprendido y aceptado los términos aquí establecidos."
+        "body": "La presente Política de Privacidad describe cómo ETHernal Fund (en adelante, 'el Protocolo') trata la información de los usuarios que interactúan con los contratos inteligentes desplegados en blockchain pública. Al utilizar el Protocolo, usted reconoce haber leído, comprendido y aceptado los términos aquí establecidos."
       },
       "s2": {
         "title": "Información registrada en Blockchain",
         "b1": "Dirección de billetera (wallet) del usuario.",
-        "b2": "Montos depositados, retirados y transferidos (en USDC u otros tokens ERC-20 configurados).",
+        "b2": "Montos depositados, retirados y transferidos (en USDC u otros tokens ERC-20 stablecoins configurados).",
         "b3": "Dirección del fondo personal creado mediante PersonalFundFactory.",
         "b4": "Parámetros del fondo: edad declarada, edad de jubilación, depósito mensual, capital inicial, protocolo DeFi seleccionado y período de timelock.",
         "b5": "Protocolo de inversión seleccionado (MockAaveAdapter, MockOndoAdapter u otros registrados en ProtocolRegistry).",

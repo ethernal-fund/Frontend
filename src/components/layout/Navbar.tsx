@@ -100,7 +100,7 @@ const Navbar: React.FC = () => {
             />
           </div>
           <span className="text-xl font-bold text-gray-900 hidden sm:block group-hover:text-forest-green transition">
-            Ethernal
+            ETHernal Fund
           </span>
         </Link>
 

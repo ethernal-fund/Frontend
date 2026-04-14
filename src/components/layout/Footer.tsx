@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
                 />
               </div>
               <span className="text-xl font-bold group-hover:text-yellow-400 transition">
-                Ethernal
+                ETHernal
               </span>
             </Link>
             <p className="text-gray-400 text-sm">{t('footer.tagline')}</p>
