@@ -6,6 +6,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
   useConnection,
+  useChainId,
 } from 'wagmi';
 import { format } from 'date-fns';
 import {
@@ -16,11 +17,8 @@ import {
   AlertTriangle, Info,
 } from 'lucide-react';
 import { USER_PREFERENCES_ABI } from '@/config/abis';
-import { USER_PREFERENCES_ADDRESS } from '@/config';
-
-const FACTORY_ADDRESS           = '0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A' as const;
-const PROTOCOL_REGISTRY_ADDRESS = '0xa76322A970EA80B0ebbB9c5213a2F3A1ee53118f' as const;
-const ARBISCAN_BASE             = 'https://sepolia.arbiscan.io/address/';
+import { getContractAddress, ZERO_ADDRESS as ZERO_ADDR } from '@/config/addresses';
+import { getExplorerAddressUrl } from '@/config/chains';
 
 const FACTORY_ABI = [
   {
@@ -82,7 +80,7 @@ type Protocol = {
   isVerified?:     boolean;
 };
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
+const ZERO_ADDRESS = ZERO_ADDR;
 
 const RISK_LEVELS = [
   {
@@ -200,13 +198,18 @@ const DashboardPage: React.FC = () => {
   const navigate    = useNavigate();
   const location    = useLocation();
   const { address } = useConnection();
+  const chainId     = useChainId();
+
+  const factoryAddress     = getContractAddress(chainId, 'personalFundFactory') ?? ZERO_ADDRESS;
+  const registryAddress    = getContractAddress(chainId, 'protocolRegistry')    ?? ZERO_ADDRESS;
+  const userPrefAddress    = getContractAddress(chainId, 'userPreferences')     ?? ZERO_ADDRESS;
 
   const {
     data:      userFundAddress,
     isLoading: isLoadingFund,
     refetch:   refetchFund,
   } = useReadContract({
-    address:      FACTORY_ADDRESS,
+    address:      factoryAddress,
     abi:          FACTORY_ABI,
     functionName: 'getUserFund',
     args:         address ? [address] : undefined,
@@ -264,7 +267,7 @@ const DashboardPage: React.FC = () => {
     data:    protocolListRaw,
     refetch: refetchProtocols,
   } = useReadContract({
-    address:      PROTOCOL_REGISTRY_ADDRESS,
+    address:      registryAddress,
     abi:          REGISTRY_ABI,
     functionName: 'getActiveProtocolsList',
     query:        { enabled: true },
@@ -281,7 +284,7 @@ const DashboardPage: React.FC = () => {
   }, [protocolListRaw]);
 
   const { data: userPreferencesRaw } = useReadContract({
-    address:      USER_PREFERENCES_ADDRESS,
+    address:      userPrefAddress,
     abi:          USER_PREFERENCES_ABI,
     functionName: 'getUserConfig',
     args:         address ? [address] : undefined,
@@ -294,7 +297,7 @@ const DashboardPage: React.FC = () => {
   });
 
   const { data: routingStrategyRaw } = useReadContract({
-    address:      USER_PREFERENCES_ADDRESS,
+    address:      userPrefAddress,
     abi:          USER_PREFERENCES_ABI,
     functionName: 'getUserStrategy',
     args:         address ? [address] : undefined,
@@ -476,7 +479,7 @@ const DashboardPage: React.FC = () => {
     setPrefSaveError(null);
     try {
       writeConfig({
-        address:      USER_PREFERENCES_ADDRESS,
+        address:      userPrefAddress,
         abi:          USER_PREFERENCES_ABI,
         functionName: 'setUserConfig',
         args: [
@@ -497,7 +500,7 @@ const DashboardPage: React.FC = () => {
     if (!address) return;
     try {
       writeStrategy({
-        address:      USER_PREFERENCES_ADDRESS,
+        address:      userPrefAddress,
         abi:          USER_PREFERENCES_ABI,
         functionName: 'setRoutingStrategy',
         args:         [effectiveStrategy as 0 | 1 | 2, 50n, 10n],
@@ -701,7 +704,7 @@ const DashboardPage: React.FC = () => {
                       <p className="font-mono text-xs sm:text-sm break-all text-indigo-800">{fundAddress}</p>
                     </div>
                     <a
-                      href={`${ARBISCAN_BASE}${fundAddress}`}
+                      href={getExplorerAddressUrl(chainId, fundAddress!)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg transition shrink-0"
