@@ -296,7 +296,7 @@ const DashboardPage: React.FC = () => {
   const { data: routingStrategyRaw } = useReadContract({
     address:      USER_PREFERENCES_ADDRESS,
     abi:          USER_PREFERENCES_ABI,
-    functionName: 'getRoutingStrategy',
+    functionName: 'getUserStrategy',
     args:         address ? [address] : undefined,
     query: {
       enabled:              !!address,
