@@ -21,6 +21,7 @@ const HomePage       = lazy(() => import('@/pages/public/LandingPage'));
 const CalculatorPage = lazy(() => import('@/pages/public/CalculatorPage'));
 const ContactPage    = lazy(() => import('@/pages/public/ContactPage'));
 const SurveyPage     = lazy(() => import('@/pages/public/SurveyPage'));
+const OurHistoryPage = lazy(() => import('@/pages/public/OurHistoryPage'));
 const NotFoundPage   = lazy(() => import('@/pages/public/NotFoundPage'));
 
 // Legal (public, sin Navbar/Footer propios — LegalPage los omite)
@@ -66,6 +67,7 @@ function AppShell() {
             <Route path={ROUTES.CALCULATOR} element={<CalculatorPage />} />
             <Route path={ROUTES.CONTACT}    element={<ContactPage />}    />
             <Route path={ROUTES.SURVEY}     element={<SurveyPage />}     />
+            <Route path={ROUTES.OUR_HISTORY} element={<OurHistoryPage />} />
 
             {/* Legal */}
             <Route path={ROUTES.PRIVACY}    element={<PrivacyPage />}    />

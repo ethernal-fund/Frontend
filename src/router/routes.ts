@@ -4,6 +4,7 @@ export const ROUTES = {
   CALCULATOR:  '/calculator',
   CONTACT:     '/contact',
   SURVEY:      '/survey',
+  OUR_HISTORY:  '/our-history',
   LEARNING:    '/learning',
 
   // User (requires connected wallet)
@@ -71,6 +72,13 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     footer: true,
     title: 'Survey',
     description: 'Anonymous survey to help us improve Ethernal.',
+  },
+  [ROUTES.OUR_HISTORY]: {
+    guard: 'public',
+    navbar: true,
+    footer: true,
+    title: 'Our History',
+    description: 'The story behind Ethernal Fund and its mission.',
   },
   [ROUTES.LEARNING]: {
     guard: 'public',

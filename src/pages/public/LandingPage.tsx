@@ -346,8 +346,33 @@ const HomePage: React.FC = () => {
         {/* About */}
         <section className="bg-gray-100 py-16 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-6 text-gray-800">{t('about.title')}</h2>
-            <p className="text-lg text-gray-700 leading-relaxed">{t('about.description')}</p>
+            <h2 className="text-4xl font-bold mb-6 text-gray-800">
+              {t('about.title')}
+            </h2>
+            
+            <div className="max-w-3xl mx-auto">
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                Todo comenzó una tarde mientras nuestro fundador, Cristian F. Taborda, 
+                iba a buscar a sus hijos al colegio. Al encontrarse con una manifestación de jubilados 
+                en la esquina de Rodríguez Peña y Avenida Rivadavia, una inocente pregunta de su hijo 
+                reveló una realidad dolorosa: el sistema previsional había fallado a varias generaciones 
+                de su propia familia.
+              </p>
+              
+              <p className="text-lg text-gray-700 leading-relaxed mb-10">
+                Ese momento despertó en él una profunda determinación: crear una alternativa real y 
+                sostenible. Así nació la idea de una aplicación descentralizada donde cada persona 
+                pueda calcular, crear y administrar su propio fondo de retiro, con dignidad y libertad.
+              </p>
+
+              <Link
+                to="/nuestra-historia"
+                className="inline-flex items-center gap-2 text-green-700 font-semibold hover:text-green-800 transition-colors group"
+              >
+                Conocer toda nuestra historia 
+                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </section>
 
