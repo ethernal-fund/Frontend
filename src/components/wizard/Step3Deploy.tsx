@@ -7,22 +7,68 @@ import { useDeployFund }    from '@/hooks/useDeployFund';
 import { fmtUsdc }          from '@/lib/calculator';
 import { getExplorerUrl, getExplorerAddressUrl } from '@/config/chains';
 import { cn }               from '@/lib/cn';
+import { useAuthStore }     from '@/stores/authStore';   
+import { useEffect, useRef } from 'react';
 
 interface Step3Props {
-  onBack:      () => void;
-  onSuccess:   () => void;   // cierra el modal antes de navegar
+  onBack:    () => void;
+  onSuccess: () => void;
 }
 
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
+
 export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
-  const { t } = useTranslation();
+  const { t }    = useTranslation();
   const chainId  = useChainId();
   const navigate = useNavigate();
+  const { token } = useAuthStore();  
+
   const { calculator, result, selectedProtocol, approved, prevStep } = useWizardStore();
   const { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund } = useDeployFund();
 
-  const totalApprove = (calculator.principal) + (result?.monthlyGross ?? 0);
-  const isSuccess    = status === 'success';
-  const isLoading    = status === 'approving' || status === 'deploying';
+  const totalApprove  = calculator.principal + (result?.monthlyGross ?? 0);
+  const isSuccess     = status === 'success';
+  const isLoading     = status === 'approving' || status === 'deploying';
+  const registeredRef = useRef(false);
+
+  useEffect(() => {
+    if (!isSuccess || !fundAddr || !txHash || !selectedProtocol || registeredRef.current) return;
+
+    registeredRef.current = true;   // evitar doble llamada en StrictMode
+
+    const body = {
+      contract_address:       fundAddr,
+      tx_hash:                txHash,
+      principal:              calculator.principal,
+      monthly_deposit:        result?.monthlyGross ?? 0,
+      desired_monthly_income: calculator.desiredMonthlyIncome,
+      current_age:            calculator.currentAge,
+      retirement_age:         calculator.retirementAge,
+      payment_years:          calculator.paymentYears,
+      apy_percent:            calculator.apyPercent,
+      protocol_address:       selectedProtocol.address,
+    };
+
+    fetch(`${API_BASE}/funds/register`, {
+      method:  'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((e) => { throw new Error(e.detail ?? 'Register failed'); });
+        return res.json();
+      })
+      .then((data) => {
+        console.info('[Step3Deploy] Fund registered in DB:', data);
+      })
+      .catch((err) => {
+        // No bloquear la UX — el indexer puede sincronizar después
+        console.error('[Step3Deploy] Could not register fund in DB:', err);
+      });
+  }, [isSuccess, fundAddr, txHash, selectedProtocol, calculator, result, token]);
 
   return (
     <div className="space-y-6">
@@ -49,7 +95,8 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
 
       {/* Allowance note */}
       <div className="bg-[#7b4dff11] border border-[#7b4dff44] rounded-xl px-4 py-3 font-mono text-xs text-(--accent2)">
-        You'll approve <strong>{fmtUsdc(totalApprove)}</strong> for the Factory contract, then deploy your PersonalFund in one transaction.
+        You'll approve <strong>{fmtUsdc(totalApprove)}</strong> for the Factory contract,
+        then deploy your PersonalFund in one transaction.
       </div>
 
       {/* Action buttons */}
@@ -140,11 +187,11 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </button>
       )}
 
-      {/* Dashboard CTA — appears after successful deploy */}
+      {/* Dashboard CTA */}
       {isSuccess && (
         <button
           onClick={() => {
-            onSuccess();   // cierra y resetea el modal
+            onSuccess();
             navigate('/dashboard', {
               state:   { newFundAddr: fundAddr },
               replace: true,
