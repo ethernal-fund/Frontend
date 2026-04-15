@@ -7,7 +7,9 @@ export interface FaucetResponse {
   success: boolean;
   message: string;
   tx_hash: string | null;
-  amount: number | null;              // USDC enviado (ej: 100.0)
+  eth_tx_hash: string | null;           // Hash de la transacción en Ethereum
+  amount: number | null;
+  eth_amount: number | null;          // Cantidad de ETH enviado (ej: 0.1)
   balance: number | null;             // Balance del wallet tras recibir
   wait_time?: number | null;          // Segundos a esperar si hay rate limit
 }

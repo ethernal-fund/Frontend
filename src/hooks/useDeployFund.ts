@@ -7,6 +7,8 @@ import { FACTORY_ABI, ERC20_ABI }                  from '@/config/abis';
 import { useWizardStore }                           from '@/stores/wizardStore';
 import { useToast }                                 from '@/stores/uiStore';
 import { toUsdcBigInt }                             from '@/lib/calculator';
+import { apiFetch }                                 from '@/lib/api';
+import { buildApiUrl, API_ENDPOINTS }              from '@/config/api_config';
 
 export type DeployStatus =
   | 'idle' | 'approving' | 'approved' | 'deploying' | 'success' | 'error';
@@ -31,6 +33,30 @@ async function getGasOverrides(publicClient: PublicClient) {
   }
 }
 
+// ─── Tipos para el sync ──────────────────────────────────────────────────────
+interface FundSyncPayload {
+  fund_address:     string;
+  owner_address:    string;
+  chain_id:         number;
+  tx_hash:          string;
+  principal:        number;       // USDC con decimales (ej: 1000.00)
+  monthly_deposit:  number;
+  current_age:      number;
+  retirement_age:   number;
+  desired_income:   number;
+  payment_years:    number;
+  apy_percent:      number;
+  protocol_address: string;
+}
+
+async function syncFundToBackend(payload: FundSyncPayload): Promise<void> {
+  await apiFetch<unknown>(buildApiUrl(API_ENDPOINTS.FUNDS.SYNC), {
+    method:  'POST',
+    body:    JSON.stringify(payload),
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 export function useDeployFund() {
   const approvedFromStore = useWizardStore((s) => s.approved);
   const [status,   setStatus]   = useState<DeployStatus>(approvedFromStore ? 'approved' : 'idle');
@@ -159,6 +185,7 @@ export function useDeployFund() {
 
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
+      let deployedFundAddr: `0x${string}` | null = null;
       for (const log of receipt.logs) {
         try {
           const decoded = decodeEventLog({
@@ -167,10 +194,36 @@ export function useDeployFund() {
             topics: log.topics,
           });
           if (decoded.eventName === 'FundCreated') {
-            setFundAddr(decoded.args.fundAddress);
+            deployedFundAddr = decoded.args.fundAddress;
+            setFundAddr(deployedFundAddr);
             break;
           }
         } catch { /* log from a different contract, skip */ }
+      }
+
+      // ── Guardar en la DB ───────────────────────────────────────────────────
+      if (deployedFundAddr && walletClient.account?.address) {
+        try {
+          await syncFundToBackend({
+            fund_address:     deployedFundAddr,
+            owner_address:    walletClient.account.address,
+            chain_id:         chainId,
+            tx_hash:          hash,
+            principal:        calculator.principal,
+            monthly_deposit:  result.monthlyGross,
+            current_age:      calculator.currentAge,
+            retirement_age:   calculator.retirementAge,
+            desired_income:   calculator.desiredMonthlyIncome,
+            payment_years:    calculator.paymentYears,
+            apy_percent:      calculator.apyPercent,
+            protocol_address: selectedProtocol.address,
+          });
+        } catch (syncErr) {
+          // El fondo está deployado en la chain — no fallar el flujo por error de DB.
+          // El backend puede sincronizarse luego via indexer.
+          console.error('[useDeployFund] sync to backend failed:', syncErr);
+          toast.warning('Fondo deployado, pero no se pudo registrar en la base de datos. Se sincronizará automáticamente.');
+        }
       }
 
       setStatus('success');

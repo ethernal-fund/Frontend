@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useChainId } from 'wagmi';
-import { Droplets, CheckCircle, AlertCircle, Loader2, ExternalLink, RefreshCw } from 'lucide-react';
+import {
+  Droplets,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  ExternalLink,
+  RefreshCw,
+  Coins,
+  Zap,
+} from 'lucide-react';
 import { useWallet } from '@/hooks/web3/useWallet';
 import { useFaucet } from '@/hooks/web3/useFaucet';
 import type { FaucetResponse } from '@/services/faucet/faucet-client';
@@ -11,11 +20,12 @@ interface FaucetButtonProps {
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
-const EXPLORER_URL = import.meta.env.VITE_EXPLORER_URL || 'https://sepolia.arbiscan.io';
+const EXPLORER_URL =
+  import.meta.env.VITE_EXPLORER_URL || 'https://sepolia.arbiscan.io';
 
 export function FaucetButton({ className = '' }: FaucetButtonProps) {
   const { address, isConnected } = useWallet();
-  const chainId                  = useChainId();
+  const chainId = useChainId();
   const { requestTokens, loading, error: faucetError, clearError } = useFaucet();
 
   const [status,   setStatus]   = useState<Status>('idle');
@@ -31,8 +41,6 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
   }, [address, chainId]);
 
   const handleRequest = async () => {
-    // Doble guard: useWallet ya retorna safeAddress (undefined si inválida),
-    // pero validamos de nuevo para seguridad en tiempo de ejecución.
     if (!address || !isConnected || !address.startsWith('0x') || address.length !== 42) return;
 
     setStatus('loading');
@@ -54,7 +62,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
       setStatus('error');
       setErrorMsg(
         faucetError ??
-        (err instanceof Error ? err.message : 'Error al conectar con el faucet.')
+          (err instanceof Error ? err.message : 'Error al conectar con el faucet.')
       );
     }
   };
@@ -66,7 +74,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     clearError();
   };
 
-  // Wallet no conectada
+  // ── Wallet no conectada ──────────────────────────────────────────────────
   if (!isConnected || !address) {
     return (
       <div className={`bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 ${className}`}>
@@ -80,42 +88,81 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     );
   }
 
-  // Éxito
+  // ── Éxito ────────────────────────────────────────────────────────────────
   if (status === 'success' && result) {
-    const explorerUrl = result.tx_hash
+    const usdcExplorerUrl = result.tx_hash
       ? `${EXPLORER_URL}/tx/${result.tx_hash}`
+      : null;
+
+    const ethExplorerUrl = result.eth_tx_hash
+      ? `${EXPLORER_URL}/tx/${result.eth_tx_hash}`
       : null;
 
     return (
       <div className={`bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-5 ${className}`}>
         <div className="flex items-start gap-3 mb-4">
           <CheckCircle className="text-emerald-600 shrink-0 mt-0.5" size={24} />
-          <div>
-            <p className="font-bold text-emerald-800 text-base">{result.message}</p>
-            {result.amount && (
-              <p className="text-emerald-700 text-sm mt-1">
-                USDC recibido: <strong>{result.amount.toLocaleString()} USDC</strong>
-              </p>
+          <div className="min-w-0">
+            <p className="font-bold text-emerald-800 text-base leading-snug">
+              {result.message}
+            </p>
+
+            {/* USDC recibido */}
+            {result.amount != null && (
+              <div className="flex items-center gap-1.5 mt-2">
+                <Coins size={14} className="text-emerald-600 shrink-0" />
+                <p className="text-emerald-700 text-sm">
+                  MockUSDC recibido:{' '}
+                  <strong>{result.amount.toLocaleString()} USDC</strong>
+                </p>
+              </div>
             )}
+
+            {/* ETH recibido */}
+            {result.eth_amount != null && (
+              <div className="flex items-center gap-1.5 mt-1">
+                <Zap size={14} className="text-indigo-600 shrink-0" />
+                <p className="text-indigo-700 text-sm">
+                  ETH gas recibido:{' '}
+                  <strong>{result.eth_amount} ETH</strong>
+                </p>
+              </div>
+            )}
+
+            {/* Balance actual USDC */}
             {result.balance != null && (
-              <p className="text-emerald-600 text-xs mt-0.5">
+              <p className="text-emerald-600 text-xs mt-1.5">
                 Balance actual: {result.balance.toLocaleString()} USDC
               </p>
             )}
           </div>
         </div>
 
-        {explorerUrl && (
+        {/* Links al explorer */}
+        {(usdcExplorerUrl || ethExplorerUrl) && (
           <div className="flex flex-wrap gap-2 mb-3">
-            <a
-              href={explorerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg transition"
-            >
-              <ExternalLink size={12} />
-              Ver transacción
-            </a>
+            {usdcExplorerUrl && (
+              <a
+                href={usdcExplorerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-3 py-1.5 rounded-lg transition"
+              >
+                <ExternalLink size={12} />
+                Ver tx USDC
+              </a>
+            )}
+            {ethExplorerUrl && (
+              <a
+                href={ethExplorerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-lg transition"
+              >
+                <ExternalLink size={12} />
+                Ver tx ETH
+              </a>
+            )}
           </div>
         )}
 
@@ -130,13 +177,15 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     );
   }
 
-  // Error
+  // ── Error ────────────────────────────────────────────────────────────────
   if (status === 'error') {
     const isRateLimit =
-      errorMsg?.toLowerCase().includes('rate')   ||
-      errorMsg?.toLowerCase().includes('limit')  ||
-      errorMsg?.toLowerCase().includes('espera') ||
-      errorMsg?.toLowerCase().includes('24');
+      errorMsg?.toLowerCase().includes('rate')    ||
+      errorMsg?.toLowerCase().includes('limit')   ||
+      errorMsg?.toLowerCase().includes('espera')  ||
+      errorMsg?.toLowerCase().includes('24')      ||
+      errorMsg?.toLowerCase().includes('wallet')  ||
+      errorMsg?.toLowerCase().includes('ip');
 
     return (
       <div className={`bg-red-50 border-2 border-red-200 rounded-2xl p-5 ${className}`}>
@@ -165,7 +214,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     );
   }
 
-  // Estado idle / loading — CTA principal
+  // ── Idle / Loading — CTA principal ───────────────────────────────────────
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Wallet info */}
