@@ -2,19 +2,16 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000';
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,
-  TIMEOUT:  30_000,
-} as const;
-
-export const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json',
-  'Accept':       'application/json',
+  TIMEOUT: 30_000,           // 30 segundos
+  VERSION: 'v1',
 } as const;
 
 export const API_ENDPOINTS = {
-
   AUTH: {
-    NONCE: '/users/nonce',
-    LOGIN: '/users/auth',
+    NONCE:   '/users/nonce',
+    VERIFY:  '/users/auth',     
+    REFRESH: '/auth/refresh',
+    LOGOUT:  '/auth/logout',
   },
 
   USERS: {
@@ -25,7 +22,8 @@ export const API_ENDPOINTS = {
   FUNDS: {
     ME:           '/funds/me',
     TRANSACTIONS: '/funds/me/transactions',
-    SYNC:         '/funds/sync',
+    SYNC:         '/funds/sync',         
+    REGISTER:     '/funds/register',      
     BY_ADDRESS:   (address: string) => `/funds/${address}`,
   },
 
@@ -46,12 +44,12 @@ export const API_ENDPOINTS = {
   },
 
   CONTACT: {
-    BASE: '/contact',        
+    BASE: '/contact',
   },
 
   SURVEY: {
     BASE:     '/surveys',
-    FOLLOWUP: '/surveys/follow-up',  
+    FOLLOWUP: '/surveys/follow-up',
   },
 
   ADMIN: {
@@ -64,31 +62,36 @@ export const API_ENDPOINTS = {
     CONTACT_READ: (id: number) => `/admin/contacts/${id}/read`,
     INDEXER_RUN:  '/admin/indexer/run',
   },
-
 } as const;
 
 export const buildApiUrl = (endpoint: string): string => {
   const base = API_CONFIG.BASE_URL.replace(/\/$/, '');
+  const versionPath = `/api/${API_CONFIG.VERSION}`;
+  
+  // Asegura que el endpoint siempre empiece con /
   const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  return `${base}/api/v1${path}`; 
+
+  return `${base}${versionPath}${path}`;
 };
 
-export const getHealthUrl = (): string =>
-  `${API_CONFIG.BASE_URL.replace(/\/$/, '')}/health`;
+export const getHealthUrl = (): string => {
+  const base = API_CONFIG.BASE_URL.replace(/\/$/, '');
+  return `${base}/health`;
+};
 
 export type BackendStatus = 'unknown' | 'healthy' | 'warming_up' | 'unavailable';
 
 const WARMUP = {
-  PING_INTERVAL:  600_000,
-  TIMEOUT:         15_000,
-  INITIAL_PINGS:        3,
-  INITIAL_DELAY:    5_000,
+  PING_INTERVAL: 600_000,   // 10 minutos
+  TIMEOUT:       15_000,    // 15 segundos
+  INITIAL_PINGS: 3,
+  INITIAL_DELAY: 5_000,
 } as const;
 
 class WarmupManager {
   private intervalId: ReturnType<typeof setInterval> | null = null;
   private status: BackendStatus = 'unknown';
-  private listeners = new Set<(s: BackendStatus) => void>();
+  private listeners = new Set<(status: BackendStatus) => void>();
 
   async start(immediate = true): Promise<void> {
     if (this.intervalId) return;
@@ -103,22 +106,30 @@ class WarmupManager {
     }
   }
 
-  onStatusChange(cb: (s: BackendStatus) => void): () => void {
-    this.listeners.add(cb);
-    cb(this.status);
-    return () => this.listeners.delete(cb);
+  onStatusChange(callback: (status: BackendStatus) => void): () => void {
+    this.listeners.add(callback);
+    callback(this.status);
+    return () => this.listeners.delete(callback);
   }
 
-  getStatus():   BackendStatus { return this.status; }
-  isHealthy():   boolean       { return this.status === 'healthy'; }
-  async forcePing(): Promise<boolean> { return this.ping(); }
+  getStatus(): BackendStatus {
+    return this.status;
+  }
+
+  isHealthy(): boolean {
+    return this.status === 'healthy';
+  }
+
+  async forcePing(): Promise<boolean> {
+    return this.ping();
+  }
 
   private async initialWarmup(): Promise<void> {
     this.setStatus('warming_up');
     for (let i = 1; i <= WARMUP.INITIAL_PINGS; i++) {
       if (await this.ping()) return;
       if (i < WARMUP.INITIAL_PINGS) {
-        await new Promise(r => setTimeout(r, WARMUP.INITIAL_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, WARMUP.INITIAL_DELAY));
       }
     }
     this.setStatus('unavailable');
@@ -126,34 +137,48 @@ class WarmupManager {
 
   private async ping(): Promise<boolean> {
     try {
-      const ctrl = new AbortController();
-      const tid  = setTimeout(() => ctrl.abort(), WARMUP.TIMEOUT);
-      const res  = await fetch(getHealthUrl(), { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (res.ok) { this.setStatus('healthy'); return true; }
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), WARMUP.TIMEOUT);
+
+      const response = await fetch(getHealthUrl(), { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        this.setStatus('healthy');
+        return true;
+      }
+
       this.setStatus('unavailable');
       return false;
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : '';
-      this.setStatus(msg.includes('abort') ? 'warming_up' : 'unavailable');
+    } catch (error) {
+      const isAbort = error instanceof Error && error.name === 'AbortError';
+      this.setStatus(isAbort ? 'warming_up' : 'unavailable');
       return false;
     }
   }
 
-  private setStatus(s: BackendStatus): void {
-    if (this.status === s) return;
-    this.status = s;
-    this.listeners.forEach(cb => { try { cb(s); } catch { /* noop */ } });
+  private setStatus(newStatus: BackendStatus): void {
+    if (this.status === newStatus) return;
+    this.status = newStatus;
+    this.listeners.forEach((cb) => {
+      try {
+        cb(newStatus);
+      } catch {
+        // noop
+      }
+    });
   }
 }
 
 export const warmupManager = new WarmupManager();
 
+// Iniciar warmup automáticamente en el cliente
 if (typeof window !== 'undefined') {
   warmupManager.start();
   window.addEventListener('beforeunload', () => warmupManager.stop());
 }
 
 if (import.meta.env.DEV) {
-  console.log('[api] BASE_URL:', API_BASE_URL);
+  console.log('[api] BASE_URL configurado:', API_BASE_URL);
+  console.log('[api] Versión API:', API_CONFIG.VERSION);
 }
