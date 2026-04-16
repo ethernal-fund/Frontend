@@ -20,9 +20,9 @@ const FUND_CREATED_EVENT = parseAbiItem(
 async function getGasOverrides(publicClient: PublicClient) {
   try {
     const block = await publicClient.getBlock({ blockTag: 'latest' });
-    const bump  = (val: bigint) => val * 120n / 100n;
+    const bump  = (val: bigint) => val * 150n / 100n;   // +50% buffer on base fee
     if (block.baseFeePerGas) {
-      const maxPriorityFeePerGas = 1_000_000n;
+      const maxPriorityFeePerGas = 2_000_000n;           // 2 gwei tip — más competitivo
       const maxFeePerGas         = bump(block.baseFeePerGas) + maxPriorityFeePerGas;
       return { maxFeePerGas, maxPriorityFeePerGas };
     }
@@ -33,7 +33,6 @@ async function getGasOverrides(publicClient: PublicClient) {
   }
 }
 
-// ─── Tipos para el sync ──────────────────────────────────────────────────────
 interface FundSyncPayload {
   fund_address:     string;
   owner_address:    string;
@@ -56,7 +55,6 @@ async function syncFundToBackend(payload: FundSyncPayload): Promise<void> {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 export function useDeployFund() {
   const approvedFromStore = useWizardStore((s) => s.approved);
   const [status,   setStatus]   = useState<DeployStatus>(approvedFromStore ? 'approved' : 'idle');
@@ -71,8 +69,6 @@ export function useDeployFund() {
     useWizardStore();
   const toast = useToast();
 
-  // Resolve addresses for the current connected chain.
-  // Returns null if the chain has no deployed contracts.
   const getAddresses = useCallback(() => {
     const addrs = getContractAddresses(chainId);
     if (!addrs) {
@@ -149,7 +145,6 @@ export function useDeployFund() {
     ] as const;
 
     try {
-      // Simulate first to get a readable revert reason instead of a gas estimation failure.
       let gasEstimate: bigint;
       try {
         gasEstimate = await publicClient.estimateContractGas({
@@ -159,7 +154,9 @@ export function useDeployFund() {
           args:         txArgs,
           account:      walletClient.account,
         });
-        gasEstimate = gasEstimate * 120n / 100n;
+        gasEstimate = gasEstimate * 160n / 100n;  
+        const GAS_FLOOR = 1_500_000n;             
+        if (gasEstimate < GAS_FLOOR) gasEstimate = GAS_FLOOR;
       } catch (simErr) {
         const msg = simErr instanceof Error ? simErr.message : 'Transaction would revert';
         const clean = msg.replace(/^.*ContractFunctionExecutionError:\s*/s, '').split('\n')[0] ?? msg;
@@ -201,7 +198,6 @@ export function useDeployFund() {
         } catch { /* log from a different contract, skip */ }
       }
 
-      // ── Guardar en la DB ───────────────────────────────────────────────────
       if (deployedFundAddr && walletClient.account?.address) {
         try {
           await syncFundToBackend({
@@ -219,8 +215,6 @@ export function useDeployFund() {
             protocol_address: selectedProtocol.address,
           });
         } catch (syncErr) {
-          // El fondo está deployado en la chain — no fallar el flujo por error de DB.
-          // El backend puede sincronizarse luego via indexer.
           console.error('[useDeployFund] sync to backend failed:', syncErr);
           toast.warning('Fondo deployado, pero no se pudo registrar en la base de datos. Se sincronizará automáticamente.');
         }
