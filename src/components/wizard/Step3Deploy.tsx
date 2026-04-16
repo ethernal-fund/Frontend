@@ -19,16 +19,14 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
   const chainId = useChainId();
   const navigate = useNavigate();
 
-  // Datos del wizard
-  const { calculator, result, selectedProtocol, approved, prevStep } = useWizardStore();
-
-  // Hook de despliegue (ya maneja approve, deploy y sync al backend)
-  const { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund } = useDeployFund();
+  const { calculator, result, selectedProtocol, prevStep } = useWizardStore();
+  const { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund, approved } = useDeployFund();
 
   const totalApprove = calculator.principal + (result?.monthlyGross ?? 0);
 
   const isSuccess = status === 'success';
   const isLoading = status === 'approving' || status === 'deploying';
+  const isError   = status === 'error';
 
   return (
     <div className="space-y-6">
@@ -98,6 +96,8 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
             <>
               <Loader2 size={18} className="animate-spin" /> {t('deploying')}
             </>
+          ) : isError ? (
+            t('retryDeploy', { defaultValue: 'Retry Deploy' })
           ) : (
             t('deployFund')
           )}
@@ -105,23 +105,23 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
       </div>
 
       {/* Status Messages */}
-      {(txHash || isSuccess || status === 'error') && (
+      {(txHash || isSuccess || isError) && (
         <div
           className={cn(
             'flex items-start gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
             isSuccess && 'border-(--success) text-(--success)',
-            status === 'error' && 'border-(--danger) text-(--danger)',
-            !isSuccess && status !== 'error' && 'border-(--accent2) text-(--accent2)'
+            isError && 'border-(--danger) text-(--danger)',
+            !isSuccess && !isError && 'border-(--accent2) text-(--accent2)'
           )}
         >
-          {status === 'error' ? (
+          {isError ? (
             <AlertCircle size={16} className="shrink-0 mt-0.5" />
           ) : (
             <CheckCircle size={16} className="shrink-0 mt-0.5" />
           )}
 
           <div className="flex-1 min-w-0">
-            {status === 'error' && <div>{errorMsg}</div>}
+            {isError && <div>{errorMsg}</div>}
 
             {isSuccess && fundAddr && (
               <div>

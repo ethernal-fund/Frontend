@@ -20,9 +20,9 @@ const FUND_CREATED_EVENT = parseAbiItem(
 async function getGasOverrides(publicClient: PublicClient) {
   try {
     const block = await publicClient.getBlock({ blockTag: 'latest' });
-    const bump  = (val: bigint) => val * 150n / 100n;   // +50% buffer on base fee
+    const bump  = (val: bigint) => val * 160n / 100n;   // +60% 
     if (block.baseFeePerGas) {
-      const maxPriorityFeePerGas = 2_000_000n;           // 2 gwei tip — más competitivo
+      const maxPriorityFeePerGas = 3_000_000n;           // 3 gwei tip — más competitivo
       const maxFeePerGas         = bump(block.baseFeePerGas) + maxPriorityFeePerGas;
       return { maxFeePerGas, maxPriorityFeePerGas };
     }
@@ -155,7 +155,7 @@ export function useDeployFund() {
           account:      walletClient.account,
         });
         gasEstimate = gasEstimate * 160n / 100n;  
-        const GAS_FLOOR = 1_500_000n;             
+        const GAS_FLOOR = 3_000_000n;             
         if (gasEstimate < GAS_FLOOR) gasEstimate = GAS_FLOOR;
       } catch (simErr) {
         const msg = simErr instanceof Error ? simErr.message : 'Transaction would revert';
@@ -230,5 +230,7 @@ export function useDeployFund() {
     }
   }, [walletClient, publicClient, result, calculator, selectedProtocol, getAddresses, storeSetTxHash, toast]);
 
-  return { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund };
+  const approved = approvedFromStore || status === 'approved' || status === 'deploying' || status === 'success';
+
+  return { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund, approved };
 }

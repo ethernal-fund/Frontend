@@ -15,7 +15,6 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
   const { step, reset } = useWizardStore();
   const overlayRef      = useRef<HTMLDivElement>(null);
 
-  // Cerrar con Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -23,10 +22,8 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Bloquear scroll del body cuando el modal está abierto
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -39,7 +36,7 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
 
   function handleSuccess() {
     onClose();   // cierra el modal de inmediato
-    reset();     // resetea sin delay — ya no importa, el modal está cerrado
+    reset();    
   }
 
   if (!open) return null;
