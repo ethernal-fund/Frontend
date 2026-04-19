@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
-import { buildApiUrl, API_ENDPOINTS } from '@/config/api_config';
+import { buildApiUrl, API_ENDPOINTS } from '@/config/api.config';
 import { useAuthStore } from '@/stores/authStore';
 
 const api: AxiosInstance = axios.create({

@@ -8,7 +8,7 @@ import { useWizardStore }                           from '@/stores/wizardStore';
 import { useToast }                                 from '@/stores/uiStore';
 import { toUsdcBigInt }                             from '@/lib/calculator';
 import { apiFetch }                                 from '@/lib/api';
-import { buildApiUrl, API_ENDPOINTS }              from '@/config/api_config';
+import { buildApiUrl, API_ENDPOINTS }              from '@/config/api.config';
 
 export type DeployStatus =
   | 'idle' | 'approving' | 'approved' | 'deploying' | 'success' | 'error';

@@ -1,6 +1,6 @@
 import { useWalletClient } from 'wagmi';
 import { useAuthStore }    from '@/stores/authStore';
-import { buildApiUrl, API_ENDPOINTS } from '@/config/api_config';
+import { buildApiUrl, API_ENDPOINTS } from '@/config/api.config';
 import api from '@/lib/axios';
 
 export function useSiweAuth() {
