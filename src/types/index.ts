@@ -60,11 +60,7 @@ export interface WizardState {
   txHash:           `0x${string}` | null;
 }
 
-// i18n 
-
 export type SupportedLocale = 'en' | 'es' | 'de' | 'it' | 'pt' | 'zh';
-
-// Retirement plan 
 
 export type {
   RetirementPlan,

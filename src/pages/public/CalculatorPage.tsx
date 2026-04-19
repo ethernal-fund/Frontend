@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMyFund }     from '@/hooks/useMyFund';
 import {
   VictoryChart,
   VictoryLine,
@@ -32,6 +34,7 @@ import {
   AlertCircle,
   Droplets,
   ChevronRight,
+  LayoutDashboard,
 } from 'lucide-react';
 
 interface FieldProps {
@@ -66,6 +69,7 @@ const Field = ({ label, value, onChange, icon, step = 1, min, max, hint }: Field
 
 const CalculatorPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { isConnected, openModal } = useWallet();
   const chainId = useChainId();
   const factoryReady = areMainContractsDeployed(chainId);
@@ -87,6 +91,7 @@ const CalculatorPage = () => {
   });
 
   const { setCalculatorField, runCalculator } = useWizardStore();
+  const { hasFund: fundAddress } = useMyFund();
 
   useEffect(() => {
     recalculate();
@@ -461,11 +466,17 @@ const CalculatorPage = () => {
                 </p>
 
                 <button
-                  onClick={handleCreateContract}
+                  onClick={fundAddress ? () => navigate('/dashboard') : handleCreateContract}
                   disabled={isConnecting}
                   className="btn btn-gold mx-auto sm:w-auto text-base sm:text-lg px-8 py-4"
                 >
-                  {isConnecting ? (
+                  {fundAddress ? (
+                    <>
+                      <LayoutDashboard size={20} />
+                      {t('calculator.goToDashboard', 'Dashboard')}
+                      <ArrowRight size={20} />
+                    </>
+                  ) : isConnecting ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black" />
                       {t('common.loading')}
@@ -486,7 +497,11 @@ const CalculatorPage = () => {
                 </button>
 
                 <p className="mt-4 text-white/70 text-sm">
-                  {isConnected ? t('calculator.createOnArbitrum') : t('calculator.walletWillOpen')}
+                  {fundAddress
+                    ? t('calculator.contractAlreadyExists', 'You already have an active Smart Contract')
+                    : isConnected
+                    ? t('calculator.createOnArbitrum')
+                    : t('calculator.walletWillOpen')}
                 </p>
               </div>
             </div>

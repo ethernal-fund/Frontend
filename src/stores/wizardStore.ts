@@ -6,10 +6,10 @@ import { calculate } from '@/lib/calculator';
 
 interface WizardStore extends WizardState {
   // Navigation
-  goStep:  (step: WizardStep) => void;
+  goStep:   (step: WizardStep) => void;
   nextStep: () => void;
   prevStep: () => void;
-  reset:   () => void;
+  reset:    () => void;
 
   setCalculatorField: <K extends keyof CalculatorInput>(key: K, value: CalculatorInput[K]) => void;
   runCalculator:      () => void;
@@ -44,10 +44,10 @@ export const useWizardStore = create<WizardStore>()(
     immer((set, get) => ({
       ...INITIAL_STATE,
 
-      goStep:   (step)  => set((s) => { s.step = step; },           false, 'wizard/goStep'),
-      nextStep: ()      => set((s) => { if (s.step < 3) s.step++; }, false, 'wizard/next'),
-      prevStep: ()      => set((s) => { if (s.step > 1) s.step--; }, false, 'wizard/prev'),
-      reset:    ()      => set(() => ({ ...INITIAL_STATE }),          false, 'wizard/reset'),
+      goStep:   (step) => set((s) => { s.step = step; },            false, 'wizard/goStep'),
+      nextStep: ()     => set((s) => { if (s.step < 3) s.step++; }, false, 'wizard/next'),
+      prevStep: ()     => set((s) => { if (s.step > 1) s.step--; }, false, 'wizard/prev'),
+      reset:    ()     => set(() => ({ ...INITIAL_STATE }),          false, 'wizard/reset'),
 
       setCalculatorField: (key, value) =>
         set((s) => { s.calculator[key] = value as never; }, false, `wizard/calc/${key}`),

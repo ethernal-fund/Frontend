@@ -1,32 +1,63 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChainId } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { ExternalLink, CheckCircle, Loader2, AlertCircle, LayoutDashboard } from 'lucide-react';
 
-import { useWizardStore } from '@/stores/wizardStore';
-import { useDeployFund } from '@/hooks/useDeployFund';
-import { fmtUsdc } from '@/lib/calculator';
+import { useWizardStore }   from '@/stores/wizardStore';
+import { useDeployFund }    from '@/hooks/useDeployFund';
+import { FUND_QUERY_KEY }   from '@/hooks/useMyFund';
+import { fmtUsdc }          from '@/lib/calculator';
 import { getExplorerUrl, getExplorerAddressUrl } from '@/config/chains';
 import { cn } from '@/lib/cn';
 
+// Cuántas veces pollear el backend esperando que el indexer registre el fondo
+const MAX_POLL_ATTEMPTS = 12;
+const POLL_INTERVAL_MS  = 5_000;   // 5 s entre intentos → máx 60 s
+
 interface Step3Props {
-  onBack: () => void;
+  onBack:    () => void;
   onSuccess: () => void;
 }
 
 export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
-  const { t } = useTranslation();
-  const chainId = useChainId();
-  const navigate = useNavigate();
+  const { t }        = useTranslation();
+  const chainId      = useChainId();
+  const navigate     = useNavigate();
+  const queryClient  = useQueryClient();
 
   const { calculator, result, selectedProtocol, prevStep } = useWizardStore();
   const { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund, approved } = useDeployFund();
 
-  const totalApprove = calculator.principal + (result?.monthlyGross ?? 0);
+  const totalApprove  = calculator.principal + (result?.monthlyGross ?? 0);
+  const isSuccess     = status === 'success';
+  const isLoading     = status === 'approving' || status === 'deploying';
+  const isError       = status === 'error';
 
-  const isSuccess = status === 'success';
-  const isLoading = status === 'approving' || status === 'deploying';
-  const isError   = status === 'error';
+  // Polling: cuando el deploy confirma, esperamos que el indexer registre el fondo
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const attempts = useRef(0);
+
+  useEffect(() => {
+    if (!isSuccess) return;
+
+    // Invalidar de inmediato por si el indexer ya procesó el evento
+    void queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY });
+
+    // Luego pollear cada 5 s hasta encontrar el fondo o agotar intentos
+    pollRef.current = setInterval(async () => {
+      attempts.current += 1;
+      await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY });
+
+      const cached = queryClient.getQueryData<{ contract_address: string } | null>(FUND_QUERY_KEY);
+      if (cached || attempts.current >= MAX_POLL_ATTEMPTS) {
+        clearInterval(pollRef.current!);
+      }
+    }, POLL_INTERVAL_MS);
+
+    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+  }, [isSuccess]);
 
   return (
     <div className="space-y-6">
@@ -37,17 +68,15 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
         <div className="grid grid-cols-2 gap-3 text-sm font-mono">
           {[
-            ['Principal', fmtUsdc(calculator.principal)],
-            ['Monthly deposit', fmtUsdc(result?.monthlyGross ?? 0)],
-            ['Age range', `${calculator.currentAge} → ${calculator.retirementAge}`],
-            ['APY', `${calculator.apyPercent}%`],
-            ['Protocol', selectedProtocol?.name ?? '—'],
+            ['Principal',        fmtUsdc(calculator.principal)],
+            ['Monthly deposit',  fmtUsdc(result?.monthlyGross ?? 0)],
+            ['Age range',        `${calculator.currentAge} → ${calculator.retirementAge}`],
+            ['APY',              `${calculator.apyPercent}%`],
+            ['Protocol',         selectedProtocol?.name ?? '—'],
             ['Total to approve', fmtUsdc(totalApprove)],
           ].map(([label, value]) => (
             <div key={label}>
-              <div className="text-(--muted) text-[0.6rem] uppercase tracking-wider mb-0.5">
-                {label}
-              </div>
+              <div className="text-(--muted) text-[0.6rem] uppercase tracking-wider mb-0.5">{label}</div>
               <div className="text-(--text) font-bold">{value}</div>
             </div>
           ))}
@@ -62,7 +91,6 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
 
       {/* Action buttons */}
       <div className="space-y-3">
-        {/* Approve USDC Button */}
         <button
           onClick={() => void approveUsdc()}
           disabled={approved || isLoading}
@@ -70,56 +98,41 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
             'w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base transition',
             approved
               ? 'bg-[#22c55e] border border-[#22c55e] text-white cursor-default shadow-[0_0_12px_#22c55e55]'
-              : 'bg-(--accent) text-(--bg) hover:opacity-90 disabled:opacity-50 disabled:cursor-wait'
+              : 'bg-(--accent) text-(--bg) hover:opacity-90 disabled:opacity-50 disabled:cursor-wait',
           )}
         >
           {status === 'approving' ? (
-            <>
-              <Loader2 size={18} className="animate-spin" /> {t('approving')}
-            </>
+            <><Loader2 size={18} className="animate-spin" /> {t('approving')}</>
           ) : approved ? (
-            <>
-              <CheckCircle size={18} /> {t('approved')}
-            </>
-          ) : (
-            t('approveUsdc')
-          )}
+            <><CheckCircle size={18} /> {t('approved')}</>
+          ) : t('approveUsdc')}
         </button>
 
-        {/* Deploy Fund Button */}
         <button
           onClick={() => void deployFund()}
           disabled={!approved || isLoading || isSuccess}
           className="w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base bg-(--accent) text-(--bg) hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {status === 'deploying' ? (
-            <>
-              <Loader2 size={18} className="animate-spin" /> {t('deploying')}
-            </>
+            <><Loader2 size={18} className="animate-spin" /> {t('deploying')}</>
           ) : isError ? (
             t('retryDeploy', { defaultValue: 'Retry Deploy' })
-          ) : (
-            t('deployFund')
-          )}
+          ) : t('deployFund')}
         </button>
       </div>
 
-      {/* Status Messages */}
+      {/* Status messages */}
       {(txHash || isSuccess || isError) && (
-        <div
-          className={cn(
-            'flex items-start gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
-            isSuccess && 'border-(--success) text-(--success)',
-            isError && 'border-(--danger) text-(--danger)',
-            !isSuccess && !isError && 'border-(--accent2) text-(--accent2)'
-          )}
-        >
-          {isError ? (
-            <AlertCircle size={16} className="shrink-0 mt-0.5" />
-          ) : (
-            <CheckCircle size={16} className="shrink-0 mt-0.5" />
-          )}
-
+        <div className={cn(
+          'flex items-start gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
+          isSuccess && 'border-(--success) text-(--success)',
+          isError   && 'border-(--danger) text-(--danger)',
+          !isSuccess && !isError && 'border-(--accent2) text-(--accent2)',
+        )}>
+          {isError
+            ? <AlertCircle size={16} className="shrink-0 mt-0.5" />
+            : <CheckCircle size={16} className="shrink-0 mt-0.5" />
+          }
           <div className="flex-1 min-w-0">
             {isError && <div>{errorMsg}</div>}
 
@@ -128,8 +141,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
                 🎉 Fund deployed at{' '}
                 <a
                   href={getExplorerAddressUrl(chainId, fundAddr)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   className="text-(--accent2) hover:opacity-80 underline"
                 >
                   {fundAddr.slice(0, 10)}…{fundAddr.slice(-8)}
@@ -137,11 +149,16 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
               </div>
             )}
 
+            {isSuccess && (
+              <div className="mt-1 text-[0.7rem] text-(--muted)">
+                Registering fund… this may take a few seconds.
+              </div>
+            )}
+
             {txHash && (
               <a
                 href={getExplorerUrl(chainId, txHash)}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-1 text-(--accent2) hover:opacity-80 mt-1"
               >
                 {t('viewOnExplorer')} <ExternalLink size={12} />
@@ -151,13 +168,10 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       )}
 
-      {/* Back Button */}
+      {/* Back */}
       {!isSuccess && (
         <button
-          onClick={() => {
-            prevStep();
-            onBack();
-          }}
+          onClick={() => { prevStep(); onBack(); }}
           disabled={isLoading}
           className="text-sm text-(--muted) hover:text-(--text) transition"
         >
@@ -165,19 +179,13 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </button>
       )}
 
-      {/* Go to Dashboard Button */}
+      {/* Dashboard */}
       {isSuccess && (
         <button
-          onClick={() => {
-            onSuccess();
-            navigate('/dashboard', {
-              state: { newFundAddr: fundAddr },
-              replace: true,
-            });
-          }}
+          onClick={() => { onSuccess(); navigate('/dashboard', { state: { newFundAddr: fundAddr }, replace: true }); }}
           className={cn(
             'w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base transition',
-            'bg-[#22c55e] text-white hover:bg-[#16a34a] shadow-[0_0_16px_#22c55e44]'
+            'bg-[#22c55e] text-white hover:bg-[#16a34a] shadow-[0_0_16px_#22c55e44]',
           )}
         >
           <LayoutDashboard size={18} />
