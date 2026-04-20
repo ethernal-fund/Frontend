@@ -1,6 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import { useAppKit } from '@reown/appkit/react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useAppKit, useDisconnect as useAppKitDisconnect } from '@reown/appkit/react';
 import { useConnection, useDisconnect, useChainId } from 'wagmi';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthStore }   from '@/stores/authStore';
+import { useWizardStore } from '@/stores/wizardStore';
 
 const EXPLORERS: Record<number, string> = {
   1:        'https://etherscan.io',
@@ -13,9 +16,7 @@ const EXPLORERS: Record<number, string> = {
   11155420: 'https://sepolia-optimism.etherscan.io',
 };
 
-const formatAddress = (addr: string) =>
-  `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-
+const formatAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 const getExplorerUrl = (address: string, chainId: number) =>
   `${EXPLORERS[chainId] ?? 'https://etherscan.io'}/address/${address}`;
 
@@ -26,7 +27,6 @@ const WalletIcon = ({ size = 18 }: { size?: number }) => (
     <line x1="3" y1="10" x2="21" y2="10" />
   </svg>
 );
-
 const CopyIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -34,7 +34,6 @@ const CopyIcon = () => (
     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
   </svg>
 );
-
 const ExternalLinkIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -43,7 +42,6 @@ const ExternalLinkIcon = () => (
     <line x1="10" y1="14" x2="21" y2="3" />
   </svg>
 );
-
 const LogOutIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -52,7 +50,6 @@ const LogOutIcon = () => (
     <line x1="21" y1="12" x2="9" y2="12" />
   </svg>
 );
-
 const ChevronDownIcon = ({ className = '' }: { className?: string }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -64,37 +61,44 @@ const ChevronDownIcon = ({ className = '' }: { className?: string }) => (
 type CopyState = 'idle' | 'copied';
 
 export function ConnectWallet() {
-  const { open }               = useAppKit();
-  const { address, isConnected } = useConnection();
-  const { disconnect }         = useDisconnect();
-  const chainId                = useChainId();
-  const [isOpen,     setIsOpen    ] = useState(false);
-  const [copyState,  setCopyState ] = useState<CopyState>('idle');
+  const { open }                         = useAppKit();
+  const { disconnect: disconnectAppKit } = useAppKitDisconnect();
+  const { address, isConnected }         = useConnection();
+  const { disconnect }                   = useDisconnect();
+  const chainId                          = useChainId();
+  const queryClient                      = useQueryClient();
+  const logout                           = useAuthStore((s) => s.logout);
+  const resetWizard                      = useWizardStore((s) => s.reset);
+
+  const [isOpen,    setIsOpen   ] = useState(false);
+  const [copyState, setCopyState] = useState<CopyState>('idle');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+    const onClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node))
         setIsOpen(false);
-      }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
   }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [isOpen]);
+
+  const handleDisconnect = useCallback(() => {
+    setIsOpen(false);
+    logout();
+    queryClient.clear();
+    resetWizard();
+    disconnect();
+    try { disconnectAppKit(); } catch { /* sin sesión WC activa en desktop */ }
+  }, [logout, queryClient, resetWizard, disconnect, disconnectAppKit]);
 
   const copyAddress = async () => {
     if (!address) return;
@@ -112,16 +116,6 @@ export function ConnectWallet() {
     if (!address) return;
     window.open(getExplorerUrl(address, chainId), '_blank', 'noopener,noreferrer');
     setIsOpen(false);
-  };
-
-  const handleDisconnect = () => {
-    disconnect();
-    setIsOpen(false);
-  };
-
-  const handleOpenAccount = () => {
-    setIsOpen(false);
-    open({ view: 'Account' });
   };
 
   if (!isConnected) {
@@ -159,48 +153,32 @@ export function ConnectWallet() {
                      border border-gray-200 dark:border-gray-700 rounded-lg
                      shadow-lg overflow-hidden z-50"
         >
-          {/* Full account via AppKit */}
-          <button
-            role="menuitem"
-            onClick={handleOpenAccount}
+          <button role="menuitem" onClick={() => { setIsOpen(false); open({ view: 'Account' }); }}
             className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700
-                       transition-colors flex items-center gap-3 text-sm"
-          >
+                       transition-colors flex items-center gap-3 text-sm">
             <WalletIcon />
             <span>View Account</span>
           </button>
 
-          {/* Copy address */}
-          <button
-            role="menuitem"
-            onClick={copyAddress}
+          <button role="menuitem" onClick={copyAddress}
             className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700
-                       transition-colors flex items-center gap-3 text-sm"
-          >
+                       transition-colors flex items-center gap-3 text-sm">
             <CopyIcon />
             <span>{copyState === 'copied' ? '✓ Copied!' : 'Copy Address'}</span>
           </button>
 
-          {/* View on explorer */}
-          <button
-            role="menuitem"
-            onClick={viewOnExplorer}
+          <button role="menuitem" onClick={viewOnExplorer}
             className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700
-                       transition-colors flex items-center gap-3 text-sm"
-          >
+                       transition-colors flex items-center gap-3 text-sm">
             <ExternalLinkIcon />
             <span>View on Explorer</span>
           </button>
 
-          {/* Disconnect */}
-          <button
-            role="menuitem"
-            onClick={handleDisconnect}
+          <button role="menuitem" onClick={handleDisconnect}
             className="w-full px-4 py-3 text-left hover:bg-red-50 dark:hover:bg-red-900/20
                        transition-colors flex items-center gap-3 text-sm
                        text-red-600 dark:text-red-400
-                       border-t border-gray-200 dark:border-gray-700"
-          >
+                       border-t border-gray-200 dark:border-gray-700">
             <LogOutIcon />
             <span>Disconnect</span>
           </button>
@@ -211,15 +189,11 @@ export function ConnectWallet() {
 }
 
 export function ConnectWalletSimple() {
-  const { open }       = useAppKit();
+  const { open }        = useAppKit();
   const { isConnected } = useConnection();
-
   return (
-    <button
-      onClick={() => open()}
-      className="px-4 py-2 bg-blue-600 text-white rounded-lg
-                 hover:bg-blue-700 transition-colors font-medium"
-    >
+    <button onClick={() => open()}
+      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
       {isConnected ? 'Account' : 'Connect Wallet'}
     </button>
   );
