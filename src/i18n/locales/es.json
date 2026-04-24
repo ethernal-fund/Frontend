@@ -62,11 +62,13 @@
     "title": "¿Por qué Ethernal?",
     "security": {
       "title": "Seguridad y Control",
-      "description": "Tus fondos están en contratos inteligentes auditados. Solo tú tienes el control."
+      "description": "Tus fondos están en contratos inteligentes auditados. Solo tú tienes el control.",
+      "cta": "Ver detalle de seguridad"
     },
     "education": {
       "title": "Educación Financiera",
-      "description": "Aprende sobre DeFi y estrategias de jubilación mientras ahorras."
+      "description": "Aprende sobre DeFi y estrategias de jubilación mientras ahorras.",
+      "cta": "Explorar recursos educativos"
     },
     "fees": {
       "title": "Comisiones Bajas",
