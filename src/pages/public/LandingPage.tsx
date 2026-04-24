@@ -328,7 +328,7 @@ const HomePage: React.FC = () => {
                     <p className="text-gray-600">{t(`features.${key}.description`)}</p>
                     {isInteractive && (
                       <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full group-hover:bg-green-100 transition">
-                        {t('features.fees.cta')}
+                        {t('features.${key}.cta')}
                         <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     )}
