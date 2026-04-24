@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '@/components/common/SEO';
 import { FeeComparisonModal } from '@/components/marketing/FeeComparisonModal';
 import { SecurityControlModal } from '@/components/marketing/SecurityControlModal';
+import { FinanceEducationModal } from '@/components/marketing/FinanceEducationModal';
 
 type OGLocale = 'es' | 'en' | 'pt' | 'zh' | 'fr' | 'de' | 'it';
 
@@ -223,6 +224,7 @@ const HomePage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [feeModalOpen, setFeeModalOpen] = useState(false);
   const [securityModalOpen, setSecurityModalOpen] = useState(false);
+  const [finance, setFinance] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem('autoDisconnectHome') === 'true' && isConnected) {
@@ -238,7 +240,7 @@ const HomePage: React.FC = () => {
 
   const features = [
     { icon: Shield,        key: 'security',  onClick: () => setSecurityModalOpen(true) },
-    { icon: GraduationCap, key: 'education', onClick: undefined },
+    { icon: GraduationCap, key: 'education', onClick: () => setFinance(true) },
     { icon: TrendingUp,    key: 'fees',      onClick: () => setFeeModalOpen(true) },
   ] as const;
 
@@ -328,7 +330,7 @@ const HomePage: React.FC = () => {
                     <p className="text-gray-600">{t(`features.${key}.description`)}</p>
                     {isInteractive && (
                       <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full group-hover:bg-green-100 transition">
-                        {t('features.${key}.cta')}
+                        {t(`features.${key}.cta`)}
                         <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     )}
@@ -376,6 +378,10 @@ const HomePage: React.FC = () => {
       <SecurityControlModal
         isOpen={securityModalOpen}
         onClose={() => setSecurityModalOpen(false)}
+      />
+      <FinanceEducationModal
+        isOpen={finance}
+        onClose={() => setFinance(false)}
       />
     </>
   );
