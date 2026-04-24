@@ -70,12 +70,14 @@
     },
     "fees": {
       "title": "低费用",
-      "description": "无中间商。费用比传统基金低达 10 倍。"
+      "description": "无中间商。费用比传统基金低达 10 倍。",
+      "cta": "查看费用对比"
     }
   },
   "about": {
     "title": "关于 Ethernal",
-    "description": "Ethernal 将区块链安全与传统金融规划相结合，为所有人提供去中心化、透明且可访问的退休体验。"
+    "description": "Ethernal 将区块链安全与传统金融规划相结合，为所有人提供去中心化、透明且可访问的退休体验。",
+    "historyLink": "了解我们的完整故事"
   },
   "survey": {
     "title": "退休与区块链调查",
@@ -355,7 +357,8 @@
         "monthlyDeposit": "月存款",
         "totalDeposits": "总存款",
         "retirementAge": "退休年龄",
-        "years": "岁"
+        "years": "岁",
+        "extraDeposit": "额外存款"
       },
       "contractAddress": "合约地址",
       "viewOnArbiscan": "在 Arbiscan 上查看",
@@ -451,6 +454,9 @@
         "processing": "处理中...",
         "cancel": "取消"
       }
+    },
+    "notifications": {
+      "riskUpdateAlert": "提醒：风险更新"
     }
   },
   "errors": {
@@ -494,7 +500,9 @@
   "loading": {
     "ethernal": "加载 Ethernal 中",
     "connecting": "正在连接区块链...",
-    "dashboard": "正在加载你的控制台..."
+    "dashboard": "正在加载你的控制台...",
+    "verifyingFund": "正在区块链上验证您的基金...",
+    "updating": "更新中..."
   },
   "createContract": {
     "factoryAddressNotConfigured": "此网络未配置 Factory 地址"
@@ -822,5 +830,55 @@
   "beta": {
     "bannerText": "测试版本 — 您的反馈帮助我们改进。",
     "bannerCta": "分享您的想法 →"
+  },
+  "ourStory": {
+    "pageTitle": "我们的故事",
+    "metaDescription": "了解一次在布宜诺斯艾利斯街头与孩子的对话如何催生了 Ethernal Fund 的诞生——一个去中心化退休平台。"
+  },
+  "security": {
+    "modalTitle": "安全与控制",
+    "card": {
+      "privacy": {
+        "label": "隐私",
+        "title": "零知识登录",
+        "description": "无需用户名或密码。无个人数据。仅通过钱包账户访问——无黑客攻击面，无可出售的数据。"
+      },
+      "sovereignty": {
+        "label": "主权",
+        "title": "不可追踪的资金",
+        "description": "匿名钱包账户：不可追踪且不可没收。没有腐败政客可以侵占您的储蓄——您的钱属于您，只属于您。"
+      },
+      "succession": {
+        "label": "继承",
+        "title": "自动智能合约",
+        "description": "无需继承程序或受益人身份确认。达到退休年龄时，智能合约自动将资金释放到钱包——硬件钱包或应用程序。"
+      }
+    },
+    "pill": {
+      "noPassword": "无密码",
+      "noPersonalData": "无个人数据",
+      "antiHack": "防黑客",
+      "anonymous": "匿名",
+      "nonSeizable": "不可没收",
+      "noIntermediaries": "无中间商",
+      "noFormalities": "无繁文缛节",
+      "autoRetirement": "自动退休",
+      "smartContract": "智能合约"
+    },
+    "stat": {
+      "exposed": "暴露数据",
+      "identity": "需要身份验证",
+      "formalities": "继承手续",
+      "zero": "零",
+      "none": "无"
+    },
+    "shieldTitle": "非托管架构。",
+    "shieldDescription": "钱包持有者是唯一能够访问资金的人——Ethernal Fund 和任何第三方均无法干预、没收或重定向资产。",
+    "disclaimer": "ETHERNAL FUND · 链上合约 · ARBITRUM · 非托管"
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "subtitle": "您查找的页面不存在。",
+    "goHome": "返回首页"
   }
 }

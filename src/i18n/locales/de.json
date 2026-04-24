@@ -70,12 +70,14 @@
     },
     "fees": {
       "title": "Niedrige Gebühren",
-      "description": "Keine Zwischenhändler. Gebühren bis zu 10x niedriger als traditionelle Fonds."
+      "description": "Keine Zwischenhändler. Gebühren bis zu 10x niedriger als traditionelle Fonds.",
+      "cta": "Gebührenvergleich ansehen"
     }
   },
   "about": {
     "title": "Über Ethernal",
-    "description": "Ethernal kombiniert Blockchain-Sicherheit mit traditioneller Finanzplanung, um ein dezentrales, transparentes und für alle zugängliches Rentenerlebnis zu bieten."
+    "description": "Ethernal kombiniert Blockchain-Sicherheit mit traditioneller Finanzplanung, um ein dezentrales, transparentes und für alle zugängliches Rentenerlebnis zu bieten.",
+    "historyLink": "Unsere vollständige Geschichte"
   },
   "survey": {
     "title": "Umfrage zu Rente und Blockchain",
@@ -355,7 +357,8 @@
         "monthlyDeposit": "Monatliche Einzahlung",
         "totalDeposits": "Gesamteinzahlungen",
         "retirementAge": "Rentenalter",
-        "years": "Jahre"
+        "years": "Jahre",
+        "extraDeposit": "Zusätzliche Einzahlung"
       },
       "contractAddress": "Vertragsadresse",
       "viewOnArbiscan": "Auf Arbiscan anzeigen",
@@ -451,6 +454,9 @@
         "processing": "Verarbeitung...",
         "cancel": "Abbrechen"
       }
+    },
+    "notifications": {
+      "riskUpdateAlert": "Hinweis: Risikoaktualisierung"
     }
   },
   "errors": {
@@ -494,7 +500,9 @@
   "loading": {
     "ethernal": "Ethernal wird geladen",
     "connecting": "Verbindung zur Blockchain...",
-    "dashboard": "Dein Dashboard wird geladen..."
+    "dashboard": "Dein Dashboard wird geladen...",
+    "verifyingFund": "Dein Fonds wird auf der Blockchain verifiziert...",
+    "updating": "Aktualisierung..."
   },
   "createContract": {
     "factoryAddressNotConfigured": "Factory-Adresse für dieses Netzwerk nicht konfiguriert"
@@ -822,5 +830,55 @@
   "beta": {
     "bannerText": "Beta-Version — dein Feedback hilft uns zu verbessern.",
     "bannerCta": "Teile deine Meinung →"
+  },
+  "ourStory": {
+    "pageTitle": "Unsere Geschichte",
+    "metaDescription": "Erfahre, wie ein Gespräch mit einem Kind auf den Straßen von Buenos Aires die Gründung von Ethernal Fund inspirierte — eine dezentrale Altersvorsorge-Plattform."
+  },
+  "security": {
+    "modalTitle": "Sicherheit & Kontrolle",
+    "card": {
+      "privacy": {
+        "label": "Datenschutz",
+        "title": "Passwortloser Zugang",
+        "description": "Keine Benutzernamen oder Passwörter. Keine persönlichen Daten. Zugang nur über ein Wallet-Konto — keine Angriffsfläche für Hacker, keine Daten, die verkauft werden können."
+      },
+      "sovereignty": {
+        "label": "Souveränität",
+        "title": "Unverlierbare Gelder",
+        "description": "Anonyme Wallet-Konten: nicht rückverfolgbar und nicht pfändbar. Kein korrupter Politiker kann deine Ersparnisse vereinnahmen — dein Geld gehört dir und nur dir."
+      },
+      "succession": {
+        "label": "Nachfolge",
+        "title": "Automatischer Smart Contract",
+        "description": "Keine Nachlassverfahren oder Begünstigtenidentifikation. Beim Erreichen des Rentenalters gibt der Smart Contract die Gelder automatisch an das Wallet frei — Hardware-Wallet oder App."
+      }
+    },
+    "pill": {
+      "noPassword": "Keine Passwörter",
+      "noPersonalData": "Keine persönlichen Daten",
+      "antiHack": "Anti-Hack",
+      "anonymous": "Anonym",
+      "nonSeizable": "Nicht pfändbar",
+      "noIntermediaries": "Keine Zwischenhändler",
+      "noFormalities": "Keine Formalitäten",
+      "autoRetirement": "Automatische Rente",
+      "smartContract": "Smart Contract"
+    },
+    "stat": {
+      "exposed": "Offengelegte Daten",
+      "identity": "Identität erforderlich",
+      "formalities": "Nachlasspflichten",
+      "zero": "Null",
+      "none": "Keine"
+    },
+    "shieldTitle": "Nicht-verwahrte Architektur.",
+    "shieldDescription": "Der Wallet-Inhaber ist der Einzige mit Zugang zu den Geldern — weder Ethernal Fund noch Dritte können die Vermögenswerte einfrieren, pfänden oder umleiten.",
+    "disclaimer": "ETHERNAL FUND · ON-CHAIN VERTRAG · ARBITRUM · NICHT VERWAHRT"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "subtitle": "Die gesuchte Seite existiert nicht.",
+    "goHome": "Zur Startseite"
   }
 }

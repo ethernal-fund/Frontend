@@ -70,12 +70,14 @@
     },
     "fees": {
       "title": "Low Fees",
-      "description": "No intermediaries. Fees up to 10x lower than traditional funds."
+      "description": "No intermediaries. Fees up to 10x lower than traditional funds.",
+      "cta": "See fee comparison"
     }
   },
   "about": {
     "title": "About Ethernal",
-    "description": "Ethernal combines blockchain security with traditional financial planning to offer a decentralized, transparent and accessible retirement experience for everyone."
+    "description": "Ethernal combines blockchain security with traditional financial planning to offer a decentralized, transparent and accessible retirement experience for everyone.",
+    "historyLink": "Learn our full story"
   },
   "survey": {
     "title": "Retirement & Blockchain Survey",
@@ -355,7 +357,8 @@
         "monthlyDeposit": "Monthly Deposit",
         "totalDeposits": "Total Deposits",
         "retirementAge": "Retirement Age",
-        "years": "years"
+        "years": "years",
+        "extraDeposit": "Extra Deposit"
       },
       "contractAddress": "Contract Address",
       "viewOnArbiscan": "View on Arbiscan",
@@ -451,6 +454,9 @@
         "processing": "Processing...",
         "cancel": "Cancel"
       }
+    },
+    "notifications": {
+      "riskUpdateAlert": "Alert: Risk Update"
     }
   },
   "errors": {
@@ -494,7 +500,9 @@
   "loading": {
     "ethernal": "Loading Ethernal",
     "connecting": "Connecting to blockchain...",
-    "dashboard": "Loading your Dashboard..."
+    "dashboard": "Loading your Dashboard...",
+    "verifyingFund": "Verifying your fund on the blockchain...",
+    "updating": "Updating..."
   },
   "createContract": {
     "factoryAddressNotConfigured": "Factory address not configured for this network"
@@ -822,5 +830,55 @@
   "beta": {
     "bannerText": "This is a beta version — your feedback helps us improve.",
     "bannerCta": "Share your thoughts →"
+  },
+  "ourStory": {
+    "pageTitle": "Our Story",
+    "metaDescription": "Learn how a conversation with a child on the streets of Buenos Aires sparked the creation of Ethernal Fund — a decentralized retirement platform."
+  },
+  "security": {
+    "modalTitle": "Security & Control",
+    "card": {
+      "privacy": {
+        "label": "Privacy",
+        "title": "Zero-Knowledge Login",
+        "description": "No usernames or passwords. No personal data. Access only through a wallet account — no attack surface for hackers, no data that can be sold."
+      },
+      "sovereignty": {
+        "label": "Sovereignty",
+        "title": "Untraceable Funds",
+        "description": "Anonymous wallet accounts: untraceable and non-seizable. No corrupt politicians can appropriate your savings — your money is yours and yours alone."
+      },
+      "succession": {
+        "label": "Succession",
+        "title": "Automatic Smart Contract",
+        "description": "No succession procedures or beneficiary identification. Upon reaching retirement age, the Smart Contract automatically releases funds to the wallet — hard wallet or app."
+      }
+    },
+    "pill": {
+      "noPassword": "No passwords",
+      "noPersonalData": "No personal data",
+      "antiHack": "Anti-hack",
+      "anonymous": "Anonymous",
+      "nonSeizable": "Non-seizable",
+      "noIntermediaries": "No intermediaries",
+      "noFormalities": "No formalities",
+      "autoRetirement": "Auto retirement",
+      "smartContract": "Smart Contract"
+    },
+    "stat": {
+      "exposed": "Exposed data",
+      "identity": "Identity required",
+      "formalities": "Succession formalities",
+      "zero": "Zero",
+      "none": "None"
+    },
+    "shieldTitle": "Non-custodial architecture.",
+    "shieldDescription": "The wallet holder is the only one with access to the funds — neither Ethernal Fund nor any third party can intervene, seize, or redirect the assets.",
+    "disclaimer": "ETHERNAL FUND · ON-CHAIN CONTRACT · ARBITRUM · NON-CUSTODIAL"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "The page you're looking for doesn't exist.",
+    "goHome": "Go home"
   }
 }

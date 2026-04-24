@@ -70,12 +70,14 @@
     },
     "fees": {
       "title": "Taxas Baixas",
-      "description": "Sem intermediários. Taxas até 10x menores que fundos tradicionais."
+      "description": "Sem intermediários. Taxas até 10x menores que fundos tradicionais.",
+      "cta": "Ver comparativo de taxas"
     }
   },
   "about": {
     "title": "Sobre a Ethernal",
-    "description": "A Ethernal combina a segurança da blockchain com o planejamento financeiro tradicional para oferecer uma experiência de aposentadoria descentralizada, transparente e acessível para todos."
+    "description": "A Ethernal combina a segurança da blockchain com o planejamento financeiro tradicional para oferecer uma experiência de aposentadoria descentralizada, transparente e acessível para todos.",
+    "historyLink": "Conheça nossa história completa"
   },
   "survey": {
     "title": "Pesquisa sobre Aposentadoria e Blockchain",
@@ -355,7 +357,8 @@
         "monthlyDeposit": "Depósito Mensal",
         "totalDeposits": "Total de Depósitos",
         "retirementAge": "Idade de Aposentadoria",
-        "years": "anos"
+        "years": "anos",
+        "extraDeposit": "Depósito Extra"
       },
       "contractAddress": "Endereço do Contrato",
       "viewOnArbiscan": "Ver no Arbiscan",
@@ -451,6 +454,9 @@
         "processing": "Processando...",
         "cancel": "Cancelar"
       }
+    },
+    "notifications": {
+      "riskUpdateAlert": "Alerta: Atualização de Risco"
     }
   },
   "errors": {
@@ -494,7 +500,9 @@
   "loading": {
     "ethernal": "Carregando Ethernal",
     "connecting": "Conectando à blockchain...",
-    "dashboard": "Carregando seu Dashboard..."
+    "dashboard": "Carregando seu Dashboard...",
+    "verifyingFund": "Verificando seu fundo na blockchain...",
+    "updating": "Atualizando..."
   },
   "createContract": {
     "factoryAddressNotConfigured": "Endereço da factory não configurado para esta rede"
@@ -822,5 +830,55 @@
   "beta": {
     "bannerText": "Versão beta — seu feedback nos ajuda a melhorar.",
     "bannerCta": "Compartilhe sua opinião →"
+  },
+  "ourStory": {
+    "pageTitle": "Nossa História",
+    "metaDescription": "Saiba como uma conversa com uma criança nas ruas de Buenos Aires inspirou a criação do Ethernal Fund — uma plataforma de aposentadoria descentralizada."
+  },
+  "security": {
+    "modalTitle": "Segurança e Controle",
+    "card": {
+      "privacy": {
+        "label": "Privacidade",
+        "title": "Login sem senha",
+        "description": "Sem nomes de usuário ou senhas. Sem dados pessoais. Acesso apenas por conta de carteira — sem superfície de ataque para hackers, sem dados que possam ser vendidos."
+      },
+      "sovereignty": {
+        "label": "Soberania",
+        "title": "Fundos Não Rastreáveis",
+        "description": "Contas de carteira anônimas: não rastreáveis e não penhoráveis. Nenhum político corrupto pode se apropriar das suas economias — seu dinheiro é seu e somente seu."
+      },
+      "succession": {
+        "label": "Sucessão",
+        "title": "Smart Contract Automático",
+        "description": "Sem procedimentos de sucessão ou identificação de beneficiários. Ao atingir a idade de aposentadoria, o Smart Contract libera automaticamente os fundos para a carteira — hardware wallet ou app."
+      }
+    },
+    "pill": {
+      "noPassword": "Sem senhas",
+      "noPersonalData": "Sem dados pessoais",
+      "antiHack": "Anti-hack",
+      "anonymous": "Anônimo",
+      "nonSeizable": "Não penhorável",
+      "noIntermediaries": "Sem intermediários",
+      "noFormalities": "Sem burocracia",
+      "autoRetirement": "Aposentadoria automática",
+      "smartContract": "Smart Contract"
+    },
+    "stat": {
+      "exposed": "Dados expostos",
+      "identity": "Identidade exigida",
+      "formalities": "Formalidades de sucessão",
+      "zero": "Zero",
+      "none": "Nenhuma"
+    },
+    "shieldTitle": "Arquitetura não custodiada.",
+    "shieldDescription": "O titular da carteira é o único com acesso aos fundos — nem o Ethernal Fund nem qualquer terceiro pode intervir, penhorar ou redirecionar os ativos.",
+    "disclaimer": "ETHERNAL FUND · CONTRATO ON-CHAIN · ARBITRUM · NÃO CUSTODIADO"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "subtitle": "A página que você está procurando não existe.",
+    "goHome": "Ir para o início"
   }
 }
