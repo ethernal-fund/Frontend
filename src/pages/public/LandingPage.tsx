@@ -18,37 +18,37 @@ interface OGImageProps {
 const OG_COPY: Record<OGLocale, { title: string; subtitle: string; cta: string }> = {
   en: {
     title: 'Your Retirement on the Blockchain',
-    subtitle: 'Decentralized, transparent and low-fee savings — powered by Arbitrum.',
+    subtitle: 'Decentralized, transparent and low-fee savings — powered by Ethereum.',
     cta: 'Start saving →',
   },
   es: {
     title: 'Tu Jubilación en la Blockchain',
-    subtitle: 'Ahorro descentralizado, transparente y sin comisiones abusivas — sobre Arbitrum.',
+    subtitle: 'Ahorro descentralizado, transparente y sin comisiones abusivas — sobre Ethereum.',
     cta: 'Empezar a ahorrar →',
   },
   pt: {
     title: 'Sua Aposentadoria na Blockchain',
-    subtitle: 'Poupança descentralizada, transparente e com taxas baixas — no Arbitrum.',
+    subtitle: 'Poupança descentralizada, transparente e com taxas baixas — no Ethereum.',
     cta: 'Comece a poupar →',
   },
   zh: {
     title: '区块链上的退休储蓄',
-    subtitle: '去中心化、透明且低费用的储蓄——由 Arbitrum 驱动。',
+    subtitle: '去中心化、透明且低费用的储蓄——由 Ethereum 驱动。',
     cta: '开始储蓄 →',
   },
   fr: {
     title: 'Votre Retraite sur la Blockchain',
-    subtitle: 'Épargne décentralisée, transparente et à faibles frais — propulsée par Arbitrum.',
+    subtitle: 'Épargne décentralisée, transparente et à faibles frais — propulsée par Ethereum.',
     cta: 'Commencer →',
   },
   de: {
     title: 'Ihre Rente auf der Blockchain',
-    subtitle: 'Dezentrales, transparentes und günstiges Sparen — mit Arbitrum.',
+    subtitle: 'Dezentrales, transparentes und günstiges Sparen — mit Ethereum.',
     cta: 'Jetzt sparen →',
   },
   it: {
     title: 'Il Tuo Pensionamento sulla Blockchain',
-    subtitle: 'Risparmio decentralizzato, trasparente e a basse commissioni — su Arbitrum.',
+    subtitle: 'Risparmio decentralizzato, trasparente e a basse commissioni — su Ethereum.',
     cta: 'Inizia a risparmiare →',
   },
 };
