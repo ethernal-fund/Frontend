@@ -5,6 +5,7 @@ import { useWallet } from '@/hooks/web3/useWallet';
 import { useTranslation } from 'react-i18next';
 import SEO from '@/components/common/SEO';
 import { FeeComparisonModal } from '@/components/marketing/FeeComparisonModal';
+import { SecurityControlModal } from '@/components/marketing/SecurityControlModal';
 
 type OGLocale = 'es' | 'en' | 'pt' | 'zh' | 'fr' | 'de' | 'it';
 
@@ -221,6 +222,7 @@ const HomePage: React.FC = () => {
   const { isConnected, disconnect, openModal } = useWallet();
   const { t, i18n } = useTranslation();
   const [feeModalOpen, setFeeModalOpen] = useState(false);
+  const [securityModalOpen, setSecurityModalOpen] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem('autoDisconnectHome') === 'true' && isConnected) {
@@ -235,7 +237,7 @@ const HomePage: React.FC = () => {
   };
 
   const features = [
-    { icon: Shield,        key: 'security',  onClick: undefined },
+    { icon: Shield,        key: 'security',  onClick: () => setSecurityModalOpen(true) },
     { icon: GraduationCap, key: 'education', onClick: undefined },
     { icon: TrendingUp,    key: 'fees',      onClick: () => setFeeModalOpen(true) },
   ] as const;
@@ -248,11 +250,7 @@ const HomePage: React.FC = () => {
         keywords={['retirement', 'blockchain', 'DeFi', 'Arbitrum', 'decentralized', 'savings', 'ethereum', 'vyper', 'fund']}
         locale={i18n.language}
       />
-
-      {/* Off-screen OG frames — only needed during local export; safe to keep in prod
-          since it's aria-hidden and outside the viewport. Remove after committing PNGs. */}
       {import.meta.env.DEV && <OGImagePortal logoUrl="/logo.png" />}
-
       <div className="pt-4">
 
         {/* ── Beta Banner ── */}
@@ -323,13 +321,11 @@ const HomePage: React.FC = () => {
                     {isInteractive && (
                       <div className="absolute inset-0 bg-linear-to-br from-green-50/60 to-emerald-50/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     )}
-
                     <Icon className="text-green-600 mb-4" size={40} />
                     <h3 className="text-xl font-semibold mb-3 text-gray-800">
                       {t(`features.${key}.title`)}
                     </h3>
                     <p className="text-gray-600">{t(`features.${key}.description`)}</p>
-
                     {isInteractive && (
                       <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full group-hover:bg-green-100 transition">
                         {t('features.fees.cta')}
@@ -349,7 +345,6 @@ const HomePage: React.FC = () => {
             <h2 className="text-4xl font-bold mb-6 text-gray-800">
               {t('about.title')}
             </h2>
-            
             <div className="max-w-3xl mx-auto">
               <p className="text-lg text-gray-700 leading-relaxed mb-8">
                 Todo comenzó una tarde mientras nuestro fundador, Cristian F. Taborda, 
@@ -358,13 +353,11 @@ const HomePage: React.FC = () => {
                 reveló una realidad dolorosa: el sistema previsional había fallado a varias generaciones 
                 de su propia familia.
               </p>
-              
               <p className="text-lg text-gray-700 leading-relaxed mb-10">
                 Ese momento despertó en él una profunda determinación: crear una alternativa real y 
                 sostenible. Así nació la idea de una aplicación descentralizada donde cada persona 
                 pueda calcular, crear y administrar su propio fondo de retiro, con dignidad y libertad.
               </p>
-
               <Link
                 to="/nuestra-historia"
                 className="inline-flex items-center gap-2 text-green-700 font-semibold hover:text-green-800 transition-colors group"
@@ -375,12 +368,14 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
-
       </div>
-
       <FeeComparisonModal
         isOpen={feeModalOpen}
         onClose={() => setFeeModalOpen(false)}
+      />
+      <SecurityControlModal
+        isOpen={securityModalOpen}
+        onClose={() => setSecurityModalOpen(false)}
       />
     </>
   );

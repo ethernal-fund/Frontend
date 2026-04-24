@@ -1,8 +1,8 @@
 import { createAppKit }  from '@reown/appkit/react'
 import env               from '@/lib/env'
 
-import { wagmiAdapter }                                    from './adapter'
-import { PROJECT_ID, APP_URL, WAGMI_CHAINS, DEFAULT_CHAIN } from './constants'
+import { wagmiAdapter }                                      from './adapter'
+import { PROJECT_ID, APP_URL, WAGMI_CHAINS, DEFAULT_CHAIN }  from './constants'
 
 export const modal = createAppKit({
   adapters:            [wagmiAdapter],
@@ -31,6 +31,33 @@ export const modal = createAppKit({
     '--w3m-border-radius-master': '8px',
     '--w3m-font-family':          'Inter, system-ui, -apple-system, sans-serif',
   },
+})
+
+const IGNORED_ERROR_CODES = new Set([
+  4001,                                     // User rejected the request
+  4100,                                     // Unauthorized (wallet locked / no accounts)
+  4902,                                     // Chain not added yet 
+])
+
+modal.subscribeEvents(({ data }) => {
+  switch (data.event) {
+    case 'CONNECT_ERROR': {
+      const code: number | undefined = (data as any).properties?.cause?.code
+      if (code !== undefined && IGNORED_ERROR_CODES.has(code)) break
+      console.error('[web3] CONNECT_ERROR', (data as any).properties)
+      break
+    }
+    case 'DISCONNECT_ERROR': {
+      console.warn('[web3] DISCONNECT_ERROR', (data as any).properties)
+      break
+    }
+    case 'CONNECT_SUCCESS': {
+      if (import.meta.env.DEV) {
+        console.log('[web3] CONNECT_SUCCESS', (data as any).properties)
+      }
+      break
+    }
+  }
 })
 
 if (import.meta.env.DEV) {
