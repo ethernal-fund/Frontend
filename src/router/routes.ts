@@ -4,7 +4,7 @@ export const ROUTES = {
   CALCULATOR:  '/calculator',
   CONTACT:     '/contact',
   SURVEY:      '/survey',
-  OUR_HISTORY:  '/our-history',
+  OUR_HISTORY: '/our-history',
   LEARNING:    '/learning',
 
   // User (requires connected wallet)

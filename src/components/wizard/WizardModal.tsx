@@ -11,10 +11,17 @@ interface WizardModalProps {
   onClose: () => void;
 }
 
+const RESET_DELAY_MS = 2_000;
+
 export function WizardModal({ open, onClose }: WizardModalProps) {
   const { step, reset } = useWizardStore();
   const overlayRef      = useRef<HTMLDivElement>(null);
-
+  const resetTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    };
+  }, []);
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -23,7 +30,6 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [open]);
-
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -31,18 +37,21 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
 
   function handleClose() {
     onClose();
-    setTimeout(() => reset(), 300);
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(() => {
+      reset();
+    }, RESET_DELAY_MS);
   }
 
   function handleSuccess() {
-    onClose();   // cierra el modal de inmediato
-    reset();    
+    onClose();
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(() => {
+      reset();
+    }, RESET_DELAY_MS);
   }
-
   if (!open) return null;
-
   return (
-    // Overlay
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"

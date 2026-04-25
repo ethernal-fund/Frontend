@@ -7,8 +7,6 @@ import { FACTORY_ABI, ERC20_ABI }                  from '@/config/abis';
 import { useWizardStore }                           from '@/stores/wizardStore';
 import { useToast }                                 from '@/stores/uiStore';
 import { toUsdcBigInt }                             from '@/lib/calculator';
-import { apiFetch }                                 from '@/lib/api';
-import { buildApiUrl, API_ENDPOINTS }              from '@/config/api.config';
 
 export type DeployStatus =
   | 'idle' | 'approving' | 'approved' | 'deploying' | 'success' | 'error';
@@ -18,35 +16,43 @@ const FUND_CREATED_EVENT = parseAbiItem(
 );
 
 const TESTNET_CHAIN_IDS = new Set([
-  421614, // Arbitrum Sepolia
+  421614,   // Arbitrum Sepolia
   11155111, // Ethereum Sepolia
-  80002,  // Polygon Amoy
-  84532,  // Base Sepolia
+  80002,    // Polygon Amoy
+  84532,    // Base Sepolia
 ]);
 
 function isTestnet(chainId: number): boolean {
   return TESTNET_CHAIN_IDS.has(chainId);
 }
+
 interface GasConfig {
   minPriorityFee: bigint;
-  minMaxFee: bigint;
-  bumpPct: bigint;
+  minMaxFee:      bigint;
+  bumpPct:        bigint;
 }
 
 const GAS_CONFIG: Record<'testnet' | 'mainnet', GasConfig> = {
   testnet: {
-    // Arbitrum Sepolia reports near-zero baseFee; hardcode a 100 gwei floor
-    // so MetaMask never builds a tx with < 0.1 gwei maxFeePerGas.
     minPriorityFee: 100_000_000_000n, // 100 gwei
     minMaxFee:      100_000_000_000n, // 100 gwei
-    bumpPct:        160n,             // +60% on top of whatever baseFee reports
+    bumpPct:        160n,             // +60% sobre baseFee
   },
   mainnet: {
-    // Real L2 mainnet — baseFee is meaningful, a smaller floor is fine.
-    minPriorityFee: 10_000_000n,     // 0.01 gwei  (Arbitrum One typical tip)
-    minMaxFee:      100_000_000n,    // 0.1  gwei  (safety net only)
-    bumpPct:        130n,            // +30% buffer
+    minPriorityFee: 10_000_000n,  // 0.01 gwei (Arbitrum One típico)
+    minMaxFee:      100_000_000n, // 0.1  gwei (safety net)
+    bumpPct:        130n,         // +30% buffer
   },
+};
+
+const GAS_FLOOR: Record<'testnet' | 'mainnet', bigint> = {
+  testnet: 3_000_000n,
+  mainnet: 1_000_000n,
+};
+
+const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = {
+  testnet: 160n, // +60%
+  mainnet: 130n, // +30%
 };
 
 function bigintMax(a: bigint, b: bigint): bigint {
@@ -61,12 +67,11 @@ async function getGasOverrides(publicClient: PublicClient, chainId: number) {
 
     if (block.baseFeePerGas !== null && block.baseFeePerGas !== undefined) {
       const bumpedBase           = block.baseFeePerGas * cfg.bumpPct / 100n;
-      const maxPriorityFeePerGas = bigintMax(cfg.minPriorityFee, 1n); // always ≥ floor
+      const maxPriorityFeePerGas = bigintMax(cfg.minPriorityFee, 1n);
       const maxFeePerGas         = bigintMax(
         bumpedBase + maxPriorityFeePerGas,
         cfg.minMaxFee,
       );
-
       return { maxFeePerGas, maxPriorityFeePerGas };
     }
 
@@ -78,38 +83,6 @@ async function getGasOverrides(publicClient: PublicClient, chainId: number) {
       ? { maxFeePerGas: cfg.minMaxFee, maxPriorityFeePerGas: cfg.minPriorityFee }
       : {};
   }
-}
-
-const GAS_FLOOR: Record<'testnet' | 'mainnet', bigint> = {
-  testnet: 3_000_000n,
-  mainnet: 1_000_000n, // Arbitrum One is efficient; don't over-pad
-};
-
-const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = {
-  testnet: 160n, // +60%
-  mainnet: 130n, // +30%
-};
-
-interface FundSyncPayload {
-  fund_address:     string;
-  owner_address:    string;
-  chain_id:         number;
-  tx_hash:          string;
-  principal:        number;
-  monthly_deposit:  number;
-  current_age:      number;
-  retirement_age:   number;
-  desired_income:   number;
-  payment_years:    number;
-  apy_percent:      number;
-  protocol_address: string;
-}
-
-async function syncFundToBackend(payload: FundSyncPayload): Promise<void> {
-  await apiFetch<unknown>(buildApiUrl(API_ENDPOINTS.FUNDS.SYNC), {
-    method: 'POST',
-    body:   JSON.stringify(payload),
-  });
 }
 
 export function useDeployFund() {
@@ -125,7 +98,6 @@ export function useDeployFund() {
   const { result, calculator, selectedProtocol, setApproved, setTxHash: storeSetTxHash } =
     useWizardStore();
   const toast = useToast();
-
   const chainType = isTestnet(chainId) ? 'testnet' : 'mainnet';
 
   const getAddresses = useCallback(() => {
@@ -163,7 +135,6 @@ export function useDeployFund() {
 
       toast.info('Approval sent — waiting for confirmation…');
       await publicClient.waitForTransactionReceipt({ hash });
-
       setApproved(true);
       setStatus('approved');
       toast.success('USDC approved ✓');
@@ -174,14 +145,12 @@ export function useDeployFund() {
       toast.error(msg);
     }
   }, [walletClient, publicClient, result, calculator, chainId, getAddresses, setApproved, toast]);
-
   const deployFund = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected'); return; }
     if (!result || !selectedProtocol)   { toast.error('Complete the wizard first'); return; }
 
     const addrs = getAddresses();
     if (!addrs) return;
-
     const principal     = toUsdcBigInt(calculator.principal);
     const monthly       = toUsdcBigInt(result.monthlyGross);
     const desired       = toUsdcBigInt(calculator.desiredMonthlyIncome);
@@ -225,7 +194,6 @@ export function useDeployFund() {
       }
 
       const gasOverrides = await getGasOverrides(publicClient, chainId);
-
       const hash = await walletClient.writeContract({
         address:      addrs.personalFundFactory,
         abi:          FACTORY_ABI,
@@ -240,7 +208,6 @@ export function useDeployFund() {
       toast.info('Transaction sent — waiting for confirmation…');
 
       const receipt = await publicClient.waitForTransactionReceipt({ hash });
-
       let deployedFundAddr: `0x${string}` | null = null;
       for (const log of receipt.logs) {
         try {
@@ -254,29 +221,7 @@ export function useDeployFund() {
             setFundAddr(deployedFundAddr);
             break;
           }
-        } catch { /* log from a different contract, skip */ }
-      }
-
-      if (deployedFundAddr && walletClient.account?.address) {
-        try {
-          await syncFundToBackend({
-            fund_address:     deployedFundAddr,
-            owner_address:    walletClient.account.address,
-            chain_id:         chainId,
-            tx_hash:          hash,
-            principal:        calculator.principal,
-            monthly_deposit:  result.monthlyGross,
-            current_age:      calculator.currentAge,
-            retirement_age:   calculator.retirementAge,
-            desired_income:   calculator.desiredMonthlyIncome,
-            payment_years:    calculator.paymentYears,
-            apy_percent:      calculator.apyPercent,
-            protocol_address: selectedProtocol.address,
-          });
-        } catch (syncErr) {
-          console.error('[useDeployFund] sync to backend failed:', syncErr);
-          toast.warning('Fondo deployado, pero no se pudo registrar en la base de datos. Se sincronizará automáticamente.');
-        }
+        } catch { /* log de otro contrato, ignorar */ }
       }
 
       setStatus('success');

@@ -15,7 +15,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const isConnected     = useWalletStore((s) => s.isConnected)
   const location        = useLocation()
 
-  if (isReconnecting) return <LoadingScreen />
+  if (isReconnecting || isAuthenticated === undefined || isAuthenticated === null) {
+    return <LoadingScreen />
+  }
   if (!isAuthenticated) {
     const from = location.pathname + location.search
     const redirectParam = from !== ROUTES.HOME
@@ -23,7 +25,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       : ''
     return <Navigate to={`${ROUTES.HOME}${redirectParam}`} replace />
   }
-  if (!isConnected) return <LoadingScreen />
+  if (!isConnected) {
+    return <LoadingScreen />
+  }
   return <>{children}</>
 }
 export default ProtectedRoute
