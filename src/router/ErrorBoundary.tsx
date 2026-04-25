@@ -2,9 +2,9 @@ import { Component } from 'react';
 import type { ReactNode, ErrorInfo } from 'react';
 
 interface ErrorBoundaryProps {
-  children:   ReactNode;
-  fallback?:  ReactNode;
-  onError?:   (error: Error, info: ErrorInfo) => void;
+  children?: ReactNode;           // ← Ahora es opcional
+  fallback?: ReactNode;           // ← Fallback personalizado (ideal para errorElement)
+  onError?: (error: Error, info: ErrorInfo) => void;
 }
 
 interface ErrorBoundaryState {
@@ -43,10 +43,12 @@ export default class ErrorBoundary extends Component<
       return this.props.children;
     }
 
+    // Si se pasa un fallback (usado por errorElement), lo mostramos
     if (this.props.fallback) {
       return this.props.fallback;
     }
 
+    // Fallback por defecto (cuando se usa como wrapper normal)
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
