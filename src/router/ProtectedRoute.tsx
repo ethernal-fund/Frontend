@@ -9,13 +9,19 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isReconnecting  = useWalletStore((s) => s.isReconnecting);
   const isConnected     = useWalletStore((s) => s.isConnected);
   const location        = useLocation();
+  const isAuthLoading = 
+    isReconnecting || 
+    (isConnected && !isAuthenticated);   // ← Clave: wallet conectada pero aún no autenticada (SIWE en curso)
 
-  if (isReconnecting || isAuthenticated === undefined || isAuthenticated === null) {
+  if (isAuthLoading) {
     return <LoadingScreen />;
   }
+
   if (!isAuthenticated) {
     const from = location.pathname + location.search;
-    const redirectParam = from !== ROUTES.HOME ? `?redirect=${encodeURIComponent(from)}` : '';
+    const redirectParam = from !== ROUTES.HOME
+      ? `?redirect=${encodeURIComponent(from)}`
+      : '';
     return <Navigate to={`${ROUTES.HOME}${redirectParam}`} replace />;
   }
   if (!isConnected) {

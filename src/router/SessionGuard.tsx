@@ -21,7 +21,7 @@ const PRESERVE_ON_ENTRY: string[] = [
 ]
 
 const ENTRY_HANDLED_KEY = '_ethernal_entry_handled'
-const SIWE_COOLDOWN_MS = 5_000
+const SIWE_COOLDOWN_MS = 1_500
 
 export function SessionGuard() {
   const navigate  = useNavigate()
