@@ -1,6 +1,9 @@
-import axios, { type AxiosInstance } from 'axios';
-import { buildApiUrl, API_ENDPOINTS } from '@/config/api.config';
+import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
+
+interface RetryableConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000',
@@ -8,55 +11,29 @@ const api: AxiosInstance = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;                           // Request: adjunta el accessToken
+  const token = useAuthStore.getState().accessToken;
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-let isRefreshing = false;                                                      // Response: refresca el token si expira (401) 
-let queue: Array<(token: string) => void> = [];
-
 api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const original = error.config;
-    if (error.response?.status !== 401 || original._retry) {
-      return Promise.reject(error);
+  (response) => response,
+
+  (error: unknown) => {
+    const axiosError = error as {
+      response?: { status?: number };
+      config?:   RetryableConfig;
+    };
+
+    const status         = axiosError.response?.status;
+    const originalConfig = axiosError.config as RetryableConfig | undefined;
+
+    if (status === 401 && originalConfig && !originalConfig._retry) {
+      originalConfig._retry = true;
+      useAuthStore.getState().clearTokens();
     }
 
-    if (isRefreshing) {
-      return new Promise((resolve) => {
-        queue.push((token) => {
-          original.headers.Authorization = `Bearer ${token}`;
-          resolve(api(original));
-        });
-      });
-    }
-
-    original._retry = true;
-    isRefreshing = true;
-
-    try {
-      const { refreshToken, setTokens, logout } = useAuthStore.getState();
-      if (!refreshToken) { logout(); return Promise.reject(error); }
-
-      const { data } = await axios.post(
-        buildApiUrl(API_ENDPOINTS.AUTH.REFRESH),
-        { refreshToken }
-      );
-
-      setTokens(data.accessToken, data.refreshToken ?? refreshToken);
-      queue.forEach((cb) => cb(data.accessToken));
-      queue = [];
-
-      original.headers.Authorization = `Bearer ${data.accessToken}`;
-      return api(original);
-    } catch {
-      useAuthStore.getState().logout();
-      return Promise.reject(error);
-    } finally {
-      isRefreshing = false;
-    }
+    return Promise.reject(error);
   }
 );
 
