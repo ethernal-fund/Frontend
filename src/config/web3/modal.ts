@@ -5,12 +5,12 @@ import { wagmiAdapter }                                      from './adapter'
 import { PROJECT_ID, APP_URL, WAGMI_CHAINS, DEFAULT_CHAIN }  from './constants'
 
 export const modal = createAppKit({
-  adapters:            [wagmiAdapter],
-  projectId:           PROJECT_ID,
-  networks:            WAGMI_CHAINS,
-  defaultNetwork:      DEFAULT_CHAIN,
+  adapters:       [wagmiAdapter],
+  projectId:      PROJECT_ID,
+  networks:       WAGMI_CHAINS,
+  defaultNetwork: DEFAULT_CHAIN,
   enableWalletConnect: true,
-  enableInjected:      true,
+  enableInjected:      false,
   enableEIP6963:       true,
   metadata: {
     name:        'Ethernal Foundation',
@@ -18,6 +18,7 @@ export const modal = createAppKit({
     url:         APP_URL,
     icons:       [`${APP_URL}/icon-512.png`],
   },
+
   features: {
     analytics:        env.features?.analytics ?? false,
     email:            false,
@@ -25,6 +26,7 @@ export const modal = createAppKit({
     emailShowWallets: true,
     allWallets:       true,
   },
+
   themeMode: 'dark',
   themeVariables: {
     '--w3m-accent':               '#1B5E20',
@@ -34,9 +36,9 @@ export const modal = createAppKit({
 })
 
 const IGNORED_ERROR_CODES = new Set([
-  4001,                                     // User rejected the request
-  4100,                                     // Unauthorized (wallet locked / no accounts)
-  4902,                                     // Chain not added yet 
+  4001,  // User rejected the request
+  4100,  // Unauthorized (wallet locked / no accounts)
+  4902,  // Chain not added yet
 ])
 
 modal.subscribeEvents(({ data }) => {
