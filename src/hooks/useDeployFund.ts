@@ -1,244 +1,195 @@
-import { useState, useCallback }                    from 'react';
-import { usePublicClient, useWalletClient, useChainId } from 'wagmi';
-import { parseAbiItem, decodeEventLog }             from 'viem';
-import type { PublicClient }                        from 'viem';
-import { getContractAddresses }                     from '@/config/addresses';
-import { FACTORY_ABI, ERC20_ABI }                  from '@/config/abis';
-import { useWizardStore }                           from '@/stores/wizardStore';
-import { useToast }                                 from '@/stores/uiStore';
-import { toUsdcBigInt }                             from '@/lib/calculator';
+import { useState, useCallback }                         from 'react'
+import { usePublicClient, useWalletClient, useChainId }  from 'wagmi'
+import { parseAbiItem, decodeEventLog }                  from 'viem'
+import type { PublicClient }                             from 'viem'
+import { getContractAddresses }                          from '@/config/addresses'
+import { FACTORY_ABI, ERC20_ABI }                       from '@/config/abis'
+import { useWizardStore }                                from '@/stores/wizardStore'
+import { useToast }                                      from '@/stores/uiStore'
+import { toUsdcBigInt }                                  from '@/lib/calculator'
+import { fundsService }                                  from '@/services/fundsService'
 
 export type DeployStatus =
-  | 'idle' | 'approving' | 'approved' | 'deploying' | 'success' | 'error';
+  | 'idle' | 'approving' | 'approved' | 'deploying' | 'registering' | 'success' | 'error'
 
 const FUND_CREATED_EVENT = parseAbiItem(
   'event FundCreated(address indexed fundAddress, address indexed owner, uint256 initialDeposit, uint256 principal, uint256 monthlyDeposit, address selectedProtocol, uint256 retirementAge, uint256 timelockEnd, uint256 timestamp)'
-);
+)
 
-const TESTNET_CHAIN_IDS = new Set([
-  421614,   // Arbitrum Sepolia
-  11155111, // Ethereum Sepolia
-  80002,    // Polygon Amoy
-  84532,    // Base Sepolia
-]);
+const TESTNET_CHAIN_IDS = new Set([421614, 11155111, 80002, 84532])
+function isTestnet(chainId: number): boolean { return TESTNET_CHAIN_IDS.has(chainId) }
 
-function isTestnet(chainId: number): boolean {
-  return TESTNET_CHAIN_IDS.has(chainId);
-}
-
-interface GasConfig {
-  minPriorityFee: bigint;
-  minMaxFee:      bigint;
-  bumpPct:        bigint;
-}
+interface GasConfig { minPriorityFee: bigint; minMaxFee: bigint; bumpPct: bigint }
 
 const GAS_CONFIG: Record<'testnet' | 'mainnet', GasConfig> = {
-  testnet: {
-    minPriorityFee: 100_000_000_000n, // 100 gwei
-    minMaxFee:      100_000_000_000n, // 100 gwei
-    bumpPct:        160n,             // +60% sobre baseFee
-  },
-  mainnet: {
-    minPriorityFee: 10_000_000n,  // 0.01 gwei (Arbitrum One típico)
-    minMaxFee:      100_000_000n, // 0.1  gwei (safety net)
-    bumpPct:        130n,         // +30% buffer
-  },
-};
-
-const GAS_FLOOR: Record<'testnet' | 'mainnet', bigint> = {
-  testnet: 3_000_000n,
-  mainnet: 1_000_000n,
-};
-
-const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = {
-  testnet: 160n, // +60%
-  mainnet: 130n, // +30%
-};
-
-function bigintMax(a: bigint, b: bigint): bigint {
-  return a > b ? a : b;
+  testnet: { minPriorityFee: 100_000_000_000n, minMaxFee: 100_000_000_000n, bumpPct: 160n },
+  mainnet: { minPriorityFee: 10_000_000n,      minMaxFee: 100_000_000n,     bumpPct: 130n },
 }
+const GAS_FLOOR:           Record<'testnet' | 'mainnet', bigint> = { testnet: 3_000_000n, mainnet: 1_000_000n }
+const GAS_LIMIT_BUMP_PCT:  Record<'testnet' | 'mainnet', bigint> = { testnet: 160n,       mainnet: 130n }
+const bigintMax = (a: bigint, b: bigint) => a > b ? a : b
 
 async function getGasOverrides(publicClient: PublicClient, chainId: number) {
-  const cfg = GAS_CONFIG[isTestnet(chainId) ? 'testnet' : 'mainnet'];
-
+  const cfg = GAS_CONFIG[isTestnet(chainId) ? 'testnet' : 'mainnet']
   try {
-    const block = await publicClient.getBlock({ blockTag: 'latest' });
-
-    if (block.baseFeePerGas !== null && block.baseFeePerGas !== undefined) {
-      const bumpedBase           = block.baseFeePerGas * cfg.bumpPct / 100n;
-      const maxPriorityFeePerGas = bigintMax(cfg.minPriorityFee, 1n);
-      const maxFeePerGas         = bigintMax(
-        bumpedBase + maxPriorityFeePerGas,
-        cfg.minMaxFee,
-      );
-      return { maxFeePerGas, maxPriorityFeePerGas };
+    const block = await publicClient.getBlock({ blockTag: 'latest' })
+    if (block.baseFeePerGas != null) {
+      const maxPriorityFeePerGas = bigintMax(cfg.minPriorityFee, 1n)
+      const maxFeePerGas = bigintMax(block.baseFeePerGas * cfg.bumpPct / 100n + maxPriorityFeePerGas, cfg.minMaxFee)
+      return { maxFeePerGas, maxPriorityFeePerGas }
     }
-
-    const gasPrice = await publicClient.getGasPrice();
-    const bumped   = gasPrice * cfg.bumpPct / 100n;
-    return { gasPrice: bigintMax(bumped, cfg.minMaxFee) };
+    return { gasPrice: bigintMax(await publicClient.getGasPrice() * cfg.bumpPct / 100n, cfg.minMaxFee) }
   } catch {
-    return isTestnet(chainId)
-      ? { maxFeePerGas: cfg.minMaxFee, maxPriorityFeePerGas: cfg.minPriorityFee }
-      : {};
+    return isTestnet(chainId) ? { maxFeePerGas: cfg.minMaxFee, maxPriorityFeePerGas: cfg.minPriorityFee } : {}
   }
 }
 
-export function useDeployFund() {
-  const approvedFromStore = useWizardStore((s) => s.approved);
-  const [status,   setStatus]   = useState<DeployStatus>(approvedFromStore ? 'approved' : 'idle');
-  const [txHash,   setTxHash]   = useState<`0x${string}` | null>(null);
-  const [fundAddr, setFundAddr] = useState<`0x${string}` | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+function extractErrorMsg(err: unknown): string {
+  if (err instanceof Error) {
+    return err.message.replace(/^.*ContractFunctionExecutionError:\s*/s, '').split('\n')[0] ?? 'Error desconocido'
+  }
+  return 'Error desconocido'
+}
 
-  const chainId                = useChainId();
-  const publicClient           = usePublicClient();
-  const { data: walletClient } = useWalletClient();
-  const { result, calculator, selectedProtocol, setApproved, setTxHash: storeSetTxHash } =
-    useWizardStore();
-  const toast = useToast();
-  const chainType = isTestnet(chainId) ? 'testnet' : 'mainnet';
+export function useDeployFund() {
+  const approvedFromStore      = useWizardStore((s) => s.approved)
+  const [status,   setStatus]  = useState<DeployStatus>(approvedFromStore ? 'approved' : 'idle')
+  const [txHash,   setTxHash]  = useState<`0x${string}` | null>(null)
+  const [fundAddr, setFundAddr]= useState<`0x${string}` | null>(null)
+  const [errorMsg, setErrorMsg]= useState<string | null>(null)
+
+  const chainId                = useChainId()
+  const publicClient           = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+  const { result, calculator, selectedProtocol, setApproved, setTxHash: storeSetTxHash } = useWizardStore()
+  const toast     = useToast()
+  const chainType = isTestnet(chainId) ? 'testnet' : 'mainnet'
 
   const getAddresses = useCallback(() => {
-    const addrs = getContractAddresses(chainId);
-    if (!addrs) {
-      toast.error(`No contracts deployed on chain ${chainId}`);
-      return null;
-    }
-    return addrs;
-  }, [chainId, toast]);
+    const addrs = getContractAddresses(chainId)
+    if (!addrs) { toast.error(`No contracts deployed on chain ${chainId}`); return null }
+    return addrs
+  }, [chainId, toast])
 
   const approveUsdc = useCallback(async () => {
-    if (!walletClient || !publicClient) { toast.error('Wallet not connected'); return; }
-    if (!result)                        { toast.error('Run the calculator first'); return; }
+    if (!walletClient || !publicClient) { toast.error('Wallet not connected');     return }
+    if (!result)                        { toast.error('Run the calculator first'); return }
+    const addrs = getAddresses(); if (!addrs) return
 
-    const addrs = getAddresses();
-    if (!addrs) return;
-
-    const principal    = toUsdcBigInt(calculator.principal);
-    const monthly      = toUsdcBigInt(result.monthlyGross);
-    const totalApprove = principal + monthly;
-
-    setStatus('approving');
-    setErrorMsg(null);
-
+    setStatus('approving'); setErrorMsg(null)
     try {
-      const gasOverrides = await getGasOverrides(publicClient, chainId);
+      const gasOverrides = await getGasOverrides(publicClient, chainId)
       const hash = await walletClient.writeContract({
-        address:      addrs.usdc,
-        abi:          ERC20_ABI,
-        functionName: 'approve',
-        args:         [addrs.personalFundFactory, totalApprove],
+        address: addrs.usdc, abi: ERC20_ABI, functionName: 'approve',
+        args: [addrs.personalFundFactory, toUsdcBigInt(calculator.principal) + toUsdcBigInt(result.monthlyGross)],
         ...gasOverrides,
-      });
-
-      toast.info('Approval sent — waiting for confirmation…');
-      await publicClient.waitForTransactionReceipt({ hash });
-      setApproved(true);
-      setStatus('approved');
-      toast.success('USDC approved ✓');
+      })
+      toast.info('Approval sent — waiting for confirmation…')
+      await publicClient.waitForTransactionReceipt({ hash })
+      setApproved(true); setStatus('approved'); toast.success('USDC approved ✓')
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Approval failed';
-      setStatus('error');
-      setErrorMsg(msg);
-      toast.error(msg);
+      const msg = extractErrorMsg(err); setStatus('error'); setErrorMsg(msg); toast.error(msg)
     }
-  }, [walletClient, publicClient, result, calculator, chainId, getAddresses, setApproved, toast]);
+  }, [walletClient, publicClient, result, calculator, chainId, getAddresses, setApproved, toast])
+
   const deployFund = useCallback(async () => {
-    if (!walletClient || !publicClient) { toast.error('Wallet not connected'); return; }
-    if (!result || !selectedProtocol)   { toast.error('Complete the wizard first'); return; }
-
-    const addrs = getAddresses();
-    if (!addrs) return;
-    const principal     = toUsdcBigInt(calculator.principal);
-    const monthly       = toUsdcBigInt(result.monthlyGross);
-    const desired       = toUsdcBigInt(calculator.desiredMonthlyIncome);
-    const rateBps       = BigInt(Math.round(calculator.apyPercent * 100));
-    const timelockYears = 0n;
-
-    setStatus('deploying');
-    setErrorMsg(null);
+    if (!walletClient || !publicClient) { toast.error('Wallet not connected');      return }
+    if (!result || !selectedProtocol)   { toast.error('Complete the wizard first'); return }
+    const addrs = getAddresses(); if (!addrs) return
 
     const txArgs = [
-      principal,
-      monthly,
+      toUsdcBigInt(calculator.principal),
+      toUsdcBigInt(result.monthlyGross),
       BigInt(calculator.currentAge),
       BigInt(calculator.retirementAge),
-      desired,
+      toUsdcBigInt(calculator.desiredMonthlyIncome),
       BigInt(calculator.paymentYears),
-      rateBps,
-      timelockYears,
+      BigInt(Math.round(calculator.apyPercent * 100)),
+      0n,
       selectedProtocol.address,
-    ] as const;
+    ] as const
 
+    setStatus('deploying'); setErrorMsg(null)
+    let gasEstimate: bigint
     try {
-      let gasEstimate: bigint;
-      try {
-        gasEstimate = await publicClient.estimateContractGas({
-          address:      addrs.personalFundFactory,
-          abi:          FACTORY_ABI,
-          functionName: 'createPersonalFund',
-          args:         txArgs,
-          account:      walletClient.account,
-        });
-        gasEstimate = gasEstimate * GAS_LIMIT_BUMP_PCT[chainType] / 100n;
-        if (gasEstimate < GAS_FLOOR[chainType]) gasEstimate = GAS_FLOOR[chainType];
-      } catch (simErr) {
-        const msg   = simErr instanceof Error ? simErr.message : 'Transaction would revert';
-        const clean = msg.replace(/^.*ContractFunctionExecutionError:\s*/s, '').split('\n')[0] ?? msg;
-        setStatus('error');
-        setErrorMsg(clean);
-        toast.error(`Simulation failed: ${clean}`);
-        return;
-      }
+      gasEstimate = await publicClient.estimateContractGas({
+        address: addrs.personalFundFactory, abi: FACTORY_ABI,
+        functionName: 'createPersonalFund', args: txArgs, account: walletClient.account,
+      })
+      gasEstimate = gasEstimate * GAS_LIMIT_BUMP_PCT[chainType] / 100n
+      if (gasEstimate < GAS_FLOOR[chainType]) gasEstimate = GAS_FLOOR[chainType]
+    } catch (simErr) {
+      const clean = extractErrorMsg(simErr); setStatus('error'); setErrorMsg(clean)
+      toast.error(`Simulation failed: ${clean}`); return
+    }
+    let hash: `0x${string}`
+    try {
+      hash = await walletClient.writeContract({
+        address: addrs.personalFundFactory, abi: FACTORY_ABI,
+        functionName: 'createPersonalFund', args: txArgs,
+        gas: gasEstimate, ...await getGasOverrides(publicClient, chainId),
+      })
+    } catch (err) {
+      const msg = extractErrorMsg(err); setStatus('error'); setErrorMsg(msg); toast.error(msg); return
+    }
 
-      const gasOverrides = await getGasOverrides(publicClient, chainId);
-      const hash = await walletClient.writeContract({
-        address:      addrs.personalFundFactory,
-        abi:          FACTORY_ABI,
-        functionName: 'createPersonalFund',
-        args:         txArgs,
-        gas:          gasEstimate,
-        ...gasOverrides,
-      });
-
-      setTxHash(hash);
-      storeSetTxHash(hash);
-      toast.info('Transaction sent — waiting for confirmation…');
-
-      const receipt = await publicClient.waitForTransactionReceipt({ hash });
-      let deployedFundAddr: `0x${string}` | null = null;
+    setTxHash(hash); storeSetTxHash(hash)
+    toast.info('Transaction sent — waiting for confirmation…')
+    let deployedFundAddr: `0x${string}` | null = null
+    try {
+      const receipt = await publicClient.waitForTransactionReceipt({ hash })
       for (const log of receipt.logs) {
         try {
-          const decoded = decodeEventLog({
-            abi:    [FUND_CREATED_EVENT],
-            data:   log.data,
-            topics: log.topics,
-          });
+          const decoded = decodeEventLog({ abi: [FUND_CREATED_EVENT], data: log.data, topics: log.topics })
           if (decoded.eventName === 'FundCreated') {
-            deployedFundAddr = decoded.args.fundAddress;
-            setFundAddr(deployedFundAddr);
-            break;
+            deployedFundAddr = decoded.args.fundAddress
+            setFundAddr(deployedFundAddr)
+            break
           }
-        } catch { /* log de otro contrato, ignorar */ }
+        } catch { /* log de otro contrato — ignorar */ }
       }
-
-      setStatus('success');
-      toast.success('Fund deployed successfully! 🎉');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Deployment failed';
-      setStatus('error');
-      setErrorMsg(msg);
-      toast.error(msg);
+      console.warn('[useDeployFund] waitForTransactionReceipt failed:', err)
     }
+
+    toast.success('Fund deployed on-chain! 🎉')
+    if (deployedFundAddr) {
+      setStatus('registering')
+      toast.info('Registering in database…')
+
+      try {
+        await fundsService.registerAndSync({
+          contract_address:       deployedFundAddr,
+          principal:              calculator.principal,
+          monthly_deposit:        result.monthlyGross,
+          desired_monthly_income: calculator.desiredMonthlyIncome,
+          current_age:            calculator.currentAge,
+          retirement_age:         calculator.retirementAge,
+          payment_years:          calculator.paymentYears,
+          apy_percent:            calculator.apyPercent,
+          protocol_address:       selectedProtocol.address,
+        })
+        toast.success('Fund registered in database ✓')
+      } catch {
+        toast.info('Fund is on-chain. Database sync will retry automatically on next login.')
+      }
+    } else {
+      console.warn('[useDeployFund] Could not extract fund address from receipt — skipping DB register')
+    }
+
+    setStatus('success')
   }, [
     walletClient, publicClient, result, calculator,
     selectedProtocol, chainId, chainType,
     getAddresses, storeSetTxHash, toast,
-  ]);
+  ])
 
-  const approved = approvedFromStore || status === 'approved' || status === 'deploying' || status === 'success';
+  const approved =
+    approvedFromStore    ||
+    status === 'approved'    ||
+    status === 'deploying'   ||
+    status === 'registering' ||
+    status === 'success'
 
-  return { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund, approved };
+  return { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund, approved }
 }

@@ -1,18 +1,18 @@
-import { StrictMode }                from 'react';
-import { createRoot }               from 'react-dom/client';
-import { QueryClientProvider }      from '@tanstack/react-query';
-import * as Sentry                  from '@sentry/react';
-import { SpeedInsights }            from '@vercel/speed-insights/react';
+import { StrictMode }           from 'react'
+import { createRoot }           from 'react-dom/client'
+import { QueryClientProvider }  from '@tanstack/react-query'
+import * as Sentry              from '@sentry/react'
+import { SpeedInsights }        from '@vercel/speed-insights/react'
 
-import { Web3Provider }             from '@/config/web3';
-import { RetirementProvider }       from '@/components/context/RetirementContext';
-import AppRouter                    from '@/router';
-import ErrorBoundary                from '@/router/ErrorBoundary';
-import ToastContainer               from '@/components/common/ToastContainer';
-import { queryClient }              from '@/lib/queryClient';
+import { Web3Provider }         from '@/config/web3'
+import { RetirementProvider }   from '@/components/context/RetirementContext'
+import AppRouter                from '@/router'
+import ErrorBoundary            from '@/router/ErrorBoundary'
+import ToastContainer           from '@/components/common/ToastContainer'
+import { queryClient }          from '@/lib/queryClient'
 
-import '@/i18n/config';
-import '@/index.css';
+import '@/i18n/config'
+import '@/index.css'
 
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
@@ -28,16 +28,16 @@ if (import.meta.env.VITE_SENTRY_DSN) {
       'MetaMask',
       'Non-Error promise rejection',
     ],
-  });
+  })
 }
 
-const container = document.getElementById('root');
+const container = document.getElementById('root')
 
 if (!container) {
   throw new Error(
     '[main.tsx] Root element #root not found. ' +
     'Make sure index.html contains <div id="root"></div>.',
-  );
+  )
 }
 
 const topLevelFallback = (
@@ -58,7 +58,7 @@ const topLevelFallback = (
       Reload
     </button>
   </div>
-);
+)
 
 createRoot(container).render(
   <StrictMode>
@@ -74,4 +74,4 @@ createRoot(container).render(
       </QueryClientProvider>
     </ErrorBoundary>
   </StrictMode>,
-);
+)
