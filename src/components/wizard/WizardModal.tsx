@@ -1,10 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { X }                 from 'lucide-react';
-import { useWizardStore }    from '@/stores/wizardStore';
-import { StepIndicator }     from '@/components/wizard/StepIndicator';
-import { Step1Calculator }   from '@/components/wizard/Step1Calculator';
+import { X }                   from 'lucide-react';
+import { useWizardStore }      from '@/stores/wizardStore';
+import { StepIndicator }       from '@/components/wizard/StepIndicator';
+import { Step1Calculator }     from '@/components/wizard/Step1Calculator';
 import { Step2SelectProtocol } from '@/components/wizard/Step2SelectProtocol';
-import { Step3Deploy }       from '@/components/wizard/Step3Deploy';
+import { Step3Deploy }         from '@/components/wizard/Step3Deploy';
+
+// FIX: removed dead imports — `use` (unused React hook), `userPreferencesAPI`
+// and `supabase` (users table is now updated server-side via the FastAPI
+// survey/funds routers, so the client no longer needs to call Supabase
+// directly from this modal).
 
 interface WizardModalProps {
   open:    boolean;
@@ -17,11 +22,15 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
   const { step, reset } = useWizardStore();
   const overlayRef      = useRef<HTMLDivElement>(null);
   const resetTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clean up any pending reset timer on unmount
   useEffect(() => {
     return () => {
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
     };
   }, []);
+
+  // Keyboard accessibility — close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -29,28 +38,35 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [open]);
+  }, [open]);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Prevent background scroll while modal is open
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
+  // ── Handlers ──────────────────────────────────────────────────────────────
+
+  function scheduleReset() {
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(() => reset(), RESET_DELAY_MS);
+  }
+
   function handleClose() {
     onClose();
-    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-    resetTimerRef.current = setTimeout(() => {
-      reset();
-    }, RESET_DELAY_MS);
+    scheduleReset();
   }
 
   function handleSuccess() {
     onClose();
-    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-    resetTimerRef.current = setTimeout(() => {
-      reset();
-    }, RESET_DELAY_MS);
+    scheduleReset();
   }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+
   if (!open) return null;
+
   return (
     <div
       ref={overlayRef}
@@ -88,15 +104,9 @@ export function WizardModal({ open, onClose }: WizardModalProps) {
         <div className="px-6 py-6">
           <StepIndicator current={step} />
 
-          {step === 1 && (
-            <Step1Calculator onNext={() => {}} />
-          )}
-          {step === 2 && (
-            <Step2SelectProtocol onNext={() => {}} onBack={() => {}} />
-          )}
-          {step === 3 && (
-            <Step3Deploy onBack={() => {}} onSuccess={handleSuccess} />
-          )}
+          {step === 1 && <Step1Calculator onNext={() => {}} />}
+          {step === 2 && <Step2SelectProtocol onNext={() => {}} onBack={() => {}} />}
+          {step === 3 && <Step3Deploy onBack={() => {}} onSuccess={handleSuccess} />}
         </div>
       </div>
     </div>

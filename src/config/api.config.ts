@@ -16,7 +16,7 @@ export const API_ENDPOINTS = {
 
   USERS: {
     ME:     '/users/me',
-    SURVEY: '/users/survey',
+    SURVEY: '/users/survey',  
   },
 
   FUNDS: {
@@ -72,7 +72,6 @@ export const buildApiUrl = (endpoint: string): string => {
 
 export const getHealthUrl = (): string =>
   `${API_CONFIG.BASE_URL.replace(/\/$/, '')}/health`
-
 export type BackendStatus = 'unknown' | 'healthy' | 'warming_up' | 'unavailable'
 
 const WARMUP = {
@@ -106,8 +105,8 @@ class WarmupManager {
     return () => this.listeners.delete(cb)
   }
 
-  getStatus   = (): BackendStatus => this.status
-  isHealthy   = (): boolean       => this.status === 'healthy'
+  getStatus   = (): BackendStatus  => this.status
+  isHealthy   = (): boolean        => this.status === 'healthy'
   forcePing   = (): Promise<boolean> => this.ping()
 
   private async initialWarmup(): Promise<void> {
@@ -143,7 +142,6 @@ class WarmupManager {
 }
 
 export const warmupManager = new WarmupManager()
-
 if (typeof window !== 'undefined') {
   warmupManager.start()
   window.addEventListener('beforeunload', () => warmupManager.stop())

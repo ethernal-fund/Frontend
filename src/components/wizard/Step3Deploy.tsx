@@ -21,8 +21,8 @@ import { ROUTES }           from '@/router/routes';
 
 const MAX_POLL_ATTEMPTS = 12;
 const POLL_INTERVAL_MS  = 5_000;
-const MAX_SYNC_RETRIES = 3;
-const SYNC_RETRY_DELAY = 2_000;
+const MAX_SYNC_RETRIES  = 3;
+const SYNC_RETRY_DELAY  = 2_000;
 
 interface Step3Props {
   onBack:    () => void;
@@ -32,6 +32,7 @@ interface Step3Props {
 type PostDeployStep =
   | 'idle'            // deploy aún no completado
   | 'authenticating'  // esperando firma SIWE
+  | 'registering'     // POST /funds/register en curso   ← NEW
   | 'syncing'         // POST /funds/sync en curso
   | 'polling'         // GET /funds/me en loop hasta encontrar el fondo
   | 'ready'           // fondo confirmado en DB → habilitar botón Dashboard
@@ -58,20 +59,53 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
   const isSuccess    = status === 'success';
   const isError      = status === 'error';
 
+  // ── Post-deploy flow ────────────────────────────────────────────────────────
+  // Order of operations:
+  //   1. Ensure authenticated (SIWE login if needed)
+  //   2. POST /funds/register  — creates the DB row + updates users.last_active_at
+  //   3. POST /funds/sync      — pulls on-chain data into the DB row
+  //   4. Poll GET /funds/me    — wait until the cached query has the new fund
+
   const runPostDeployFlow = useCallback(async () => {
-    if (!fundAddr) return;
+    if (!fundAddr || !result || !selectedProtocol) return;
+
+    // ── Step 1: authenticate ────────────────────────────────────────────────
     if (!isAuthenticated) {
       setPostStep('authenticating');
       try {
         await login();
       } catch (authErr) {
         console.warn('[Step3Deploy] SIWE failed:', authErr);
-        setSyncErrMsg('Autenticación rechazada. El fondo existe on-chain — intentá recargar la página.');
+        setSyncErrMsg(
+          'Autenticación rechazada. El fondo existe on-chain — intentá recargar la página.',
+        );
         setPostStep('sync_failed');
         return;
       }
     }
 
+    // ── Step 2: register fund in DB ─────────────────────────────────────────
+    // FIX: this call was missing. Without it the backend never creates the
+    // personal_funds row and users.last_active_at is never updated.
+    setPostStep('registering');
+    try {
+      await fundsService.registerFund({
+        contract_address:       fundAddr,
+        principal:              calculator.principal,
+        monthly_deposit:        result.monthlyGross,
+        desired_monthly_income: calculator.desiredMonthlyIncome,
+        current_age:            calculator.currentAge,
+        retirement_age:         calculator.retirementAge,
+        payment_years:          calculator.paymentYears,
+        apy_percent:            calculator.apyPercent,
+        protocol_address:       selectedProtocol.address,
+      });
+    } catch (regErr) {
+      // registerFund already persists to localStorage for retry — not fatal
+      console.warn('[Step3Deploy] registerFund failed (queued for retry):', regErr);
+    }
+
+    // ── Step 3: sync on-chain data ──────────────────────────────────────────
     setPostStep('syncing');
     let synced = false;
     for (let attempt = 0; attempt < MAX_SYNC_RETRIES; attempt++) {
@@ -89,13 +123,14 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
 
     if (!synced) {
       setSyncErrMsg(
-        'No se pudo registrar en la base de datos. ' +
-        'El fondo existe on-chain y se sincronizará automáticamente.'
+        'No se pudo sincronizar con la base de datos. ' +
+        'El fondo existe on-chain y se sincronizará automáticamente.',
       );
       setPostStep('sync_failed');
       return;
     }
 
+    // ── Step 4: poll until the query cache has the new fund ─────────────────
     setPostStep('polling');
     attempts.current = 0;
     await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY });
@@ -104,7 +139,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
       attempts.current += 1;
       await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY });
 
-      const cached = queryClient.getQueryData<{ contract_address: string } | null>(FUND_QUERY_KEY);
+      const cached    = queryClient.getQueryData<{ contract_address: string } | null>(FUND_QUERY_KEY);
       const exhausted = attempts.current >= MAX_POLL_ATTEMPTS;
 
       if (cached || exhausted) {
@@ -112,7 +147,15 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         setPostStep('ready');
       }
     }, POLL_INTERVAL_MS);
-  }, [fundAddr, isAuthenticated, login, queryClient]);
+  }, [
+    fundAddr,
+    isAuthenticated,
+    login,
+    queryClient,
+    calculator,
+    result,
+    selectedProtocol,
+  ]);
 
   useEffect(() => {
     if (!isSuccess) return;
@@ -120,10 +163,10 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [isSuccess]); 
+  }, [isSuccess]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGoToDashboard = useCallback(() => {
-    onSuccess(); 
+    onSuccess();
     navigate(ROUTES.DASHBOARD, {
       state:   { newFundAddr: fundAddr },
       replace: true,
@@ -131,21 +174,24 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
   }, [onSuccess, navigate, fundAddr]);
 
   const postStepConfig: Record<PostDeployStep, { label: string; color: string }> = {
-    idle:            { label: '',                                               color: '' },
-    authenticating:  { label: 'Firmá el mensaje en tu wallet…',                color: 'text-(--accent2) border-(--accent2)' },
-    syncing:         { label: 'Registrando en base de datos…',                  color: 'text-(--accent2) border-(--accent2)' },
-    polling:         { label: 'Verificando fondo en la red…',                   color: 'text-(--accent2) border-(--accent2)' },
-    ready:           { label: '¡Fondo verificado y listo!',                     color: 'text-(--success) border-(--success)' },
-    sync_failed:     { label: syncErrMsg ?? 'Sync falló — el fondo existe on-chain.', color: 'text-(--warn) border-(--warn)' },
+    idle:           { label: '',                                                         color: '' },
+    authenticating: { label: 'Firmá el mensaje en tu wallet…',                          color: 'text-(--accent2) border-(--accent2)' },
+    registering:    { label: 'Registrando fondo en la base de datos…',                  color: 'text-(--accent2) border-(--accent2)' },
+    syncing:        { label: 'Sincronizando datos on-chain…',                            color: 'text-(--accent2) border-(--accent2)' },
+    polling:        { label: 'Verificando fondo en la red…',                             color: 'text-(--accent2) border-(--accent2)' },
+    ready:          { label: '¡Fondo verificado y listo!',                               color: 'text-(--success) border-(--success)' },
+    sync_failed:    { label: syncErrMsg ?? 'Sync falló — el fondo existe on-chain.',     color: 'text-(--warn) border-(--warn)' },
   };
 
-  const showDashboardBtn = isSuccess && (postStep === 'ready' || postStep === 'sync_failed');
+  const showDashboardBtn  = isSuccess && (postStep === 'ready' || postStep === 'sync_failed');
   const dashboardBtnGreen = postStep === 'ready';
+
+  // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-6">
 
-      {/* ── Resumen ── */}
+      {/* Summary */}
       <div className="bg-(--surface2) border border-(--border2) rounded-xl p-5">
         <div className="font-mono text-[0.65rem] text-(--muted) uppercase tracking-widest mb-4">
           Summary
@@ -167,15 +213,15 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       </div>
 
-      {/* ── Nota de allowance ── */}
+      {/* Allowance note */}
       <div className="bg-[#7b4dff11] border border-[#7b4dff44] rounded-xl px-4 py-3 font-mono text-xs text-(--accent2)">
         Aprobarás <strong>{fmtUsdc(totalApprove)}</strong> para el contrato Factory,
         luego se desplegará tu PersonalFund en una transacción.
       </div>
 
-      {/* ── Botones de acción on-chain ── */}
+      {/* Action buttons */}
       <div className="space-y-3">
-        {/* Approve */}
+        {/* Approve USDC */}
         <button
           onClick={() => void approveUsdc()}
           disabled={approved || isDeploying}
@@ -209,7 +255,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </button>
       </div>
 
-      {/* ── Status on-chain (tx hash + dirección del fondo) ── */}
+      {/* On-chain status */}
       {(txHash || isSuccess || isError) && (
         <div className={cn(
           'flex items-start gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
@@ -228,7 +274,8 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
                 🎉 Fondo deployado en{' '}
                 <a
                   href={getExplorerAddressUrl(chainId, fundAddr)}
-                  target="_blank" rel="noopener noreferrer"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-(--accent2) hover:opacity-80 underline"
                 >
                   {fundAddr.slice(0, 10)}…{fundAddr.slice(-8)}
@@ -238,7 +285,8 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
             {txHash && (
               <a
                 href={getExplorerUrl(chainId, txHash)}
-                target="_blank" rel="noopener noreferrer"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-1 text-(--accent2) hover:opacity-80 mt-1"
               >
                 {t('viewOnExplorer')} <ExternalLink size={12} />
@@ -248,6 +296,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       )}
 
+      {/* Post-deploy status */}
       {isSuccess && postStep !== 'idle' && (
         <div className={cn(
           'flex items-center gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
@@ -265,7 +314,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       )}
 
-      {/* ── Volver ── */}
+      {/* Back button */}
       {!isSuccess && (
         <button
           onClick={() => { prevStep(); onBack(); }}
@@ -276,7 +325,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </button>
       )}
 
-      {/* ── Botón Dashboard ── */}
+      {/* Dashboard button */}
       {showDashboardBtn && (
         <button
           onClick={handleGoToDashboard}
