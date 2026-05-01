@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMyFund }     from '@/hooks/useMyFund';
+import { useMyFund } from '@/hooks/useMyFund';
 import {
   VictoryChart,
   VictoryLine,
@@ -9,17 +9,17 @@ import {
   VictoryTooltip,
   VictoryVoronoiContainer,
 } from 'victory';
-import { useTranslation }    from 'react-i18next';
-import { useWizardStore }    from '@/stores/wizardStore';
-import { useWallet }         from '@/hooks/web3/useWallet';
-import { useChainId }        from 'wagmi';
+import { useTranslation } from 'react-i18next';
+import { useWizardStore } from '@/stores/wizardStore';
+import { useWallet } from '@/hooks/web3/useWallet';
+import { useChainId } from 'wagmi';
 import { areMainContractsDeployed } from '@/config/addresses';
-import { formatCurrency }    from '@/lib/formatters';
-import { FaucetButton }      from '@/components/web3/FaucetButton';
+import { formatCurrency } from '@/lib/formatters';
+import { FaucetButton } from '@/components/web3/FaucetButton';
 import { calcResult } from '@/lib/calculator';
 import type { CalculatorInput, CalculatorResult } from '@/types';
 import { validateCalcInputs } from '@/lib/calculatorValidation';
-import { WizardModal }       from '@/components/wizard/WizardModal';
+import { WizardModal } from '@/components/wizard/WizardModal';
 import {
   Calculator,
   TrendingUp,
@@ -35,17 +35,18 @@ import {
   Droplets,
   ChevronRight,
   LayoutDashboard,
+  Copy,
 } from 'lucide-react';
 
 interface FieldProps {
-  label:    string;
-  value:    number;
+  label: string;
+  value: number;
   onChange: (val: number) => void;
-  icon?:    React.ReactNode;
-  step?:    number;
-  min?:     number;
-  max?:     number;
-  hint?:    string;
+  icon?: React.ReactNode;
+  step?: number;
+  min?: number;
+  max?: number;
+  hint?: string;
 }
 
 const Field = ({ label, value, onChange, icon, step = 1, min, max, hint }: FieldProps) => (
@@ -75,6 +76,7 @@ const CalculatorPage = () => {
   const factoryReady = areMainContractsDeployed(chainId);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState<number | null>(null); // ← Nuevo estado
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState('');
   const [warning, setWarning] = useState('');
@@ -82,16 +84,18 @@ const CalculatorPage = () => {
   const [chartData, setChartData] = useState<{ year: number; balance: number }[]>([]);
 
   const [inputs, setInputs] = useState<CalculatorInput>({
-    principal:            0,
-    currentAge:           30,
-    retirementAge:        65,
+    principal: 0,
+    currentAge: 30,
+    retirementAge: 65,
     desiredMonthlyIncome: 3000,
-    apyPercent:           5,
-    paymentYears:         20,
+    apyPercent: 5,
+    paymentYears: 20,
   });
 
   const { setCalculatorField, runCalculator } = useWizardStore();
   const { hasFund: fundAddress } = useMyFund();
+
+  const MOCK_USDC_ADDRESS = "0xdbc8c016287437ce2cf69ff64c245a4d74599a40"; // MockUSDC en Arbitrum Sepolia
 
   useEffect(() => {
     recalculate();
@@ -129,11 +133,11 @@ const CalculatorPage = () => {
 
   const syncToWizardAndOpen = () => {
     setCalculatorField('desiredMonthlyIncome', inputs.desiredMonthlyIncome);
-    setCalculatorField('paymentYears',         inputs.paymentYears);
-    setCalculatorField('currentAge',           inputs.currentAge);
-    setCalculatorField('retirementAge',        inputs.retirementAge);
-    setCalculatorField('apyPercent',           inputs.apyPercent);
-    setCalculatorField('principal',            inputs.principal);
+    setCalculatorField('paymentYears', inputs.paymentYears);
+    setCalculatorField('currentAge', inputs.currentAge);
+    setCalculatorField('retirementAge', inputs.retirementAge);
+    setCalculatorField('apyPercent', inputs.apyPercent);
+    setCalculatorField('principal', inputs.principal);
     runCalculator();
     setModalOpen(true);
   };
@@ -154,12 +158,116 @@ const CalculatorPage = () => {
     syncToWizardAndOpen();
   };
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('¡Dirección copiada al portapapeles!'); // Puedes reemplazar por un toast
+    } catch (err) {
+      alert('Error al copiar');
+    }
+  };
+
   const victoryData = chartData.map((d) => ({ x: d.year, y: d.balance }));
+  const steps = [
+    {
+      step: 1,
+      icon: <Wallet className="w-4 h-4" />,
+      titleKey: 'calculator.step1Title',
+      descKey: 'calculator.step1Desc',
+      modalTitle: "Paso 1: Conectar Wallet y Agregar MockUSDC",
+      modalContent: (
+        <div className="space-y-6 text-sm">
+          <div>
+            <p className="mb-3">1. Conecta tu wallet haciendo clic en <strong>"Connect Wallet"</strong>.</p>
+            <p className="mb-3">2. Asegúrate de estar en la red <strong>Arbitrum Sepolia</strong>.</p>
+          </div>
+
+          <div className="bg-gray-100 dark:bg-gray-800 p-5 rounded-2xl border">
+            <p className="font-semibold mb-3 flex items-center gap-2">
+              📋 Dirección del Token MockUSDC (Testnet)
+            </p>
+            <div className="flex gap-2 bg-white dark:bg-gray-900 p-3 rounded-xl border font-mono text-sm break-all items-center">
+              <code className="flex-1 select-all">{MOCK_USDC_ADDRESS}</code>
+              <button
+                onClick={() => copyToClipboard(MOCK_USDC_ADDRESS)}
+                className="flex items-center gap-1.5 bg-forest-green hover:bg-green-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition-colors"
+              >
+                <Copy size={16} />
+                Copiar
+              </button>
+            </div>
+            <p className="text-xs text-gray-medium mt-3">
+              Agrega este token manualmente en MetaMask → "Importar tokens"
+            </p>
+          </div>
+
+          <p className="text-xs text-forest-green font-medium">
+            💡 Recomendación: Usa también el botón "Get Test Tokens" que está arriba para recibir fondos automáticamente.
+          </p>
+        </div>
+      ),
+    },
+    {
+      step: 2,
+      icon: <Droplets className="w-4 h-4" />,
+      titleKey: 'calculator.step2Title',
+      descKey: 'calculator.step2Desc',
+      modalTitle: "Paso 2: Obtener Tokens de Prueba",
+      modalContent: (
+        <div className="space-y-4 text-sm">
+          <p>1. Haz clic en el botón <strong>"Get Test Tokens"</strong> ubicado en la sección superior izquierda.</p>
+          <p>2. Solicita MockUSDC desde el faucet.</p>
+          <p>3. Espera unos segundos y verifica el saldo en tu wallet.</p>
+          <div className="alert alert-info">
+            Si el faucet no responde, agrega el token manualmente usando la dirección del Paso 1.
+          </div>
+        </div>
+      ),
+    },
+    {
+      step: 3,
+      icon: <Calculator className="w-4 h-4" />,
+      titleKey: 'calculator.step3Title',
+      descKey: 'calculator.step3Desc',
+      modalTitle: "Paso 3: Configurar tu Plan de Retiro",
+      modalContent: (
+        <div className="space-y-4 text-sm">
+          <p>Completa los campos del calculador con tus datos personales:</p>
+          <ul className="list-disc pl-5 space-y-1 text-gray-medium">
+            <li>Ingreso mensual deseado durante la jubilación</li>
+            <li>Cantidad de años que quieres recibir el ingreso</li>
+            <li>Tu edad actual y edad estimada de retiro</li>
+            <li>Rendimiento esperado (APY del protocolo)</li>
+            <li>Capital inicial (opcional)</li>
+          </ul>
+          <p className="font-medium">El sistema calculará automáticamente el depósito mensual necesario.</p>
+        </div>
+      ),
+    },
+    {
+      step: 4,
+      icon: <CheckCircle className="w-4 h-4" />,
+      titleKey: 'calculator.step4Title',
+      descKey: 'calculator.step4Desc',
+      modalTitle: "Paso 4: Crear tu Smart Contract",
+      modalContent: (
+        <div className="space-y-4 text-sm">
+          <p>Una vez revisado el resultado:</p>
+          <ol className="list-decimal pl-5 space-y-2">
+            <li>Verifica que el monto mensual sea el correcto.</li>
+            <li>Haz clic en el botón grande azul/dorado.</li>
+            <li>Firma la transacción en tu wallet.</li>
+            <li>¡Listo! Tu fondo de retiro descentralizado se habrá creado.</li>
+          </ol>
+          <p className="text-forest-green font-medium">Después podrás acceder al Dashboard para gestionar tu fondo.</p>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background-light py-8 sm:py-12 px-4">
       <div className="max-w-7xl mx-auto">
-
         {/* ── Header ── */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-dark-blue mb-4 flex items-center justify-center gap-3">
@@ -186,7 +294,6 @@ const CalculatorPage = () => {
         )}
 
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-10">
-
           {/* ── LEFT COLUMN ── */}
           <div className="space-y-6">
 
@@ -304,40 +411,32 @@ const CalculatorPage = () => {
               <FaucetButton />
             </div>
 
-            {/* Step-by-step guide */}
+            {/* ── Step-by-step guide ── */}
             <div className="card">
               <h3 className="text-lg font-bold text-dark-blue mb-5 flex items-center gap-2">
                 <Info className="text-forest-green" size={20} />
                 {t('calculator.howToStart')}
               </h3>
+
               <div className="space-y-3">
-                {(
-                  [
-                    { step: 1, icon: <Wallet className="w-4 h-4" />,     titleKey: 'calculator.step1Title', descKey: 'calculator.step1Desc' },
-                    { step: 2, icon: <Droplets className="w-4 h-4" />,   titleKey: 'calculator.step2Title', descKey: 'calculator.step2Desc' },
-                    { step: 3, icon: <Calculator className="w-4 h-4" />, titleKey: 'calculator.step3Title', descKey: 'calculator.step3Desc' },
-                    { step: 4, icon: <CheckCircle className="w-4 h-4" />, titleKey: 'calculator.step4Title', descKey: 'calculator.step4Desc' },
-                  ] as const
-                ).map((item) => (
-                  <div
+                {steps.map((item) => (
+                  <button
                     key={item.step}
-                    className="bg-gray-light rounded-xl p-4 flex items-start gap-4 hover:shadow-md transition-shadow"
+                    onClick={() => setActiveStep(item.step)}
+                    className="w-full text-left bg-gray-light rounded-xl p-4 flex items-start gap-4 hover:shadow-md hover:border-forest-green/30 border border-transparent transition-all group"
                   >
-                    <div
-                      className="font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-sm"
-                      style={{ background: 'var(--color-forest-green)', color: '#fff' }}
-                    >
+                    <div className="font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-sm bg-forest-green text-white group-hover:scale-110 transition-transform">
                       {item.step}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex-1 pt-0.5">
+                      <div className="flex items-center gap-2 mb-1">
                         <span className="text-forest-green">{item.icon}</span>
                         <h4 className="font-semibold text-dark-blue text-sm">{t(item.titleKey)}</h4>
                       </div>
-                      <p className="text-xs text-gray-medium">{t(item.descKey)}</p>
+                      <p className="text-xs text-gray-medium line-clamp-2">{t(item.descKey)}</p>
                     </div>
-                    <ChevronRight className="text-gray-medium shrink-0" size={18} />
-                  </div>
+                    <ChevronRight className="text-gray-medium shrink-0 group-hover:text-forest-green transition-colors mt-1" size={18} />
+                  </button>
                 ))}
               </div>
 
@@ -509,8 +608,40 @@ const CalculatorPage = () => {
         </div>
       </div>
 
-      {/* ── Wizard Modal ── */}
+      {/* Wizard Modal */}
       <WizardModal open={modalOpen} onClose={() => setModalOpen(false)} />
+
+      {/* Step Detail Modal */}
+      {activeStep !== null && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-60 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            <div className="px-6 py-5 border-b flex items-center justify-between bg-gray-50 dark:bg-gray-800">
+              <h3 className="font-bold text-xl text-dark-blue">
+                {steps.find((s) => s.step === activeStep)?.modalTitle}
+              </h3>
+              <button
+                onClick={() => setActiveStep(null)}
+                className="text-3xl leading-none text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[65vh]">
+              {steps.find((s) => s.step === activeStep)?.modalContent}
+            </div>
+
+            <div className="p-5 border-t flex justify-end bg-gray-50 dark:bg-gray-800">
+              <button
+                onClick={() => setActiveStep(null)}
+                className="btn btn-primary px-10 py-2.5"
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
