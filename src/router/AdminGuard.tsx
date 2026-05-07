@@ -17,20 +17,12 @@ export function AdminGuard() {
     query:        { enabled: !!address && !!contracts?.personalFundFactory },
   });
 
-  // Sin wallet → landing
   if (!address) return <Navigate to={ROUTES.HOME} replace />;
-
-  // Red no soportada o contratos no desplegados
   if (!contracts?.personalFundFactory) return <Navigate to={ROUTES.HOME} replace />;
-
-  // Esperando respuesta on-chain
   if (isLoading) return <LoadingScreen />;
 
-  // Wallet conectada pero no es admin → dashboard de usuario
   const isAdmin = !!adminAddr &&
     adminAddr.toLowerCase() === address.toLowerCase();
-
   if (!isAdmin) return <Navigate to={ROUTES.DASHBOARD} replace />;
-
   return <Outlet />;
 }

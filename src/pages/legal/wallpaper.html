@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Ethernal Fund · ETRF Wallpaper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: #06080D;
+    font-family: 'Geist Mono', monospace;
+    position: relative;
+  }
+
+  /* === GRID OVERLAY === */
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(30, 77, 120, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 77, 120, 0.08) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* === RADIAL GLOW === */
+  .glow-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 600px;
+    background: radial-gradient(ellipse at center, rgba(46, 116, 181, 0.12) 0%, rgba(31, 77, 120, 0.06) 40%, transparent 70%);
+  }
+
+  .glow-top {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(46, 116, 181, 0.07) 0%, transparent 70%);
+  }
+
+  /* === HORIZONTAL RULES (matching T&C doc style) === */
+  .rule-top {
+    position: absolute;
+    top: 64px;
+    left: 80px;
+    right: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #2E74B5 20%, #2E74B5 80%, transparent);
+    opacity: 0.4;
+  }
+
+  .rule-bottom {
+    position: absolute;
+    bottom: 64px;
+    left: 80px;
+    right: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #2E74B5 20%, #2E74B5 80%, transparent);
+    opacity: 0.4;
+  }
+
+  .rule-mid-top {
+    position: absolute;
+    top: 66px;
+    left: 80px;
+    right: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(46, 116, 181, 0.15) 20%, rgba(46, 116, 181, 0.15) 80%, transparent);
+  }
+
+  /* === CORNER MARKS === */
+  .corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+  }
+  .corner-tl { top: 52px; left: 68px; border-top: 1px solid #2E74B5; border-left: 1px solid #2E74B5; }
+  .corner-tr { top: 52px; right: 68px; border-top: 1px solid #2E74B5; border-right: 1px solid #2E74B5; }
+  .corner-bl { bottom: 52px; left: 68px; border-bottom: 1px solid #2E74B5; border-left: 1px solid #2E74B5; }
+  .corner-br { bottom: 52px; right: 68px; border-bottom: 1px solid #2E74B5; border-right: 1px solid #2E74B5; }
+
+  /* === MAIN CONTENT === */
+  .content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+
+  /* === EYEBROW === */
+  .eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    color: #2E74B5;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    opacity: 0.9;
+  }
+
+  /* === SEPARATOR DOT === */
+  .eyebrow span {
+    opacity: 0.5;
+    margin: 0 10px;
+  }
+
+  /* === MAIN TITLE === */
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 128px;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: #E8EDF4;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  /* === DIVIDER LINE === */
+  .title-divider {
+    width: 480px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(46, 116, 181, 0.5), transparent);
+    margin: 40px auto;
+  }
+
+  /* === TICKER === */
+  .ticker {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.28em;
+    color: #7BA8CC;
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  /* === TAGLINE === */
+  .tagline {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: rgba(123, 168, 204, 0.55);
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 48px;
+  }
+
+  /* === BOTTOM BAR === */
+  .bottom-bar {
+    position: absolute;
+    bottom: 88px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 96px;
+  }
+
+  .bottom-item {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    color: rgba(46, 116, 181, 0.5);
+    text-transform: uppercase;
+  }
+
+  .bottom-item.center {
+    color: rgba(46, 116, 181, 0.35);
+  }
+
+  /* === TOP BAR === */
+  .top-bar {
+    position: absolute;
+    top: 88px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 96px;
+  }
+
+  .top-item {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    color: rgba(46, 116, 181, 0.4);
+    text-transform: uppercase;
+  }
+
+  /* === SIDE VERTICAL TEXT === */
+  .side-text-left {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    color: rgba(46, 116, 181, 0.25);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .side-text-right {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    color: rgba(46, 116, 181, 0.25);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* === SEED ROUND BADGE === */
+  .badge {
+    display: inline-block;
+    border: 1px solid rgba(46, 116, 181, 0.3);
+    padding: 6px 20px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    color: rgba(46, 116, 181, 0.6);
+    text-transform: uppercase;
+    margin-top: 52px;
+  }
+
+  /* === GEOMETRIC ACCENT LINES (T&C header-style) === */
+  .accent-line-left {
+    position: absolute;
+    top: 50%;
+    left: 96px;
+    width: 160px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(46, 116, 181, 0.25));
+    transform: translateY(-50%);
+  }
+
+  .accent-line-right {
+    position: absolute;
+    top: 50%;
+    right: 96px;
+    width: 160px;
+    height: 1px;
+    background: linear-gradient(270deg, transparent, rgba(46, 116, 181, 0.25));
+    transform: translateY(-50%);
+  }
+</style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="grid"></div>
+  <div class="glow-top"></div>
+  <div class="glow-center"></div>
+
+  <!-- Frame -->
+  <div class="rule-top"></div>
+  <div class="rule-bottom"></div>
+  <div class="rule-mid-top"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- Side accent lines -->
+  <div class="accent-line-left"></div>
+  <div class="accent-line-right"></div>
+
+  <!-- Side vertical text -->
+  <div class="side-text-left">Arbitrum Network · EVM Compatible</div>
+  <div class="side-text-right">Decentralized Retirement Protocol</div>
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <span class="top-item">Seed Round · 2026</span>
+    <span class="top-item">ethernal.fund</span>
+    <span class="top-item">Versión 1.0</span>
+  </div>
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="eyebrow">Protocol<span>·</span>Arbitrum<span>·</span>DeFi</div>
+    <h1 class="title">ETHERNAL FUND</h1>
+    <div class="title-divider"></div>
+    <div class="ticker">ETRF</div>
+    <div class="tagline">Personal Retirement Protocol · On-Chain · Non-Custodial</div>
+    <div class="badge">Token Sale · Seed Round · Mayo 2026</div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <span class="bottom-item">ETRF · Utility Token</span>
+    <span class="bottom-item center">ethernal.fund/whitepaper</span>
+    <span class="bottom-item">Built on Arbitrum</span>
+  </div>
+
+</body>
+</html>

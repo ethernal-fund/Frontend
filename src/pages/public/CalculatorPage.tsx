@@ -76,7 +76,7 @@ const CalculatorPage = () => {
   const factoryReady = areMainContractsDeployed(chainId);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState<number | null>(null); // ← Nuevo estado
+  const [activeStep, setActiveStep] = useState<number | null>(null); 
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState('');
   const [warning, setWarning] = useState('');
@@ -95,7 +95,7 @@ const CalculatorPage = () => {
   const { setCalculatorField, runCalculator } = useWizardStore();
   const { hasFund: fundAddress } = useMyFund();
 
-  const MOCK_USDC_ADDRESS = "0xdbc8c016287437ce2cf69ff64c245a4d74599a40"; // MockUSDC en Arbitrum Sepolia
+  const MOCK_USDC_ADDRESS = "0x62F7FB943348d9e3e238b7043278B6895428E4d9"; 
 
   useEffect(() => {
     recalculate();

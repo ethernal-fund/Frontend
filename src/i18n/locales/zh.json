@@ -880,5 +880,113 @@
     "title": "页面未找到",
     "subtitle": "您查找的页面不存在。",
     "goHome": "返回首页"
+  },
+  "sale": {
+    "page": {
+      "title": "代币销售",
+      "subtitle": "参与 ETRF 种子轮，这是首个去中心化个人退休基金的实用代币。",
+      "brand": "Ethernal Fund · ETRF",
+      "disclaimer": "ETRF 是实用代币。参与种子轮存在资本损失风险。",
+      "links": {
+        "whitepaper": "白皮书",
+        "audit": "合约审计",
+        "docs": "文档"
+      }
+    },
+    "round": {
+      "live": "● 进行中",
+      "ended": "已结束",
+      "price": "价格",
+      "perToken": "每枚 ETRF",
+      "raised": "已筹集",
+      "hardCap": "硬顶",
+      "nextRoundPrice": "下轮价格",
+      "walletCap": "钱包上限",
+      "tokensRemaining": "剩余代币",
+      "cliffVesting": "{{cliff}}月锁定 · {{vesting}}月归属",
+      "roundClosed": "当前轮次已结束。"
+    },
+    "buy": {
+      "title": "USDC 金额",
+      "max": "最大：{{amount}} USDC",
+      "youWillReceive": "你将收到",
+      "pricePerToken": "每代币价格",
+      "cliff": "锁定期",
+      "vesting": "归属期",
+      "vestingLinear": "{{months}} 个月线性归属",
+      "cliffMonths": "{{months}} 个月",
+      "walletCapNote": "每个钱包上限 {{cap}} USDC · 仅限 USDC",
+      "needsApproval": "授权 USDC 并购买",
+      "buy": "购买 ETRF",
+      "approving": "正在授权 USDC...",
+      "buying": "正在购买 ETRF...",
+      "confirmWallet": "请在钱包中确认...",
+      "invalidAmount": "金额无效",
+      "enterAmount": "请输入金额",
+      "step1": "1. 授权 USDC",
+      "step2": "2. 购买 ETRF",
+      "success": {
+        "title": "购买成功",
+        "bought": "你购买了 {{amount}} ETRF",
+        "vestingNote": "你的归属期将开始计算。查看「我的代币」进行追踪。",
+        "buyMore": "继续购买"
+      },
+      "error": {
+        "rejected": "交易被拒绝"
+      }
+    },
+    "vesting": {
+      "title": "我的 ETRF 代币",
+      "totalLabel": "ETRF 总量",
+      "legend": {
+        "claimed": "已领取",
+        "vestedAvailable": "已归属可用",
+        "locked": "已锁定"
+      },
+      "stats": {
+        "vested": "已归属",
+        "claimed": "已领取",
+        "locked": "已锁定",
+        "available": "可用"
+      },
+      "cliff": {
+        "inDays": "锁定期还剩 {{days}} 天 · 购买后 {{months}} 个月",
+        "description": "达到锁定期后将释放首批代币"
+      },
+      "claim": "领取 {{amount}} ETRF",
+      "availableIn": "{{days}} 天后可用",
+      "noTokens": "暂无可用代币",
+      "confirmWallet": "请在钱包中确认...",
+      "claimed": "✓ 代币领取成功",
+      "myTokens": "我的代币"
+    },
+    "walletGate": {
+      "title": "连接钱包以参与",
+      "subtitle": "访问 ETRF 种子轮，开始构建你的去中心化退休基金。",
+      "supportedWallets": "MetaMask、Coinbase、WalletConnect",
+      "connect": "连接钱包",
+      "disclaimer": "仅限符合白皮书条款的合格用户。连接即表示您接受",
+      "terms": "条款与条件"
+    },
+    "tokenomics": {
+      "title": "代币经济",
+      "subtitle": "ETRF 供应分配",
+      "supplyTotal": "总供应量",
+      "viewFull": "查看完整分配",
+      "distributionSubtitle": "供应分配",
+      "slices": {
+        "publicSale": "公开销售",
+        "team": "团队",
+        "ecosystem": "生态系统",
+        "treasury": "财库",
+        "community": "社区",
+        "reserve": "储备"
+      },
+      "stats": {
+        "totalSupply": "总供应量",
+        "seedRound": "种子轮",
+        "seedPrice": "种子价格"
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ export const ROUTES = {
   SURVEY:      '/survey',
   OUR_HISTORY: '/our-history',
   LEARNING:    '/learning',
+  SALE:        '/sale',            // ← nuevo
 
   // User (requires connected wallet)
   DASHBOARD:   '/dashboard',
@@ -87,6 +88,13 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     title: 'Learning Center',
     description: 'Learn about DeFi, retirement planning, and blockchain.',
   },
+  [ROUTES.SALE]: {                 // ← nuevo
+    guard: 'public',
+    navbar: true,
+    footer: false,
+    title: 'ETRF Token Sale',
+    description: 'Participá en el Seed Round de ETRF — Ethernal Fund.',
+  },
   [ROUTES.DASHBOARD]: {
     guard: 'auth',
     navbar: true,
@@ -94,7 +102,7 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     title: 'Dashboard',
     description: 'Manage your personal retirement fund.',
   },
-    [ROUTES.COURSES]: {
+  [ROUTES.COURSES]: {
     guard: 'auth',
     navbar: true,
     footer: true,
@@ -114,10 +122,10 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     title: 'Admin — Treasury',
   },
   [ROUTES.ADMIN_PROTOCOL]: {
-  guard: 'admin',
-  navbar: true,
-  footer: false,
-  title: 'Admin — Protocol',
+    guard: 'admin',
+    navbar: true,
+    footer: false,
+    title: 'Admin — Protocol',
   },
   [ROUTES.ADMIN_CONTRACTS]: {
     guard: 'admin',

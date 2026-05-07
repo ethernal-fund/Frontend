@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Mail } from 'lucide-react';
 
 interface Section {
   heading: string;
@@ -9,11 +8,10 @@ interface Section {
 }
 
 interface LegalPageProps {
-  docKey:     'privacy' | 'terms' | 'disclaimer';
+  docKey:     'privacy' | 'terms' | 'disclaimer' | 'sale';
   version:    string;
   effectiveDate: string;
   sections:   Section[];
-  /** mostrar badge de advertencia roja (solo disclaimer) */
   warning?:   string;
 }
 
@@ -25,10 +23,6 @@ const LegalPage: React.FC<LegalPageProps> = ({
   warning,
 }) => {
   const { t } = useTranslation();
-
-  // Scroll to top on mount
-  useEffect(() => { window.scrollTo(0, 0); }, []);
-
   const titleKey = `legal.${docKey}.title` as const;
 
   return (
@@ -83,6 +77,7 @@ const LegalPage: React.FC<LegalPageProps> = ({
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               {t('legal.toc')}
             </p>
+            <nav aria-label='Tabla de contenidos'>
             <ol className="space-y-1">
               {sections.map((s, i) => (
                 <li key={i}>
@@ -95,12 +90,13 @@ const LegalPage: React.FC<LegalPageProps> = ({
                 </li>
               ))}
             </ol>
+            </nav>
           </div>
 
           {/* Sections */}
           <div className="px-8 py-8 space-y-10">
             {sections.map((s, i) => (
-              <section key={i} id={`section-${i + 1}`} className="scroll-mt-6">
+              <section key={i} id={`section-${i + 1}`} className="scroll-mt-24">
                 <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-baseline gap-2">
                   <span className="text-yellow-500 font-mono text-sm">{String(i + 1).padStart(2, '0')}</span>
                   {s.heading}
@@ -132,7 +128,7 @@ const LegalPage: React.FC<LegalPageProps> = ({
               className="flex items-center gap-1 text-xs text-green-700 hover:text-yellow-600 transition"
             >
               contact@ethernal.fund
-              <ExternalLink size={12} />
+              <Mail size={12} />
             </a>
           </div>
         </div>
@@ -151,5 +147,4 @@ const LegalPage: React.FC<LegalPageProps> = ({
     </div>
   );
 };
-
 export default LegalPage;

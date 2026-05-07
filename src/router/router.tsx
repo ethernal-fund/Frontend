@@ -13,21 +13,26 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Analytics } from '@vercel/analytics/react';
 
+// Public pages
 const HomePage       = lazy(() => import('@/pages/public/LandingPage'));
 const CalculatorPage = lazy(() => import('@/pages/public/CalculatorPage'));
 const ContactPage    = lazy(() => import('@/pages/public/ContactPage'));
 const SurveyPage     = lazy(() => import('@/pages/public/SurveyPage'));
 const OurHistoryPage = lazy(() => import('@/pages/public/OurHistoryPage'));
+const SalePage       = lazy(() => import('@/pages/public/SalePage'));   
 const NotFoundPage   = lazy(() => import('@/pages/public/NotFoundPage'));
 
+// Legal pages
 const PrivacyPage    = lazy(() => import('@/pages/legal/PrivacyPage'));
 const TermsPage      = lazy(() => import('@/pages/legal/TermsPage'));
 const DisclaimerPage = lazy(() => import('@/pages/legal/DisclaimerPage'));
 
+// User pages
 const DashboardPage  = lazy(() => import('@/pages/user/DashboardPage'));
 const CoursesPage    = lazy(() => import('@/pages/user/CoursesPage'));
 const LearningPage   = lazy(() => import('@/pages/user/LearningPage'));
 
+// Admin pages
 const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboard'));
 const TreasuryPage      = lazy(() => import('@/pages/admin/TreasuryPage'));
 const ProtocolManager   = lazy(() => import('@/pages/admin/ProtocolManager'));
@@ -77,13 +82,14 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    errorElement: routerErrorBoundary,           
+    errorElement: routerErrorBoundary,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: ROUTES.CALCULATOR, element: <CalculatorPage /> },
-      { path: ROUTES.CONTACT,    element: <ContactPage /> },
-      { path: ROUTES.SURVEY,     element: <SurveyPage /> },
+      { index: true,              element: <HomePage /> },
+      { path: ROUTES.CALCULATOR,  element: <CalculatorPage /> },
+      { path: ROUTES.CONTACT,     element: <ContactPage /> },
+      { path: ROUTES.SURVEY,      element: <SurveyPage /> },
       { path: ROUTES.OUR_HISTORY, element: <OurHistoryPage /> },
+      { path: ROUTES.SALE,        element: <SalePage /> },     
       { path: ROUTES.PRIVACY,    element: <PrivacyPage /> },
       { path: ROUTES.TERMS,      element: <TermsPage /> },
       { path: ROUTES.DISCLAIMER, element: <DisclaimerPage /> },
@@ -114,7 +120,7 @@ const router = createBrowserRouter([
       { path: ROUTES.LEGACY_ADMIN_LOGIN, element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
       { path: ROUTES.LEGACY_GOVERNANCE,  element: <Navigate to={ROUTES.DASHBOARD} replace /> },
       { path: ROUTES.LEGACY_FUND,        element: <Navigate to={ROUTES.COURSES} replace /> },
-      { path: '*', element: <NotFoundPage /> },
+      { path: ROUTES.NOT_FOUND, element: <NotFoundPage /> },
     ],
   },
 ]);

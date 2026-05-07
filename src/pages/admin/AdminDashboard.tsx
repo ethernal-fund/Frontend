@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState }               from "react";
+import EarlyRetirementMonitor    from "@/components/admin/EarlyRetirementMonitor";
 
 interface ProtocolStats {
   totalFundsCreated: number;
@@ -208,6 +209,11 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* ── Early Retirement Monitor ── */}
+      <div className="mb-8">
+        <EarlyRetirementMonitor />
+      </div>
+
       {/* ── Bottom grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -267,10 +273,10 @@ export default function AdminDashboardPage() {
             <SectionHeader title="Fee Configuration" />
             <div className="space-y-2">
               {[
-                { label: "Deposit fee",                  value: "5%  (500 bps)" },
-                { label: "Early retirement fee",         value: "7%  (700 bps)" },
-                { label: "Extra deposit reclaim penalty",value: "1%  (100 bps)" },
-                { label: "Max fee cap",                  value: "10% (1000 bps)" },
+                { label: "Deposit fee",                   value: "5%  (500 bps)"  },
+                { label: "Early exit penalty",            value: "7%  (700 bps)"  },
+                { label: "Extra deposit reclaim penalty",  value: "1%  (100 bps)"  },
+                { label: "Max fee cap",                   value: "5%  (500 bps)"  },
               ].map((row, i) => (
                 <div key={i} className="flex justify-between items-center text-sm py-1 border-b border-green-100 last:border-0">
                   <span className="text-green-800">{row.label}</span>

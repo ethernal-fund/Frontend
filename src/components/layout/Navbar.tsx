@@ -27,10 +27,10 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const { t } = useTranslation();
   const { address, isConnected, chain } = useConnection();
-  const { disconnect } = useDisconnect();
+  const { mutate: disconnect } = useDisconnect();
   const { data: balance } = useBalance({ address });
   const chainId = useChainId();
-  const { switchChain } = useSwitchChain();
+  const { mutate: switchChain } = useSwitchChain();
   const { open } = useAppKit();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -83,6 +83,7 @@ const Navbar: React.FC = () => {
     { path: '/', label: t('nav.home') },
     { path: '/calculator', label: t('nav.calculator') },
     { path: '/contact', label: t('nav.contact') },
+    { path: '/sale', label: 'Token Sale', isHighlighted: true },
     ...(isConnected ? [{ path: '/dashboard', label: t('nav.dashboard') }] : []),
   ];
 
@@ -106,11 +107,27 @@ const Navbar: React.FC = () => {
 
         {/* ── Desktop Nav ── */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-          {navLinks.map((link) => (
+        {navLinks.map((link) =>
+          link.isHighlighted ? (
+            <Link
+              key={link.path}
+              to={link.path}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #897148, #b8965e)',
+                color: '#f7f8f6',
+                boxShadow: '0 0 12px rgba(137,113,72,0.35)',
+              }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-200 animate-pulse" />
+              {link.label}
+            </Link>
+          ) : (
             <Link key={link.path} to={link.path} className={isActive(link.path)}>
               {link.label}
             </Link>
-          ))}
+          )
+        )}
         </nav>
 
         {/* ── Right Side ── */}
@@ -319,19 +336,31 @@ const Navbar: React.FC = () => {
               className="flex flex-col p-6 space-y-4"
               aria-label="Mobile navigation"
             >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`text-lg py-3 px-4 rounded-lg transition ${
-                    location.pathname === link.path
-                      ? 'bg-forest-green text-white font-bold'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) =>
+                link.isHighlighted ? (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className="flex items-center gap-2 text-lg py-3 px-4 rounded-lg font-semibold"
+                    style={{ background: 'linear-gradient(135deg, #897148, #b8965e)', color: '#f7f8f6' }}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-amber-200 animate-pulse" />
+                    {link.label}
+                  </Link>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`text-lg py-3 px-4 rounded-lg transition ${
+                      location.pathname === link.path
+                        ? 'bg-forest-green text-white font-bold'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
 
               {/* Language + Wallet info */}
               <div className="pt-4 border-t border-gray-200 space-y-4">

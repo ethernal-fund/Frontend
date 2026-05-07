@@ -882,5 +882,113 @@
     "title": "Página no encontrada",
     "subtitle": "La página que buscas no existe.",
     "goHome": "Ir al inicio"
+  },
+  "sale": {
+    "page": {
+      "title": "Token Sale",
+      "subtitle": "Participá en el Seed Round de ETRF, el token de utilidad del primer fondo de retiro personal descentralizado.",
+      "brand": "Ethernal Fund · ETRF",
+      "disclaimer": "ETRF es un token de utilidad. La participación en el Seed Round implica riesgo de pérdida de capital.",
+      "links": {
+        "whitepaper": "Whitepaper",
+        "audit": "Auditoría de contratos",
+        "docs": "Documentación"
+      }
+    },
+    "round": {
+      "live": "● Live",
+      "ended": "Finalizado",
+      "price": "precio",
+      "perToken": "por ETRF",
+      "raised": "recaudado",
+      "hardCap": "hard cap",
+      "nextRoundPrice": "precio next round",
+      "walletCap": "cap por wallet",
+      "tokensRemaining": "tokens restantes",
+      "cliffVesting": "{{cliff}}m cliff · {{vesting}}m vesting",
+      "roundClosed": "La ronda actual está cerrada."
+    },
+    "buy": {
+      "title": "Monto en USDC",
+      "max": "Máx: {{amount}} USDC",
+      "youWillReceive": "Recibirás",
+      "pricePerToken": "Precio por token",
+      "cliff": "Cliff",
+      "vesting": "Vesting",
+      "vestingLinear": "{{months}} meses lineal",
+      "cliffMonths": "{{months}} meses",
+      "walletCapNote": "Cap de {{cap}} USDC por wallet · Solo USDC",
+      "needsApproval": "Aprobar USDC y comprar",
+      "buy": "Comprar ETRF",
+      "approving": "Aprobando USDC...",
+      "buying": "Comprando ETRF...",
+      "confirmWallet": "Confirmá en tu wallet...",
+      "invalidAmount": "Monto inválido",
+      "enterAmount": "Ingresá un monto",
+      "step1": "1. Aprobar USDC",
+      "step2": "2. Comprar ETRF",
+      "success": {
+        "title": "Compra exitosa",
+        "bought": "Compraste {{amount}} ETRF",
+        "vestingNote": "Tu vesting comenzará a correr. Revisá \"Mis tokens\" para el seguimiento.",
+        "buyMore": "Comprar más"
+      },
+      "error": {
+        "rejected": "Transacción rechazada"
+      }
+    },
+    "vesting": {
+      "title": "Mis tokens ETRF",
+      "totalLabel": "ETRF total",
+      "legend": {
+        "claimed": "reclamado",
+        "vestedAvailable": "vested disponible",
+        "locked": "bloqueado"
+      },
+      "stats": {
+        "vested": "vested",
+        "claimed": "reclamado",
+        "locked": "bloqueado",
+        "available": "disponible"
+      },
+      "cliff": {
+        "inDays": "Cliff en {{days}} días · {{months}} meses desde la compra",
+        "description": "Los primeros tokens se liberarán al alcanzar el cliff"
+      },
+      "claim": "Reclamar {{amount}} ETRF",
+      "availableIn": "Disponible en {{days}} días",
+      "noTokens": "Sin tokens disponibles",
+      "confirmWallet": "Confirmá en tu wallet...",
+      "claimed": "✓ Tokens reclamados correctamente",
+      "myTokens": "Mis tokens"
+    },
+    "walletGate": {
+      "title": "Conectá tu wallet para participar",
+      "subtitle": "Accedé al Seed Round de ETRF y comenzá a construir tu fondo de retiro descentralizado.",
+      "supportedWallets": "MetaMask, Coinbase, WalletConnect",
+      "connect": "Conectar wallet",
+      "disclaimer": "Solo usuarios elegibles según los términos del whitepaper. Al conectar aceptás los",
+      "terms": "términos y condiciones"
+    },
+    "tokenomics": {
+      "title": "Tokenomics",
+      "subtitle": "Distribución del supply de ETRF",
+      "supplyTotal": "Supply Total",
+      "viewFull": "VER DISTRIBUCIÓN COMPLETA",
+      "distributionSubtitle": "Distribución del supply",
+      "slices": {
+        "publicSale": "Venta Pública",
+        "team": "Equipo",
+        "ecosystem": "Ecosistema",
+        "treasury": "Tesorería",
+        "community": "Comunidad",
+        "reserve": "Reserva"
+      },
+      "stats": {
+        "totalSupply": "Supply Total",
+        "seedRound": "Seed Round",
+        "seedPrice": "Precio Seed"
+      }
+    }
   }
 }

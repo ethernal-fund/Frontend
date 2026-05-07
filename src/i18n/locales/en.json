@@ -880,5 +880,113 @@
     "title": "Page not found",
     "subtitle": "The page you're looking for doesn't exist.",
     "goHome": "Go home"
+  },
+  "sale": {
+    "page": {
+      "title": "Token Sale",
+      "subtitle": "Participate in the ETRF Seed Round, the utility token of the first decentralized personal retirement fund.",
+      "brand": "Ethernal Fund · ETRF",
+      "disclaimer": "ETRF is a utility token. Participation in the Seed Round involves risk of capital loss.",
+      "links": {
+        "whitepaper": "Whitepaper",
+        "audit": "Contract Audit",
+        "docs": "Documentation"
+      }
+    },
+    "round": {
+      "live": "● Live",
+      "ended": "Ended",
+      "price": "price",
+      "perToken": "per ETRF",
+      "raised": "raised",
+      "hardCap": "hard cap",
+      "nextRoundPrice": "next round price",
+      "walletCap": "wallet cap",
+      "tokensRemaining": "tokens remaining",
+      "cliffVesting": "{{cliff}}m cliff · {{vesting}}m vesting",
+      "roundClosed": "The current round is closed."
+    },
+    "buy": {
+      "title": "Amount in USDC",
+      "max": "Max: {{amount}} USDC",
+      "youWillReceive": "You will receive",
+      "pricePerToken": "Price per token",
+      "cliff": "Cliff",
+      "vesting": "Vesting",
+      "vestingLinear": "{{months}} months linear",
+      "cliffMonths": "{{months}} months",
+      "walletCapNote": "Cap of {{cap}} USDC per wallet · USDC only",
+      "needsApproval": "Approve USDC and buy",
+      "buy": "Buy ETRF",
+      "approving": "Approving USDC...",
+      "buying": "Buying ETRF...",
+      "confirmWallet": "Confirm in your wallet...",
+      "invalidAmount": "Invalid amount",
+      "enterAmount": "Enter an amount",
+      "step1": "1. Approve USDC",
+      "step2": "2. Buy ETRF",
+      "success": {
+        "title": "Purchase successful",
+        "bought": "You bought {{amount}} ETRF",
+        "vestingNote": "Your vesting will begin. Check \"My tokens\" for tracking.",
+        "buyMore": "Buy more"
+      },
+      "error": {
+        "rejected": "Transaction rejected"
+      }
+    },
+    "vesting": {
+      "title": "My ETRF tokens",
+      "totalLabel": "ETRF total",
+      "legend": {
+        "claimed": "claimed",
+        "vestedAvailable": "vested available",
+        "locked": "locked"
+      },
+      "stats": {
+        "vested": "vested",
+        "claimed": "claimed",
+        "locked": "locked",
+        "available": "available"
+      },
+      "cliff": {
+        "inDays": "Cliff in {{days}} days · {{months}} months from purchase",
+        "description": "The first tokens will be released when the cliff is reached"
+      },
+      "claim": "Claim {{amount}} ETRF",
+      "availableIn": "Available in {{days}} days",
+      "noTokens": "No tokens available",
+      "confirmWallet": "Confirm in your wallet...",
+      "claimed": "✓ Tokens claimed successfully",
+      "myTokens": "My tokens"
+    },
+    "walletGate": {
+      "title": "Connect your wallet to participate",
+      "subtitle": "Access the ETRF Seed Round and start building your decentralized retirement fund.",
+      "supportedWallets": "MetaMask, Coinbase, WalletConnect",
+      "connect": "Connect wallet",
+      "disclaimer": "Eligible users only as per the whitepaper terms. By connecting you accept the",
+      "terms": "terms and conditions"
+    },
+    "tokenomics": {
+      "title": "Tokenomics",
+      "subtitle": "ETRF supply distribution",
+      "supplyTotal": "Total Supply",
+      "viewFull": "VIEW FULL DISTRIBUTION",
+      "distributionSubtitle": "Distribution",
+      "slices": {
+        "publicSale": "Public Sale",
+        "team": "Team",
+        "ecosystem": "Ecosystem",
+        "treasury": "Treasury",
+        "community": "Community",
+        "reserve": "Reserve"
+      },
+      "stats": {
+        "totalSupply": "Total Supply",
+        "seedRound": "Seed Round",
+        "seedPrice": "Seed Price"
+      }
+    }
   }
 }

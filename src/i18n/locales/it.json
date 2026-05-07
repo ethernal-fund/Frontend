@@ -880,5 +880,113 @@
     "title": "Pagina non trovata",
     "subtitle": "La pagina che stai cercando non esiste.",
     "goHome": "Torna alla home"
+  },
+  "sale": {
+    "page": {
+      "title": "Token Sale",
+      "subtitle": "Partecipa al Seed Round di ETRF, il token di utilità del primo fondo pensione personale decentralizzato.",
+      "brand": "Ethernal Fund · ETRF",
+      "disclaimer": "ETRF è un token di utilità. La partecipazione al Seed Round comporta il rischio di perdita del capitale.",
+      "links": {
+        "whitepaper": "Whitepaper",
+        "audit": "Audit dei contratti",
+        "docs": "Documentazione"
+      }
+    },
+    "round": {
+      "live": "● Live",
+      "ended": "Terminato",
+      "price": "prezzo",
+      "perToken": "per ETRF",
+      "raised": "raccolto",
+      "hardCap": "hard cap",
+      "nextRoundPrice": "prezzo round successivo",
+      "walletCap": "limite wallet",
+      "tokensRemaining": "token rimanenti",
+      "cliffVesting": "{{cliff}}m cliff · {{vesting}}m vesting",
+      "roundClosed": "Il round corrente è chiuso."
+    },
+    "buy": {
+      "title": "Importo in USDC",
+      "max": "Max: {{amount}} USDC",
+      "youWillReceive": "Riceverai",
+      "pricePerToken": "Prezzo per token",
+      "cliff": "Cliff",
+      "vesting": "Vesting",
+      "vestingLinear": "{{months}} mesi lineare",
+      "cliffMonths": "{{months}} mesi",
+      "walletCapNote": "Limite di {{cap}} USDC per wallet · Solo USDC",
+      "needsApproval": "Approva USDC e acquista",
+      "buy": "Acquista ETRF",
+      "approving": "Approvazione USDC...",
+      "buying": "Acquisto ETRF...",
+      "confirmWallet": "Conferma nel tuo wallet...",
+      "invalidAmount": "Importo non valido",
+      "enterAmount": "Inserisci un importo",
+      "step1": "1. Approva USDC",
+      "step2": "2. Acquista ETRF",
+      "success": {
+        "title": "Acquisto riuscito",
+        "bought": "Hai acquistato {{amount}} ETRF",
+        "vestingNote": "Il tuo vesting inizierà. Controlla \"I miei token\" per il monitoraggio.",
+        "buyMore": "Acquista ancora"
+      },
+      "error": {
+        "rejected": "Transazione rifiutata"
+      }
+    },
+    "vesting": {
+      "title": "I miei token ETRF",
+      "totalLabel": "ETRF totale",
+      "legend": {
+        "claimed": "riscattato",
+        "vestedAvailable": "vested disponibile",
+        "locked": "bloccato"
+      },
+      "stats": {
+        "vested": "vested",
+        "claimed": "riscattato",
+        "locked": "bloccato",
+        "available": "disponibile"
+      },
+      "cliff": {
+        "inDays": "Cliff tra {{days}} giorni · {{months}} mesi dall'acquisto",
+        "description": "I primi token verranno rilasciati al raggiungimento del cliff"
+      },
+      "claim": "Riscatta {{amount}} ETRF",
+      "availableIn": "Disponibile tra {{days}} giorni",
+      "noTokens": "Nessun token disponibile",
+      "confirmWallet": "Conferma nel tuo wallet...",
+      "claimed": "✓ Token riscattati con successo",
+      "myTokens": "I miei token"
+    },
+    "walletGate": {
+      "title": "Connetti il tuo wallet per partecipare",
+      "subtitle": "Accedi al Seed Round di ETRF e inizia a costruire il tuo fondo pensione decentralizzato.",
+      "supportedWallets": "MetaMask, Coinbase, WalletConnect",
+      "connect": "Connetti wallet",
+      "disclaimer": "Solo utenti idonei secondo i termini del whitepaper. Connettendoti accetti i",
+      "terms": "termini e condizioni"
+    },
+    "tokenomics": {
+      "title": "Tokenomics",
+      "subtitle": "Distribuzione del supply di ETRF",
+      "supplyTotal": "Supply Totale",
+      "viewFull": "VEDI DISTRIBUZIONE COMPLETA",
+      "distributionSubtitle": "Distribuzione del supply",
+      "slices": {
+        "publicSale": "Vendita Pubblica",
+        "team": "Team",
+        "ecosystem": "Ecosistema",
+        "treasury": "Tesoreria",
+        "community": "Community",
+        "reserve": "Riserva"
+      },
+      "stats": {
+        "totalSupply": "Supply Totale",
+        "seedRound": "Seed Round",
+        "seedPrice": "Prezzo Seed"
+      }
+    }
   }
 }

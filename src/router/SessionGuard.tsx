@@ -5,7 +5,6 @@ import { useWalletStore }           from '@/stores/walletStore'
 import { ROUTES }                   from '@/router/routes'
 
 const ROOT_HOSTNAMES = ['ethernal.fund', 'www.ethernal.fund']
-
 const PRESERVE_ON_ENTRY: string[] = [
   ROUTES.DASHBOARD,
   ROUTES.COURSES,
@@ -14,6 +13,7 @@ const PRESERVE_ON_ENTRY: string[] = [
   ROUTES.CONTACT,
   ROUTES.SURVEY,
   ROUTES.OUR_HISTORY,
+  ROUTES.SALE,             // ← link directo a /sale no redirige a home
   ROUTES.PRIVACY,
   ROUTES.TERMS,
   ROUTES.DISCLAIMER,
@@ -29,31 +29,26 @@ const WALLET_DISCONNECT_DEBOUNCE_MS = 1500
 export function SessionGuard() {
   const navigate = useNavigate()
   const location = useLocation()
-
   const isAuth   = useAuthStore((s) => s.isAuthenticated)
   const logout   = useAuthStore((s) => s.logout)
 
   const isConnected    = useWalletStore((s) => s.isConnected)
   const address        = useWalletStore((s) => s.address)
   const isReconnecting = useWalletStore((s) => s.isReconnecting)
-
   const logoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
   useEffect(() => {
     if (sessionStorage.getItem(ENTRY_HANDLED_KEY)) return
     sessionStorage.setItem(ENTRY_HANDLED_KEY, '1')
-
     const isRootEntry = ROOT_HOSTNAMES.includes(window.location.hostname)
     const isDeepRoute = location.pathname !== ROUTES.HOME
     const shouldPreserve = PRESERVE_ON_ENTRY.some(
       (r) => location.pathname === r || location.pathname.startsWith(r + '/')
     )
     const hasRedirectParam = new URLSearchParams(location.search).has('redirect')
-
     if (isRootEntry && isDeepRoute && !shouldPreserve && !hasRedirectParam) {
       navigate(ROUTES.HOME, { replace: true })
     }
-  }, []) 
+  }, [])
 
   useEffect(() => {
     if (isReconnecting) {
@@ -65,13 +60,11 @@ export function SessionGuard() {
     }
 
     const walletGone = !isConnected || !address
-
     if (walletGone && isAuth) {
       logoutTimerRef.current = setTimeout(() => {
         const stillGone =
           !useWalletStore.getState().isConnected ||
           !useWalletStore.getState().address
-
         if (stillGone && useAuthStore.getState().isAuthenticated) {
           logout()
         }
