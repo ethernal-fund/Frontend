@@ -92,6 +92,10 @@ const CalculatorPage = () => {
     paymentYears: 20,
   });
 
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/health`).catch(() => {});
+  }, []);
+
   const { setCalculatorField, runCalculator } = useWizardStore();
   const { hasFund: fundAddress } = useMyFund();
 

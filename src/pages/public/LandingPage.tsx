@@ -326,6 +326,8 @@ const HomePage: React.FC = () => {
   }, [isConnected, disconnect]);
 
   const handleGetStarted = () => {
+    // Despierta el backend de Render
+    fetch(`${import.meta.env.VITE_API_URL}/health`).catch(() => {});
     if (isConnected) void navigate('/calculator');
     else openModal();
   };
