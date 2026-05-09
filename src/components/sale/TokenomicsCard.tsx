@@ -6,7 +6,7 @@ interface TokenomicsCardProps {
 }
 
 export function TokenomicsCard({ onClick }: TokenomicsCardProps) {
-  const { t } = useTranslation('sale');
+  const { t } = useTranslation();
 
   return (
     <div
@@ -27,16 +27,15 @@ export function TokenomicsCard({ onClick }: TokenomicsCardProps) {
           </div>
           <div>
             <h3 className="text-lg font-medium" style={{ color: '#f7f8f6' }}>
-              {t('tokenomics.title')}
+              {t('sale.tokenomics.title')}
             </h3>
             <p className="text-xs" style={{ color: '#666' }}>
-              {t('tokenomics.distributionSubtitle')}
+              {t('sale.tokenomics.distributionSubtitle')}
             </p>
           </div>
         </div>
-
         <div className="text-right">
-          <div className="text-xs text-white/60">{t('tokenomics.supplyTotal')}</div>
+          <div className="text-xs text-white/60">{t('sale.tokenomics.supplyTotal')}</div>
           <div className="text-lg font-mono tracking-tight" style={{ color: '#f7f8f6' }}>
             1B
           </div>
@@ -52,20 +51,18 @@ export function TokenomicsCard({ onClick }: TokenomicsCardProps) {
         <div className="h-full bg-[#6D597A]" style={{ width: '10%' }} />
         <div className="h-full bg-[#8D99AE]" style={{ width: '5%' }} />
       </div>
-
       <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
         {(['publicSale', 'team', 'ecosystem', 'treasury'] as const).map((key) => (
           <div key={key} className="flex justify-between">
-            <span style={{ color: '#aaa' }}>{t(`tokenomics.slices.${key}`)}</span>
+            <span style={{ color: '#aaa' }}>{t(`sale.tokenomics.slices.${key}`)}</span>
             <span className="font-medium" style={{ color: '#f7f8f6' }}>
               {key === 'publicSale' ? '30%' : key === 'team' ? '20%' : key === 'ecosystem' ? '20%' : '15%'}
             </span>
           </div>
         ))}
       </div>
-
       <div className="mt-6 flex items-center justify-center gap-2 text-xs tracking-widest uppercase border-t border-white/10 pt-4" style={{ color: '#897148' }}>
-        {t('tokenomics.viewFull')}
+        {t('sale.tokenomics.viewFull')}
         <ArrowRight size={14} />
       </div>
     </div>

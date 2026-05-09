@@ -885,7 +885,7 @@
   },
   "sale": {
     "page": {
-      "title": "Token Sale",
+      "title": "Venta de Token",
       "subtitle": "Participá en el Seed Round de ETRF, el token de utilidad del primer fondo de retiro personal descentralizado.",
       "brand": "Ethernal Fund · ETRF",
       "disclaimer": "ETRF es un token de utilidad. La participación en el Seed Round implica riesgo de pérdida de capital.",
@@ -896,14 +896,14 @@
       }
     },
     "round": {
-      "live": "● Live",
+      "live": "● En vivo",
       "ended": "Finalizado",
       "price": "precio",
       "perToken": "por ETRF",
       "raised": "recaudado",
       "hardCap": "hard cap",
-      "nextRoundPrice": "precio next round",
-      "walletCap": "cap por wallet",
+      "nextRoundPrice": "precio siguiente ronda",
+      "walletCap": "límite por billetera",
       "tokensRemaining": "tokens restantes",
       "cliffVesting": "{{cliff}}m cliff · {{vesting}}m vesting",
       "roundClosed": "La ronda actual está cerrada."
@@ -915,14 +915,14 @@
       "pricePerToken": "Precio por token",
       "cliff": "Cliff",
       "vesting": "Vesting",
-      "vestingLinear": "{{months}} meses lineal",
+      "vestingLinear": "{{months}} meses lineales",
       "cliffMonths": "{{months}} meses",
-      "walletCapNote": "Cap de {{cap}} USDC por wallet · Solo USDC",
+      "walletCapNote": "Límite de {{cap}} USDC por billetera · Solo USDC",
       "needsApproval": "Aprobar USDC y comprar",
       "buy": "Comprar ETRF",
       "approving": "Aprobando USDC...",
       "buying": "Comprando ETRF...",
-      "confirmWallet": "Confirmá en tu wallet...",
+      "confirmWallet": "Confirmá en tu billetera...",
       "invalidAmount": "Monto inválido",
       "enterAmount": "Ingresá un monto",
       "step1": "1. Aprobar USDC",
@@ -940,9 +940,10 @@
     "vesting": {
       "title": "Mis tokens ETRF",
       "totalLabel": "ETRF total",
+      "myTokens": "Mis tokens",
       "legend": {
         "claimed": "reclamado",
-        "vestedAvailable": "vested disponible",
+        "vestedAvailable": "disponible (vested)",
         "locked": "bloqueado"
       },
       "stats": {
@@ -953,20 +954,18 @@
       },
       "cliff": {
         "inDays": "Cliff en {{days}} días · {{months}} meses desde la compra",
-        "description": "Los primeros tokens se liberarán al alcanzar el cliff"
+        "description": "Los primeros tokens se liberarán al alcanzar el período de cliff"
       },
       "claim": "Reclamar {{amount}} ETRF",
       "availableIn": "Disponible en {{days}} días",
       "noTokens": "Sin tokens disponibles",
-      "confirmWallet": "Confirmá en tu wallet...",
-      "claimed": "✓ Tokens reclamados correctamente",
-      "myTokens": "Mis tokens"
+      "confirmWallet": "Confirmá en tu billetera...",
+      "claimed": "✓ Tokens reclamados correctamente"
     },
     "walletGate": {
-      "title": "Conectá tu wallet para participar",
+      "title": "Conectá tu billetera para participar",
       "subtitle": "Accedé al Seed Round de ETRF y comenzá a construir tu fondo de retiro descentralizado.",
-      "supportedWallets": "MetaMask, Coinbase, WalletConnect",
-      "connect": "Conectar wallet",
+      "connect": "Conectar billetera",
       "disclaimer": "Solo usuarios elegibles según los términos del whitepaper. Al conectar aceptás los",
       "terms": "términos y condiciones"
     },
@@ -974,6 +973,7 @@
       "title": "Tokenomics",
       "subtitle": "Distribución del supply de ETRF",
       "supplyTotal": "Supply Total",
+      "supplyLabel": "ETRF SUPPLY",
       "viewFull": "VER DISTRIBUCIÓN COMPLETA",
       "distributionSubtitle": "Distribución del supply",
       "slices": {

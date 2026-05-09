@@ -52,6 +52,8 @@ function slicePath(
 }
 
 function DonutChart() {
+  const { t } = useTranslation();
+
   let cursor = 0;
   const paths = SLICE_KEYS.map((s) => {
     const start = cursor;
@@ -59,6 +61,7 @@ function DonutChart() {
     cursor = end;
     return { ...s, start, end };
   });
+
   return (
     <svg
       viewBox="0 0 240 240"
@@ -106,14 +109,14 @@ function DonutChart() {
         letterSpacing="2"
         fontFamily="system-ui, sans-serif"
       >
-        ETRF SUPPLY
+        {t('sale.tokenomics.supplyLabel', { defaultValue: 'ETRF SUPPLY' })}
       </text>
     </svg>
   );
 }
 
 export function TokenomicsModal({ isOpen, onClose }: TokenomicsModalProps) {
-  const { t } = useTranslation('sale');
+  const { t } = useTranslation();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -133,7 +136,7 @@ export function TokenomicsModal({ isOpen, onClose }: TokenomicsModalProps) {
 
   const slices = SLICE_KEYS.map((s) => ({
     ...s,
-    label: t(`tokenomics.slices.${s.key}`),
+    label: t(`sale.tokenomics.slices.${s.key}`),
   }));
 
   return (
@@ -192,7 +195,7 @@ export function TokenomicsModal({ isOpen, onClose }: TokenomicsModalProps) {
             }}
             onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.15)')}
             onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.08)')}
-            aria-label={t('common:close')}
+            aria-label={t('common.close')}
           >
             <X size={16} />
           </button>
@@ -208,10 +211,10 @@ export function TokenomicsModal({ isOpen, onClose }: TokenomicsModalProps) {
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               marginBottom: '6px',
             }}>
-              {t('tokenomics.title')}
+              {t('sale.tokenomics.title')}
             </h2>
             <p style={{ color: '#555', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-              {t('tokenomics.subtitle')}
+              {t('sale.tokenomics.subtitle')}
             </p>
           </div>
 
@@ -278,9 +281,18 @@ export function TokenomicsModal({ isOpen, onClose }: TokenomicsModalProps) {
             background: 'rgba(255,255,255,0.04)',
           }}>
             {[
-              { labelKey: 'stats.totalSupply', value: '1,000,000,000 ETRF' },
-              { labelKey: 'stats.seedRound',   value: '100M tokens' },
-              { labelKey: 'stats.seedPrice',   value: '$0.01 USDC' },
+              { 
+                labelKey: 'sale.tokenomics.stats.totalSupply', 
+                value: t('sale.tokenomics.stats.totalSupplyValue', { defaultValue: '1,000,000,000 ETRF' }) 
+              },
+              { 
+                labelKey: 'sale.tokenomics.stats.seedRound',   
+                value: t('sale.tokenomics.stats.seedRoundValue', { defaultValue: '100M tokens' }) 
+              },
+              { 
+                labelKey: 'sale.tokenomics.stats.seedPrice',   
+                value: t('sale.tokenomics.stats.seedPriceValue', { defaultValue: '$0.01 USDC' }) 
+              },
             ].map(({ labelKey, value }) => (
               <div key={labelKey} style={{
                 padding: '14px 16px',
@@ -292,7 +304,7 @@ export function TokenomicsModal({ isOpen, onClose }: TokenomicsModalProps) {
                   textTransform: 'uppercase', color: '#555',
                   marginBottom: '6px',
                 }}>
-                  {t(`tokenomics.${labelKey}`)}
+                  {t(labelKey)}
                 </div>
                 <div style={{
                   fontSize: '13px', color: '#c4a96a',

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 export function WalletGate() {
   const { open } = useAppKit()
-  const { t } = useTranslation('sale')
+  const { t } = useTranslation()   // ← Sin 'sale' por ahora
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
@@ -28,10 +28,10 @@ export function WalletGate() {
         className="text-2xl font-light mb-3"
         style={{ color: '#f7f8f6', fontFamily: "'Cormorant Garamond', Georgia, serif" }}
       >
-        {t('walletGate.title')}
+        {t('sale.walletGate.title')}
       </h3>
       <p className="text-sm leading-relaxed mb-8 max-w-xs" style={{ color: '#666' }}>
-        {t('walletGate.subtitle')}
+        {t('sale.walletGate.subtitle')}
       </p>
 
       {/* Wallets soportadas */}
@@ -68,14 +68,14 @@ export function WalletGate() {
           (e.currentTarget as HTMLButtonElement).style.background = '#897148'
         }}
       >
-        {t('walletGate.connect')}
+        {t('sale.walletGate.connect')}
       </button>
 
       {/* Disclaimer */}
       <p className="text-[11px] mt-6 max-w-xs leading-relaxed" style={{ color: '#444' }}>
-        {t('walletGate.disclaimer')}{' '}
+        {t('sale.walletGate.disclaimer')}{' '}
         <a href="/terms" className="underline underline-offset-2" style={{ color: '#666' }}>
-          {t('walletGate.terms')}
+          {t('sale.walletGate.terms')}
         </a>.
       </p>
 

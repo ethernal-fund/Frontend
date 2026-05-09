@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useConnection } from 'wagmi';
+import { useTranslation } from 'react-i18next';
 import { useSale } from '@/hooks/useSale';
 import { RoundProgress } from '@/components/sale/RoundProgress';
 import { WalletGate } from '@/components/sale/WalletGate';
@@ -10,6 +11,7 @@ import { TokenomicsModal } from '@/components/sale/TokenomicsModal';
 
 export default function SalePage() {
   const { isConnected } = useConnection();
+  const { t } = useTranslation();
   const sale = useSale();
   const hasPurchased = sale.purchase?.hasPurchased ?? false;
   const isLoading = isConnected && !sale.round;
@@ -51,14 +53,14 @@ export default function SalePage() {
               </svg>
             </div>
             <span className="text-xs tracking-[0.3em] uppercase" style={{ color: '#555' }}>
-              Ethernal Fund · ETRF
+              {t('sale.page.brand')}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-light leading-tight mb-4" style={{ color: '#f7f8f6', fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
-            Token Sale
+            {t('sale.page.title')}
           </h1>
           <p className="text-sm leading-relaxed max-w-md" style={{ color: '#555' }}>
-            Participá en el Seed Round de ETRF, el token de utilidad del primer fondo de retiro personal descentralizado.
+            {t('sale.page.subtitle')}
           </p>
         </header>
 
@@ -75,9 +77,9 @@ export default function SalePage() {
             {/* Links */}
             <div className="pt-6 space-y-3" style={{ borderTop: '0.5px solid rgba(255,255,255,0.06)' }}>
               {[
-                { label: 'Whitepaper', href: 'https://ethernal.fund/whitepaper' },
-                { label: 'Auditoría de contratos', href: 'https://ethernal.fund/audit' },
-                { label: 'Documentación', href: 'https://ethernal.fund/docs' },
+                { label: t('sale.page.links.whitepaper'), href: 'https://ethernal.fund/whitepaper' },
+                { label: t('sale.page.links.audit'),      href: 'https://ethernal.fund/audit' },
+                { label: t('sale.page.links.docs'),       href: 'https://ethernal.fund/docs' },
               ].map(({ label, href }) => (
                 <a
                   key={label}
@@ -108,7 +110,7 @@ export default function SalePage() {
                 {hasPurchased && sale.purchase && (
                   <div className="mb-8">
                     <div className="text-[10px] tracking-widest uppercase mb-4" style={{ color: '#555' }}>
-                      Mis tokens
+                      {t('sale.vesting.myTokens')}
                     </div>
                     <VestingTracker
                       purchase={sale.purchase}
@@ -140,7 +142,9 @@ export default function SalePage() {
 
                 {sale.round.status !== 'active' && !hasPurchased && (
                   <div className="text-center py-12">
-                    <p className="text-sm" style={{ color: '#555' }}>La ronda actual está cerrada.</p>
+                    <p className="text-sm" style={{ color: '#555' }}>
+                      {t('sale.round.roundClosed')}
+                    </p>
                   </div>
                 )}
               </>
@@ -150,7 +154,7 @@ export default function SalePage() {
 
         <footer className="mt-16 pt-8" style={{ borderTop: '0.5px solid rgba(255,255,255,0.05)' }}>
           <p className="text-[11px] leading-relaxed max-w-2xl" style={{ color: '#333' }}>
-            ETRF es un token de utilidad. La participación en el Seed Round implica riesgo de pérdida de capital...
+            {t('sale.page.disclaimer')}
           </p>
         </footer>
       </div>
@@ -172,7 +176,7 @@ function RoundSkeleton() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function FormSkeleton() {
@@ -182,5 +186,5 @@ function FormSkeleton() {
       <div className="h-24 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
       <div className="h-12 rounded" style={{ background: 'rgba(137,113,72,0.1)' }} />
     </div>
-  )
+  );
 }
