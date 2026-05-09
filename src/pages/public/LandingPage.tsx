@@ -301,7 +301,7 @@ const LegalDocsSection: React.FC = () => {
 
         <p className="mt-6 text-xs text-center text-gray-400">
           {t(
-            'legal.disclaimer',
+            'legal.legalNotice', 
             'Estos documentos son de carácter informativo. No constituyen asesoramiento financiero ni oferta de valores.',
           )}
         </p>

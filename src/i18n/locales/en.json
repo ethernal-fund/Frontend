@@ -602,6 +602,9 @@
     "effective": "Effective from {{date}}",
     "toc": "Table of Contents",
     "backToHome": "Back to Home",
+    "whitepaper": "Whitepaper",
+    "tokenSaleAgreement": "Token Sale Agreement",
+    "legalNotice": "These documents are for informational purposes only. They do not constitute financial advice or an offer of securities.",
     "privacy": {
       "title": "Privacy Policy",
       "s1": {

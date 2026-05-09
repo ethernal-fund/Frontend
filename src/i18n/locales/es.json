@@ -604,6 +604,9 @@
     "effective": "Vigente desde {{date}}",
     "toc": "Contenido",
     "backToHome": "Volver al inicio",
+    "whitepaper": "Whitepaper",
+    "tokenSaleAgreement": "Acuerdo de Venta de Tokens",
+    "legalNotice": "Estos documentos son de carácter informativo. No constituyen asesoramiento financiero ni oferta de valores.",
     "privacy": {
       "title": "Política de Privacidad",
       "s1": {
