@@ -1,6 +1,6 @@
 {
   "contractName": "UserPreferences",
-  "address": "0x0f619474EeCF03a96Cb1eF78C32f940cF0fDe0df",
+  "address": "0xB1e707ef70e54c6C51Ba4Cf4368F0e15e2934f88",
   "abi": [
     {
       "name": "UserConfigUpdated",
@@ -58,6 +58,33 @@
     },
     {
       "name": "DepositRouted",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "protocol",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "WithdrawalRouted",
       "inputs": [
         {
           "name": "user",
@@ -290,6 +317,26 @@
       ]
     },
     {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "recordWithdrawal",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "name": "_protocol",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
       "stateMutability": "view",
       "type": "function",
       "name": "getUserConfig",
@@ -439,6 +486,40 @@
       "stateMutability": "view",
       "type": "function",
       "name": "getUserTotalDeposited",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getUserTotalWithdrawn",
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getUserNetDeposited",
       "inputs": [
         {
           "name": "_user",
@@ -712,5 +793,5 @@
       "outputs": []
     }
   ],
-  "constructorArgs": "000000000000000000000000dfe1dc5744e56a06e86505e6bf607c8aea4f0486"
+  "constructorArgs": "0000000000000000000000009a6397e5d17d8fdb16f3554e9774c764343c311b"
 }

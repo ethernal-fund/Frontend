@@ -1,6 +1,6 @@
 {
   "contractName": "PersonalFund",
-  "address": "0xCf02C2cedd9D9884C2306ddBe2611Ea1CB7D6E3c",
+  "address": "0x25eFFDe780c41C00371315b48534F4E2cB4BD7d0",
   "abi": [
     {
       "name": "Initialized",
@@ -325,6 +325,45 @@
       "type": "event"
     },
     {
+      "name": "EmergencyAnnounced",
+      "inputs": [
+        {
+          "name": "admin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "unlockTime",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "EmergencyCancelled",
+      "inputs": [
+        {
+          "name": "cancelledBy",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
       "name": "InvestmentMethodUpdated",
       "inputs": [
         {
@@ -435,6 +474,10 @@
           "type": "address"
         },
         {
+          "name": "_protocolRegistry",
+          "type": "address"
+        },
+        {
           "name": "_selectedProtocol",
           "type": "address"
         },
@@ -469,6 +512,10 @@
         {
           "name": "_timelockYears",
           "type": "uint256"
+        },
+        {
+          "name": "_maxFeeBP",
+          "type": "uint256"
         }
       ],
       "outputs": []
@@ -489,7 +536,12 @@
       "stateMutability": "nonpayable",
       "type": "function",
       "name": "depositMonthly",
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_maxFeeBP",
+          "type": "uint256"
+        }
+      ],
       "outputs": []
     },
     {
@@ -499,6 +551,10 @@
       "inputs": [
         {
           "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "name": "_maxFeeBP",
           "type": "uint256"
         }
       ],
@@ -596,6 +652,20 @@
       "stateMutability": "nonpayable",
       "type": "function",
       "name": "approveEarlyRetirement",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "announceEmergency",
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "cancelEmergency",
       "inputs": [],
       "outputs": []
     },
@@ -717,6 +787,22 @@
       "name": "isEarlyRetirementApproved",
       "inputs": [],
       "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getEmergencyInfo",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        },
         {
           "name": "",
           "type": "bool"
@@ -1049,6 +1135,18 @@
       "stateMutability": "view",
       "type": "function",
       "name": "dateTime",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "protocolRegistry",
       "inputs": [],
       "outputs": [
         {
@@ -1544,6 +1642,18 @@
         {
           "name": "",
           "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "emergencyUnlockTime",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
         }
       ]
     }

@@ -1,6 +1,6 @@
 {
   "contractName": "ProtocolRegistry",
-  "address": "0x7105291d638F4998De24f53e0959432Ba170f41D",
+  "address": "0x5F44eaed859B3b426D02d5E596C16eDF387abB75",
   "abi": [
     {
       "name": "ProtocolAdded",
@@ -695,6 +695,51 @@
     {
       "stateMutability": "view",
       "type": "function",
+      "name": "isApproved",
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "getApprovedProtocols",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address[100]"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "recordWithdraw",
+      "inputs": [
+        {
+          "name": "_protocolAddress",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
       "name": "admin",
       "inputs": [],
       "outputs": [
@@ -927,5 +972,5 @@
       "outputs": []
     }
   ],
-  "constructorArgs": "000000000000000000000000dfe1dc5744e56a06e86505e6bf607c8aea4f048600000000000000000000000062f7fb943348d9e3e238b7043278b6895428e4d9"
+  "constructorArgs": "0000000000000000000000009a6397e5d17d8fdb16f3554e9774c764343c311b000000000000000000000000253a19c8a3afd13c5f54fb0694e356e2d3167afa"
 }

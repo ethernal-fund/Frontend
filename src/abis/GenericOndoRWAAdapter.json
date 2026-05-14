@@ -1,6 +1,6 @@
 {
-  "contractName": "MockOndoAdapter",
-  "address": "0x8fBf9F3b42C36C1b44267F10959cC8A5d6A7C882",
+  "contractName": "GenericOndoRWAAdapter",
+  "address": "0xAc0F3ABD37Da531302bB81150532e19bf1aCEfC9",
   "abi": [
     {
       "name": "Deposited",
@@ -11,8 +11,18 @@
           "indexed": true
         },
         {
-          "name": "amount",
+          "name": "usdcIn",
           "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "tokenOut",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "rwaToken",
+          "type": "address",
           "indexed": false
         },
         {
@@ -33,8 +43,18 @@
           "indexed": true
         },
         {
-          "name": "amount",
+          "name": "tokenIn",
           "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "usdcOut",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "rwaToken",
+          "type": "address",
           "indexed": false
         },
         {
@@ -54,6 +74,10 @@
         {
           "name": "_amount",
           "type": "uint256"
+        },
+        {
+          "name": "_deadline",
+          "type": "uint256"
         }
       ],
       "outputs": [
@@ -70,6 +94,10 @@
       "inputs": [
         {
           "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "name": "_deadline",
           "type": "uint256"
         }
       ],
@@ -96,6 +124,37 @@
           "type": "uint256"
         }
       ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "setPaused",
+      "inputs": [
+        {
+          "name": "_paused",
+          "type": "bool"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "proposeAdmin",
+      "inputs": [
+        {
+          "name": "_newAdmin",
+          "type": "address"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "acceptAdmin",
+      "inputs": [],
+      "outputs": []
     },
     {
       "stateMutability": "nonpayable",
@@ -128,6 +187,30 @@
     {
       "stateMutability": "view",
       "type": "function",
+      "name": "pendingAdmin",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "router",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
       "name": "usdc",
       "inputs": [],
       "outputs": [
@@ -140,53 +223,43 @@
     {
       "stateMutability": "view",
       "type": "function",
-      "name": "name",
+      "name": "rwaToken",
       "inputs": [],
       "outputs": [
         {
           "name": "",
-          "type": "string"
+          "type": "address"
         }
       ]
     },
     {
       "stateMutability": "view",
       "type": "function",
-      "name": "balances",
-      "inputs": [
-        {
-          "name": "arg0",
-          "type": "address"
-        }
-      ],
+      "name": "feeTier",
+      "inputs": [],
       "outputs": [
         {
           "name": "",
-          "type": "uint256"
+          "type": "uint24"
         }
       ]
     },
     {
       "stateMutability": "view",
       "type": "function",
-      "name": "depositTimestamps",
-      "inputs": [
-        {
-          "name": "arg0",
-          "type": "address"
-        }
-      ],
+      "name": "paused",
+      "inputs": [],
       "outputs": [
         {
           "name": "",
-          "type": "uint256"
+          "type": "bool"
         }
       ]
     },
     {
       "stateMutability": "view",
       "type": "function",
-      "name": "totalDeposited",
+      "name": "maxSlippageBps",
       "inputs": [],
       "outputs": [
         {
@@ -200,16 +273,28 @@
       "type": "constructor",
       "inputs": [
         {
+          "name": "_router",
+          "type": "address"
+        },
+        {
           "name": "_usdc",
           "type": "address"
         },
         {
-          "name": "_name",
-          "type": "string"
+          "name": "_rwaToken",
+          "type": "address"
+        },
+        {
+          "name": "_feeTier",
+          "type": "uint24"
+        },
+        {
+          "name": "_maxSlippageBps",
+          "type": "uint256"
         }
       ],
       "outputs": []
     }
   ],
-  "constructorArgs": "000000000000000000000000253a19c8a3afd13c5f54fb0694e356e2d3167afa000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000114d6f636b204f6e646f2041646170746572000000000000000000000000000000"
+  "constructorArgs": "0000000000000000000000004f46f0070b7ef539c1bb2ad4206318aafc337efc000000000000000000000000253a19c8a3afd13c5f54fb0694e356e2d3167afa000000000000000000000000180d4fa2be4db2ecf92605ade7a0e7ca6e575f9200000000000000000000000000000000000000000000000000000000000001f40000000000000000000000000000000000000000000000000000000000000032"
 }

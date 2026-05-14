@@ -1,6 +1,6 @@
 {
   "contractName": "PersonalFundFactory",
-  "address": "0x484E6C3ad67fF018D433e2503343f48002ABD0CA",
+  "address": "0x078D8C19f52B50B6f11CC41C011dD1f55f6505Bf",
   "abi": [
     {
       "name": "FundCreated",
@@ -103,6 +103,10 @@
         },
         {
           "name": "_dateTime",
+          "type": "address"
+        },
+        {
+          "name": "_protocolRegistry",
           "type": "address"
         }
       ],
@@ -511,6 +515,18 @@
     {
       "stateMutability": "view",
       "type": "function",
+      "name": "protocolRegistry",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
       "name": "configured",
       "inputs": [],
       "outputs": [
@@ -729,5 +745,5 @@
       "outputs": []
     }
   ],
-  "constructorArgs": "000000000000000000000000cf02c2cedd9d9884c2306ddbe2611ea1cb7d6e3c000000000000000000000000dfe1dc5744e56a06e86505e6bf607c8aea4f0486"
+  "constructorArgs": "00000000000000000000000025effde780c41c00371315b48534f4e2cb4bd7d00000000000000000000000009a6397e5d17d8fdb16f3554e9774c764343c311b"
 }

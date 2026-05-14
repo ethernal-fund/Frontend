@@ -229,7 +229,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
       <div className="grid grid-cols-2 gap-2">
         <div className="bg-white/70 rounded-xl p-3 border border-blue-100 text-center">
           <p className="text-xs text-gray-500 mb-0.5">MockUSDC</p>
-          <p className="font-black text-emerald-700 text-lg">~10,000</p>
+          <p className="font-black text-emerald-700 text-lg">~5,000</p>
           <p className="text-xs text-gray-400">para tu fondo</p>
         </div>
         <div className="bg-white/70 rounded-xl p-3 border border-blue-100 text-center">

@@ -1,13 +1,16 @@
 export interface ContractAddresses {
-  personalFundFactory: `0x${string}`
-  usdc:                `0x${string}`
-  treasury:            `0x${string}`
-  protocolRegistry?:   `0x${string}`
-  userPreferences?:    `0x${string}`
-  dateTime?:           `0x${string}`
-  mockDeFiProtocol?:   `0x${string}`
-  mockAaveAdapter?:    `0x${string}`
-  mockOndoAdapter?:    `0x${string}`
+  personalFundFactory:    `0x${string}`
+  usdc:                   `0x${string}`
+  treasury:               `0x${string}`
+  protocolRegistry?:      `0x${string}`
+  userPreferences?:       `0x${string}`
+  dateTime?:              `0x${string}`
+  mockDeFiProtocol?:      `0x${string}`
+  mockAaveAdapter?:       `0x${string}`
+  mockOndoAdapter?:       `0x${string}`
+  mockRWAToken?:          `0x${string}`
+  mockUniswapRouter?:     `0x${string}`
+  genericOndoRWAAdapter?: `0x${string}`
 }
 
 export type ContractName = keyof ContractAddresses
@@ -16,11 +19,11 @@ export const ZERO_ADDRESS: `0x${string}` = '0x0000000000000000000000000000000000
 
 const OFFICIAL_USDC: Record<number, `0x${string}`> = {
   // Testnets
-  421614:   '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d', // Arbitrum Sepolia
+  421614:   '0x253A19C8A3AFD13c5F54fB0694e356e2d3167AFa', // Arbitrum Sepolia
   80002:    '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582', // Polygon Amoy
   84532:    '0x036CbD53842c5426634e7929541eC2318f3dCF7e', // Base Sepolia
   11155420: '0x5fd84259d66Cd46123540766Be93DFE6D43130D7', // Optimism Sepolia
-  11155111: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238', // Ethereum Sepolia
+  11155111: '0xa27dc7dd223a00E89B885CE6968E6379F7146CD3', // Ethereum Sepolia
   // Mainnets
   42161: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', // Arbitrum One
   137:   '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359', // Polygon
@@ -30,8 +33,9 @@ const OFFICIAL_USDC: Record<number, `0x${string}`> = {
 }
 
 export const MOCK_USDC: Record<number, `0x${string}`> = {
-  421614: '0x62F7FB943348d9e3e238b7043278B6895428E4d9', // Arbitrum Sepolia
-  80002:  '0xDA7610fD028bA2958d1Bb3dcB43F2d5d2Fb2A29d', // Polygon Amoy
+  421614:   '0x253A19C8A3AFD13c5F54fB0694e356e2d3167AFa', // Arbitrum Sepolia
+  11155111: '0xa27dc7dd223a00E89B885CE6968E6379F7146CD3', // Ethereum Sepolia
+  80002:    '0xDA7610fD028bA2958d1Bb3dcB43F2d5d2Fb2A29d', // Polygon Amoy
 }
 
 const resolveUSDC = (chainId: number): `0x${string}` =>
@@ -39,18 +43,21 @@ const resolveUSDC = (chainId: number): `0x${string}` =>
 
 export const CONTRACT_ADDRESSES: Record<number, ContractAddresses> = {
 
-  // ✅ ARBITRUM SEPOLIA — deployed 2026-04-02
+  // ✅ ARBITRUM SEPOLIA — deployed 2026-05-13    Block: 268027006
   421614: {
-    personalFundFactory: '0x484E6C3ad67fF018D433e2503343f48002ABD0CA',
-    usdc:                resolveUSDC(421614),
-    treasury:            '0xdfe1DC5744E56A06e86505e6Bf607C8Aea4F0486',
-    protocolRegistry:    '0x7105291d638F4998De24f53e0959432Ba170f41D',
-    userPreferences:     '0x0f619474EeCF03a96Cb1eF78C32f940cF0fDe0df',
-    dateTime:            '0xfa81514902c50f0af34C543151b9D6aC8660e108',
-    // personalFund:        '0xCf02C2cedd9D9884C2306ddBe2611Ea1CB7D6E3c',
-    mockDeFiProtocol:    '0x05698Ea1b8523D214D2AfddE55746e88442716E1',
-    mockAaveAdapter:     '0x0cb22CD53Ec4D2897b603d304be658d2c1cB22Da',
-    mockOndoAdapter:     '0x65681a2094b097Bfa09A3b8cbf80c95A5696BcD7',
+    personalFundFactory:   '0x078D8C19f52B50B6f11CC41C011dD1f55f6505Bf',
+    usdc:                  resolveUSDC(421614),
+    treasury:              '0x9a6397E5D17d8FDB16f3554e9774c764343C311b',
+    protocolRegistry:      '0x5F44eaed859B3b426D02d5E596C16eDF387abB75',
+    userPreferences:       '0xB1e707ef70e54c6C51Ba4Cf4368F0e15e2934f88',
+    dateTime:              '0xb52a94F91d64cFEDDf220a3C621818c5486Aa046',
+    mockDeFiProtocol:      '0x4F799F99248707574962F1453efE571e9dfbAbdA',
+    mockAaveAdapter:       '0x80240922de190d299a077fa910B92CA09666aE00',
+    mockOndoAdapter:       '0x8fBf9F3b42C36C1b44267F10959cC8A5d6A7C882',
+    mockRWAToken:          '0x180d4fA2be4DB2ECF92605aDE7a0E7Ca6E575f92',
+    mockUniswapRouter:     '0x4f46F0070B7ef539C1Bb2Ad4206318aafc337EFc',
+    genericOndoRWAAdapter: '0xAc0F3ABD37Da531302bB81150532e19bf1aCEfC9',
+    // "PersonalFund": "0x25eFFDe780c41C00371315b48534F4E2cB4BD7d0",
   },
 
   // ✅ POLYGON AMOY — deployed 2026-03-08
@@ -83,14 +90,21 @@ export const CONTRACT_ADDRESSES: Record<number, ContractAddresses> = {
     dateTime:            ZERO_ADDRESS,
   },
 
-  // 🔴 ETHEREUM SEPOLIA — pending
+  // ✅  ETHEREUM SEPOLIA — deployed 2026-05-13    Block: 10845154
   11155111: {
-    personalFundFactory: ZERO_ADDRESS,
-    usdc:                resolveUSDC(11155111),
-    treasury:            ZERO_ADDRESS,
-    protocolRegistry:    ZERO_ADDRESS,
-    userPreferences:     ZERO_ADDRESS,
-    dateTime:            ZERO_ADDRESS,
+    personalFundFactory:   '0xD346f0e4253251F80A79C8ebA1EF2fe5DBa6559E',
+    usdc:                  resolveUSDC(11155111),
+    dateTime:              '0xa52c2DDDCFa33DFF916672ccF4f134a6B8cb1239',
+    treasury:              '0xaF6C9A8D5524f3Da304A981c428BF0FAbAe26d94',
+    protocolRegistry:      '0x680CAd1cFdB5460DbA02591A06C23FFE7716091d',
+    userPreferences:       '0xF492d4F462145e90731053C846B6E943302625E0',
+    mockDeFiProtocol:      '0x46EF6d63DB6356Bb88E43b5AAbDFfD1e695270Ca',
+    mockAaveAdapter:       '0x7772CB1D9C47dF567473557d257656A4BE15aA02',
+    mockOndoAdapter:       '0x4cE7B43f4829Ad81C665D372DD937a24EF9dEe5F',
+    mockRWAToken:          '0xf963f469FEbB038bFab48176597F7c17F575804a',
+    mockUniswapRouter:     '0x91Ee1fFd01D6c9DB1f445A2F09eB5d8cdcEd504F',
+    genericOndoRWAAdapter: '0x46f44E5c88707262769B9Dfe3cACeB44BDec6049',
+    // personalFund: '0x0aa94eAA827331C0D7a073b693519D851C304325',
   },
 
   // 🔴 ARBITRUM ONE — pending

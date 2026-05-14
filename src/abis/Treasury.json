@@ -1,6 +1,6 @@
 {
   "contractName": "Treasury",
-  "address": "0xdfe1DC5744E56A06e86505e6Bf607C8Aea4F0486",
+  "address": "0x9a6397E5D17d8FDB16f3554e9774c764343C311b",
   "abi": [
     {
       "name": "FeeReceived",
@@ -1048,5 +1048,5 @@
       "outputs": []
     }
   ],
-  "constructorArgs": "00000000000000000000000062f7fb943348d9e3e238b7043278b6895428e4d9"
+  "constructorArgs": "000000000000000000000000253a19c8a3afd13c5f54fb0694e356e2d3167afa"
 }

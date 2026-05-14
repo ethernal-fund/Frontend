@@ -1,22 +1,22 @@
 {
-  "contractName": "MockOndoAdapter",
-  "address": "0x8fBf9F3b42C36C1b44267F10959cC8A5d6A7C882",
+  "contractName": "MockRWAToken",
+  "address": "0x180d4fA2be4DB2ECF92605aDE7a0E7Ca6E575f92",
   "abi": [
     {
-      "name": "Deposited",
+      "name": "Transfer",
       "inputs": [
         {
-          "name": "caller",
+          "name": "sender",
           "type": "address",
           "indexed": true
         },
         {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false
+          "name": "receiver",
+          "type": "address",
+          "indexed": true
         },
         {
-          "name": "timestamp",
+          "name": "value",
           "type": "uint256",
           "indexed": false
         }
@@ -25,20 +25,37 @@
       "type": "event"
     },
     {
-      "name": "Withdrawn",
+      "name": "Approval",
       "inputs": [
         {
-          "name": "caller",
+          "name": "owner",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "spender",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": false
+        }
+      ],
+      "anonymous": false,
+      "type": "event"
+    },
+    {
+      "name": "Minted",
+      "inputs": [
+        {
+          "name": "recipient",
           "type": "address",
           "indexed": true
         },
         {
           "name": "amount",
-          "type": "uint256",
-          "indexed": false
-        },
-        {
-          "name": "timestamp",
           "type": "uint256",
           "indexed": false
         }
@@ -49,61 +66,77 @@
     {
       "stateMutability": "nonpayable",
       "type": "function",
-      "name": "deposit",
+      "name": "transfer",
       "inputs": [
         {
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "stateMutability": "nonpayable",
-      "type": "function",
-      "name": "withdraw",
-      "inputs": [
-        {
-          "name": "_amount",
-          "type": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ]
-    },
-    {
-      "stateMutability": "view",
-      "type": "function",
-      "name": "getBalance",
-      "inputs": [
-        {
-          "name": "_account",
+          "name": "_to",
           "type": "address"
+        },
+        {
+          "name": "_value",
+          "type": "uint256"
         }
       ],
       "outputs": [
         {
           "name": "",
-          "type": "uint256"
+          "type": "bool"
         }
       ]
     },
     {
       "stateMutability": "nonpayable",
       "type": "function",
-      "name": "recoverTokens",
+      "name": "transferFrom",
       "inputs": [
         {
-          "name": "_token",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "approve",
+      "inputs": [
+        {
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "name": "mint",
+      "inputs": [
+        {
+          "name": "_recipient",
           "type": "address"
         },
         {
@@ -114,28 +147,16 @@
       "outputs": []
     },
     {
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function",
-      "name": "admin",
-      "inputs": [],
-      "outputs": [
+      "name": "burn",
+      "inputs": [
         {
-          "name": "",
-          "type": "address"
+          "name": "_amount",
+          "type": "uint256"
         }
-      ]
-    },
-    {
-      "stateMutability": "view",
-      "type": "function",
-      "name": "usdc",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ]
+      ],
+      "outputs": []
     },
     {
       "stateMutability": "view",
@@ -152,42 +173,82 @@
     {
       "stateMutability": "view",
       "type": "function",
-      "name": "balances",
-      "inputs": [
-        {
-          "name": "arg0",
-          "type": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "stateMutability": "view",
-      "type": "function",
-      "name": "depositTimestamps",
-      "inputs": [
-        {
-          "name": "arg0",
-          "type": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256"
-        }
-      ]
-    },
-    {
-      "stateMutability": "view",
-      "type": "function",
-      "name": "totalDeposited",
+      "name": "symbol",
       "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "decimals",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "admin",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "totalSupply",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "balanceOf",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "stateMutability": "view",
+      "type": "function",
+      "name": "allowance",
+      "inputs": [
+        {
+          "name": "arg0",
+          "type": "address"
+        },
+        {
+          "name": "arg1",
+          "type": "address"
+        }
+      ],
       "outputs": [
         {
           "name": "",
@@ -200,16 +261,20 @@
       "type": "constructor",
       "inputs": [
         {
-          "name": "_usdc",
-          "type": "address"
-        },
-        {
           "name": "_name",
           "type": "string"
+        },
+        {
+          "name": "_symbol",
+          "type": "string"
+        },
+        {
+          "name": "_decimals",
+          "type": "uint8"
         }
       ],
       "outputs": []
     }
   ],
-  "constructorArgs": "000000000000000000000000253a19c8a3afd13c5f54fb0694e356e2d3167afa000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000114d6f636b204f6e646f2041646170746572000000000000000000000000000000"
+  "constructorArgs": "000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000012000000000000000000000000000000000000000000000000000000000000000f4d6f636b20476f6c6420546f6b656e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000054941556f6e000000000000000000000000000000000000000000000000000000"
 }
