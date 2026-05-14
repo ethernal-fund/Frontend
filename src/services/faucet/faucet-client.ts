@@ -35,14 +35,13 @@ export interface FaucetResponse {
 }
 
 export interface ChainFaucetConfig {
-  /** First-party API endpoint (your own faucet server). Undefined = public faucets only. */
   apiUrl?:     string
-  /** Public faucet URLs shown as fallback links in the UI. */
   publicUrls:  string[]
   /** Token symbol this faucet distributes. */
   tokenSymbol: string
   /** Chain name shown in the UI. */
   chainName:   string
+  network:     string
 }
 
 export interface FaucetClientConfig {
@@ -66,6 +65,7 @@ export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
   // ✅ Arbitrum Sepolia — first-party mock USDC faucet
   421614: {
     apiUrl:      DEFAULT_FAUCET_URL,
+    network:     'arbitrum-sepolia',
     tokenSymbol: 'MockUSDC',
     chainName:   'Arbitrum Sepolia',
     publicUrls: [
@@ -79,6 +79,7 @@ export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
   // Set VITE_FAUCET_API_URL_SEPOLIA to point to a separate instance if needed.
   11155111: {
     apiUrl:      import.meta.env.VITE_FAUCET_API_URL_SEPOLIA ?? DEFAULT_FAUCET_URL,
+    network:     'sepolia',
     tokenSymbol: 'MockUSDC',
     chainName:   'Ethereum Sepolia',
     publicUrls: [
@@ -91,6 +92,7 @@ export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
 
   // ⚠️  Polygon Amoy — no first-party faucet yet, public links only
   80002: {
+    network:     'polygon-amoy',
     tokenSymbol: 'MATIC / USDC',
     chainName:   'Polygon Amoy',
     publicUrls: [
@@ -102,6 +104,7 @@ export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
 
   // ⚠️  Base Sepolia — public links only
   84532: {
+    network:     'base-sepolia',
     tokenSymbol: 'ETH',
     chainName:   'Base Sepolia',
     publicUrls: [
@@ -113,6 +116,7 @@ export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
 
   // ⚠️  Optimism Sepolia — public links only
   11155420: {
+    network:     'optimism-sepolia',
     tokenSymbol: 'ETH',
     chainName:   'Optimism Sepolia',
     publicUrls: [
@@ -175,8 +179,8 @@ export class FaucetAPIClient {
       : this.cfg.proxyUrl
 
     const body = this.cfg.direct
-      ? JSON.stringify({ address })
-      : JSON.stringify({ address, chainId, faucetUrl: chainCfg.apiUrl })
+      ? JSON.stringify({ address, network: chainCfg.network })
+      : JSON.stringify({ address, chainId, faucetUrl: chainCfg.apiUrl, network: chainCfg.network })
 
     const controller = new AbortController()
     const timeout    = setTimeout(() => controller.abort(), this.cfg.timeoutMs)
