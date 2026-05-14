@@ -1,126 +1,226 @@
+/**
+ * faucet-client.ts — Multichain faucet API client
+ *
+ * Strategy:
+ *  1. If the chain has a first-party faucet, call it through a CORS-safe proxy
+ *     route on your own backend (POST /api/v1/faucet/proxy).
+ *  2. Otherwise, return a failure response so the UI can redirect to public faucets.
+ *
+ * CORS: instead of calling the faucet server directly from the browser, the request
+ * is forwarded through your backend → POST /api/v1/faucet/proxy → { chainId, address }
+ * Your backend calls the faucet server-to-server (no CORS) and returns FaucetResponse.
+ *
+ * Direct mode: set VITE_FAUCET_DIRECT=true to bypass the proxy (useful during local
+ * dev when the faucet server already has CORS configured for your origin).
+ *
+ * Override per instance: pass a FaucetClientConfig to new FaucetAPIClient({ ... })
+ * to override any env-based default without touching global state.
+ */
+
+// Types 
+
 export interface FaucetRequest {
-  address: string;                    // Ethereum address (checksum)
-  turnstile_token?: string;           
+  address: string
+  chainId?: number
 }
 
 export interface FaucetResponse {
-  success: boolean;
-  message: string;
-  tx_hash: string | null;
-  eth_tx_hash: string | null;           // Hash de la transacción en Ethereum
-  amount: number | null;
-  eth_amount: number | null;          // Cantidad de ETH enviado (ej: 0.1)
-  balance: number | null;             // Balance del wallet tras recibir
-  wait_time?: number | null;          // Segundos a esperar si hay rate limit
+  success:      boolean
+  message:      string
+  tx_hash?:     string
+  eth_tx_hash?: string
+  amount?:      number
+  eth_amount?:  number
+  balance?:     number
 }
 
-export interface HealthResponse {
-  status: "healthy" | "degraded" | "unhealthy";
-  rpc_connected: boolean;
-  faucet_balance: number;             // Balance USDC del faucet
-  redis_available: boolean;
-  database_enabled: boolean;
-  timestamp: string;
+export interface ChainFaucetConfig {
+  /** First-party API endpoint (your own faucet server). Undefined = public faucets only. */
+  apiUrl?:     string
+  /** Public faucet URLs shown as fallback links in the UI. */
+  publicUrls:  string[]
+  /** Token symbol this faucet distributes. */
+  tokenSymbol: string
+  /** Chain name shown in the UI. */
+  chainName:   string
 }
 
-export interface BalanceResponse {
-  address: string;
-  balance: number;
-  symbol: string;                     // "USDC"
-  decimals: number;                   // 6
+export interface FaucetClientConfig {
+  /** Override VITE_FAUCET_API_URL for first-party faucet calls. */
+  apiUrl?:    string
+  /** Override the derived proxy URL (VITE_API_URL + /api/v1/faucet/proxy). */
+  proxyUrl?:  string
+  /** Override VITE_FAUCET_DIRECT. When true, calls the faucet server directly. */
+  direct?:    boolean
+  /** Request timeout in milliseconds. Default: 30 000. */
+  timeoutMs?: number
 }
 
-export interface StatsResponse {
-  faucet_balance: number;
-  total_requests: number;
-  unique_wallets: number;
-  unique_ips: number;
-  amount_per_request: number;
-  using_redis: boolean;
-  rate_limits: {
-    per_ip_seconds: number;
-    per_wallet_seconds: number;
-  };
+// Per-chain faucet configuration 
+// Add/edit entries here as you deploy faucet servers for more chains.
+
+const DEFAULT_FAUCET_URL =
+  import.meta.env.VITE_FAUCET_API_URL ?? 'https://mock-usdc-319e.onrender.com'
+
+export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
+  // ✅ Arbitrum Sepolia — first-party mock USDC faucet
+  421614: {
+    apiUrl:      DEFAULT_FAUCET_URL,
+    tokenSymbol: 'MockUSDC',
+    chainName:   'Arbitrum Sepolia',
+    publicUrls: [
+      'https://faucet.quicknode.com/arbitrum/sepolia',
+      'https://www.alchemy.com/faucets/arbitrum-sepolia',
+      'https://faucets.chain.link/arbitrum-sepolia',
+    ],
+  },
+
+  // ✅ Ethereum Sepolia — first-party faucet
+  // Set VITE_FAUCET_API_URL_SEPOLIA to point to a separate instance if needed.
+  11155111: {
+    apiUrl:      import.meta.env.VITE_FAUCET_API_URL_SEPOLIA ?? DEFAULT_FAUCET_URL,
+    tokenSymbol: 'MockUSDC',
+    chainName:   'Ethereum Sepolia',
+    publicUrls: [
+      'https://sepoliafaucet.com',
+      'https://faucet.quicknode.com/ethereum/sepolia',
+      'https://www.alchemy.com/faucets/ethereum-sepolia',
+      'https://faucets.chain.link/sepolia',
+    ],
+  },
+
+  // ⚠️  Polygon Amoy — no first-party faucet yet, public links only
+  80002: {
+    tokenSymbol: 'MATIC / USDC',
+    chainName:   'Polygon Amoy',
+    publicUrls: [
+      'https://faucets.chain.link/polygon-amoy',
+      'https://faucet.polygon.technology/',
+      'https://www.alchemy.com/faucets/polygon-amoy',
+    ],
+  },
+
+  // ⚠️  Base Sepolia — public links only
+  84532: {
+    tokenSymbol: 'ETH',
+    chainName:   'Base Sepolia',
+    publicUrls: [
+      'https://www.alchemy.com/faucets/base-sepolia',
+      'https://docs.base.org/tools/network-faucets',
+      'https://faucets.chain.link/base-sepolia',
+    ],
+  },
+
+  // ⚠️  Optimism Sepolia — public links only
+  11155420: {
+    tokenSymbol: 'ETH',
+    chainName:   'Optimism Sepolia',
+    publicUrls: [
+      'https://app.optimism.io/faucet',
+      'https://www.alchemy.com/faucets/optimism-sepolia',
+      'https://faucets.chain.link/optimism-sepolia',
+    ],
+  },
 }
 
-export interface RootResponse {
-  name: string;
-  version: string;
-  environment: string;
-  network: string;
-  chain_id: number;
-  contract: string;
-  features: {
-    database: boolean;
-    redis: boolean;
-    turnstile: boolean;
-  };
-  endpoints: Record<string, string>;
+// Helpers
+
+export const hasFirstPartyFaucet = (chainId: number): boolean =>
+  !!CHAIN_FAUCET_CONFIG[chainId]?.apiUrl
+
+export const getChainFaucetConfig = (chainId: number): ChainFaucetConfig | undefined =>
+  CHAIN_FAUCET_CONFIG[chainId]
+
+// FaucetAPIClient 
+
+/**
+ * Resolved, immutable config used internally after merging env vars and overrides.
+ */
+interface ResolvedConfig {
+  apiUrl:    string
+  proxyUrl:  string
+  direct:    boolean
+  timeoutMs: number
 }
 
 export class FaucetAPIClient {
-  private baseURL: string;
+  private readonly cfg: ResolvedConfig
 
-  constructor(baseURL?: string) {
-    this.baseURL =
-      baseURL ||
-      import.meta.env.VITE_FAUCET_API_URL ||
-      "http://localhost:8000";
-  }
+  constructor(overrides: FaucetClientConfig = {}) {
+    const defaultBase = (
+      import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+    ).replace(/\/$/, '')
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const config: RequestInit = {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    };
-
-    try {
-      const response = await fetch(url, config);
-      if (!response.ok) {
-        const error = await response
-          .json()
-          .catch(() => ({ detail: "Unknown error" }));
-        throw new Error(
-          error.detail || `HTTP ${response.status}: ${response.statusText}`
-        );
-      }
-
-      return await response.json();
-    } catch (error) {
-      if (error instanceof Error) throw error;
-      throw new Error("Network error");
+    this.cfg = {
+      apiUrl:    overrides.apiUrl    ?? DEFAULT_FAUCET_URL,
+      proxyUrl:  overrides.proxyUrl  ?? `${defaultBase}/api/v1/faucet/proxy`,
+      direct:    overrides.direct    ?? import.meta.env.VITE_FAUCET_DIRECT === 'true',
+      timeoutMs: overrides.timeoutMs ?? 30_000,
     }
   }
 
-  async root(): Promise<RootResponse> {
-    return this.request<RootResponse>("/");
-  }
+  async requestTokens(req: FaucetRequest): Promise<FaucetResponse> {
+    const { address, chainId = 421614 } = req
+    const chainCfg = CHAIN_FAUCET_CONFIG[chainId]
 
-  async health(): Promise<HealthResponse> {
-    return this.request<HealthResponse>("/health");
-  }
+    if (!chainCfg?.apiUrl) {
+      return {
+        success: false,
+        message: 'No hay faucet propio para esta red. Usá uno de los faucets públicos listados.',
+      }
+    }
 
-  async requestTokens(data: FaucetRequest): Promise<FaucetResponse> {
-    return this.request<FaucetResponse>("/faucet", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-  }
+    const url  = this.cfg.direct
+      ? `${chainCfg.apiUrl}/faucet`
+      : this.cfg.proxyUrl
 
-  async getBalance(address: string): Promise<BalanceResponse> {
-    return this.request<BalanceResponse>(`/balance/${address}`);
-  }
+    const body = this.cfg.direct
+      ? JSON.stringify({ address })
+      : JSON.stringify({ address, chainId, faucetUrl: chainCfg.apiUrl })
 
-  async getStats(): Promise<StatsResponse> {
-    return this.request<StatsResponse>("/stats");
+    const controller = new AbortController()
+    const timeout    = setTimeout(() => controller.abort(), this.cfg.timeoutMs)
+
+    try {
+      const res = await fetch(url, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+        signal:  controller.signal,
+      })
+      clearTimeout(timeout)
+      if (!res.ok) {
+        let detail = `HTTP ${res.status}`
+        try {
+          const json = await res.json() as { detail?: string; message?: string }
+          detail = json.detail ?? json.message ?? detail
+        } catch { /* ignore — non-JSON error body */ }
+        throw new Error(detail)
+      }
+      return (await res.json()) as FaucetResponse
+
+    } catch (err) {
+      clearTimeout(timeout)
+
+      if (err instanceof Error && err.name === 'AbortError') {
+        throw new Error(
+          `La solicitud al faucet tardó más de ${this.cfg.timeoutMs / 1_000} s. Intentá de nuevo.`,
+        )
+      }
+
+      if (err instanceof TypeError && err.message === 'Failed to fetch') {
+        throw new Error(
+          this.cfg.direct
+            ? `No se pudo conectar con el faucet (${chainCfg.apiUrl}). ` +
+              `El servidor puede estar caído o bloquear CORS desde tu origen.`
+            : `No se pudo conectar con el proxy del backend (${this.cfg.proxyUrl}). ` +
+              `Verificá que VITE_API_URL esté configurado y el backend esté activo.`,
+        )
+      }
+
+      throw err
+    }
   }
 }
 
-export default FaucetAPIClient;
+export const faucetClient = new FaucetAPIClient()

@@ -19,7 +19,7 @@ export function useFaucet(backendUrl?: string) {
         const url =
           backendUrl ||
           (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_FAUCET_API_URL) ||
-          'http://localhost:8000';
+          'http://localhost:5173';
         errorMessage =
           `No se pudo conectar con el servidor del faucet (${url}). ` +
           `Verifica que VITE_FAUCET_API_URL esté configurado correctamente y que el servidor esté activo.`;
