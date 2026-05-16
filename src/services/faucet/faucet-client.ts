@@ -32,6 +32,7 @@ export interface FaucetResponse {
   amount?:      number
   eth_amount?:  number
   balance?:     number
+  wait_time?:   number
 }
 
 export interface ChainFaucetConfig {

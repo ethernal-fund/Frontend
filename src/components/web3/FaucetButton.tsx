@@ -9,6 +9,7 @@
  *  - Si está en una chain soportada pero sin faucet propio → opción de
  *    cambiar a una con faucet propio, o usar links públicos
  *  - useSwitchChain de wagmi para el cambio programático
+ *  - Rate limit muestra ámbar (advertencia) en lugar de rojo (error)
  */
 
 import { useState, useEffect } from 'react'
@@ -26,6 +27,7 @@ import {
   ChevronRight,
   Wifi,
   WifiOff,
+  Clock,
 } from 'lucide-react'
 import { useWallet }        from '@/hooks/web3/useWallet'
 import { useFaucet }        from '@/hooks/web3/useFaucet'
@@ -54,7 +56,17 @@ const EXPLORER_URLS: Record<number, string> = {
   11155420: 'https://sepolia-optimism.etherscan.io',
 }
 
-// Sub-components 
+// Helpers
+
+function formatWaitTime(seconds: number): string {
+  if (seconds < 60)   return `${seconds} segundos`
+  if (seconds < 3600) return `${Math.ceil(seconds / 60)} minutos`
+  const h = Math.floor(seconds / 3600)
+  const m = Math.ceil((seconds % 3600) / 60)
+  return m > 0 ? `${h} h ${m} min` : `${h} hora${h !== 1 ? 's' : ''}`
+}
+
+// Sub-components
 
 /** Panel que se muestra cuando la chain del usuario no está en nuestra config */
 function UnsupportedChainPanel({
@@ -70,7 +82,6 @@ function UnsupportedChainPanel({
   switchError:      string | null
   onSwitch:         (chainId: number) => void
 }) {
-  // Mostrar primero las que tienen faucet propio
   const ordered = [
     ...supportedChains.filter((c) => c.hasFirstPartyFaucet),
     ...supportedChains.filter((c) => !c.hasFirstPartyFaucet),
@@ -199,7 +210,7 @@ function SuggestBetterChainBanner({
   )
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// Main Component 
 
 export function FaucetButton({ className = '' }: FaucetButtonProps) {
   const { address, isConnected } = useWallet()
@@ -216,10 +227,11 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
 
   const { requestTokens, loading, error: faucetError, clearError } = useFaucet()
 
-  const [status,           setStatus]           = useState<Status>('idle')
-  const [result,           setResult]           = useState<FaucetResponse | null>(null)
-  const [errorMsg,         setErrorMsg]         = useState<string | null>(null)
-  const [bannerDismissed,  setBannerDismissed]  = useState(false)
+  const [status,          setStatus]          = useState<Status>('idle')
+  const [result,          setResult]          = useState<FaucetResponse | null>(null)
+  const [errorMsg,        setErrorMsg]        = useState<string | null>(null)
+  const [waitSeconds,     setWaitSeconds]     = useState<number | null>(null)
+  const [bannerDismissed, setBannerDismissed] = useState(false)
 
   const chainConfig   = getChainFaucetConfig(currentChainId)
   const hasFirstParty = hasFirstPartyFaucet(currentChainId)
@@ -230,6 +242,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     setStatus('idle')
     setResult(null)
     setErrorMsg(null)
+    setWaitSeconds(null)
     setBannerDismissed(false)
     clearError()
     clearSwitchError()
@@ -238,7 +251,6 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
   const handleSwitch = async (chainId: number) => {
     try {
       await switchToChain(chainId)
-      // El useChainId de wagmi se actualizará automáticamente
     } catch {
       // El error ya queda en switchError del hook
     }
@@ -250,6 +262,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     setStatus('loading')
     setResult(null)
     setErrorMsg(null)
+    setWaitSeconds(null)
     clearError()
 
     try {
@@ -261,6 +274,8 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
       } else {
         setStatus('error')
         setErrorMsg(res.message || 'El faucet no pudo procesar la solicitud.')
+        // Capturar wait_time si viene del servidor (rate limit)
+        if (res.wait_time != null) setWaitSeconds(res.wait_time)
       }
     } catch (err) {
       setStatus('error')
@@ -274,10 +289,11 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     setStatus('idle')
     setResult(null)
     setErrorMsg(null)
+    setWaitSeconds(null)
     clearError()
   }
 
-  // ── Wallet not connected ──────────────────────────────────────────────────────
+  // Wallet not connected
   if (!isConnected || !address) {
     return (
       <div className={`bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 ${className}`}>
@@ -291,7 +307,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     )
   }
 
-  // Chain not supported at all → must switch 
+  // Chain not supported at all → must switch
   if (!isSupported) {
     return (
       <div className={className}>
@@ -306,7 +322,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     )
   }
 
-  // Chain supported but no config (safety guard) 
+  // Chain supported but no config (safety guard)
   if (!chainConfig) {
     return (
       <div className={`bg-gray-50 border-2 border-gray-200 rounded-2xl p-4 ${className}`}>
@@ -320,11 +336,9 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     )
   }
 
-  // ── Chain has NO first-party faucet → show public links + switch suggestion ───
   if (!hasFirstParty) {
     return (
       <div className={`space-y-3 ${className}`}>
-        {/* Suggest switching */}
         {!bannerDismissed && firstPartyChains.length > 0 && (
           <SuggestBetterChainBanner
             currentChainName={chainConfig.chainName}
@@ -335,7 +349,6 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
           />
         )}
 
-        {/* Public faucet links for current chain */}
         <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-5">
           <div className="flex items-start gap-3 mb-4">
             <Link className="text-blue-500 shrink-0 mt-0.5" size={20} />
@@ -377,7 +390,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     )
   }
 
-  // ── Success ───────────────────────────────────────────────────────────────────
+  // Success
   if (status === 'success' && result) {
     const usdcUrl = result.tx_hash     ? `${explorerBase}/tx/${result.tx_hash}`     : null
     const ethUrl  = result.eth_tx_hash ? `${explorerBase}/tx/${result.eth_tx_hash}` : null
@@ -443,16 +456,19 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     )
   }
 
-  // ── Error ─────────────────────────────────────────────────────────────────────
+  // Error 
   if (status === 'error') {
     const msg = errorMsg ?? ''
+
     const isRateLimit =
-      msg.toLowerCase().includes('rate')   ||
-      msg.toLowerCase().includes('limit')  ||
-      msg.toLowerCase().includes('espera') ||
-      msg.toLowerCase().includes('24')     ||
-      msg.toLowerCase().includes('wallet') ||
-      msg.toLowerCase().includes('ip')
+      msg.toLowerCase().includes('rate')      ||
+      msg.toLowerCase().includes('limit')     ||
+      msg.toLowerCase().includes('espera')    ||
+      msg.toLowerCase().includes('esperá')    ||
+      msg.toLowerCase().includes('solicitud') ||
+      msg.toLowerCase().includes('wallet')    ||
+      msg.toLowerCase().includes('ip')        ||
+      waitSeconds != null
 
     const isCORSError =
       msg.toLowerCase().includes('cors')            ||
@@ -460,33 +476,72 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
       msg.toLowerCase().includes('failed to fetch') ||
       msg.toLowerCase().includes('conectar')
 
+    // Rate limit → ámbar, tono informativo 
+    if (isRateLimit) {
+      return (
+        <div className={`bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 ${className}`}>
+          <div className="flex items-start gap-3 mb-3">
+            <Clock className="text-amber-500 shrink-0 mt-0.5" size={22} />
+            <div>
+              <p className="font-bold text-amber-800 text-sm">
+                Ya recibiste tokens hoy
+              </p>
+              <p className="text-amber-700 text-xs mt-1">
+                El faucet permite una solicitud cada 24 horas por wallet para
+                que todos puedan acceder. Volvé mañana para recargar.
+              </p>
+              {waitSeconds != null && (
+                <p className="text-amber-600 text-xs mt-1.5 font-medium">
+                  Tiempo restante: {formatWaitTime(waitSeconds)}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {chainConfig.publicUrls.length > 0 && (
+            <div className="mb-3">
+              <p className="text-xs text-amber-700 font-medium mb-2">
+                Mientras tanto, podés usar un faucet público:
+              </p>
+              <div className="space-y-1.5">
+                {chainConfig.publicUrls.slice(0, 2).map((url) => (
+                  <a key={url} href={url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs text-amber-700 hover:text-amber-900
+                               bg-white border border-amber-200 rounded-lg px-3 py-1.5 transition">
+                    <ExternalLink size={12} className="shrink-0" />
+                    {url.replace('https://', '')}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button onClick={handleReset}
+            className="inline-flex items-center gap-2 text-xs text-amber-700 hover:text-amber-900 font-medium transition">
+            <RefreshCw size={12} /> Volver
+          </button>
+        </div>
+      )
+    }
+
+    // Error real → rojo
     return (
       <div className={`bg-red-50 border-2 border-red-200 rounded-2xl p-5 ${className}`}>
         <div className="flex items-start gap-3 mb-3">
           <AlertCircle className="text-red-500 shrink-0 mt-0.5" size={22} />
           <div>
             <p className="font-bold text-red-800 text-sm">
-              {isRateLimit
-                ? 'Límite de solicitudes alcanzado'
-                : isCORSError
+              {isCORSError
                 ? 'Error de conexión con el servidor'
                 : 'Error al solicitar tokens'}
             </p>
             <p className="text-red-700 text-xs mt-1">{msg}</p>
 
-            {isRateLimit && (
-              <p className="text-red-600 text-xs mt-1">
-                El faucet permite una solicitud cada 24 horas por wallet.
-              </p>
-            )}
-
             {isCORSError && (
               <p className="text-red-600 text-xs mt-1">
                 Probá habilitando{' '}
                 <code className="bg-red-100 px-1 rounded">VITE_FAUCET_DIRECT=true</code>{' '}
-                en tu <code>.env</code> o agregá{' '}
-                <code className="bg-red-100 px-1 rounded">POST /api/v1/faucet/proxy</code>{' '}
-                en tu backend.
+                en tu <code>.env</code> o verificá que el backend esté activo.
               </p>
             )}
           </div>
@@ -518,7 +573,7 @@ export function FaucetButton({ className = '' }: FaucetButtonProps) {
     )
   }
 
-  // Idle / Loading — main CTA 
+  // Idle / Loading — main CTA
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Chain + address badge */}
