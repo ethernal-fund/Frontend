@@ -157,7 +157,7 @@ export class FaucetAPIClient {
 
     this.cfg = {
       apiUrl:    overrides.apiUrl    ?? DEFAULT_FAUCET_URL,
-      proxyUrl:  overrides.proxyUrl  ?? `${defaultBase}/api/v1/faucet/proxy`,
+      proxyUrl:  overrides.proxyUrl  ?? `${defaultBase}/api/v1/routers/faucet`,
       direct:    overrides.direct    ?? import.meta.env.VITE_FAUCET_DIRECT === 'true',
       timeoutMs: overrides.timeoutMs ?? 30_000,
     }
