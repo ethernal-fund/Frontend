@@ -81,19 +81,19 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     title: 'Our History',
     description: 'The story behind Ethernal Fund and its mission.',
   },
-  [ROUTES.LEARNING]: {
-    guard: 'public',
-    navbar: true,
-    footer: true,
-    title: 'Learning Center',
-    description: 'Learn about DeFi, retirement planning, and blockchain.',
-  },
-  [ROUTES.SALE]: {                 // ← nuevo
+    [ROUTES.SALE]: {                 
     guard: 'public',
     navbar: true,
     footer: false,
     title: 'ETRF Token Sale',
     description: 'Participá en el Seed Round de ETRF — Ethernal Fund.',
+  },
+  [ROUTES.LEARNING]: {
+    guard: 'auth',
+    navbar: true,
+    footer: true,
+    title: 'Learning Center',
+    description: 'Learn about DeFi, retirement planning, and blockchain.',
   },
   [ROUTES.DASHBOARD]: {
     guard: 'auth',

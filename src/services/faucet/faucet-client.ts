@@ -80,7 +80,7 @@ export const CHAIN_FAUCET_CONFIG: Record<number, ChainFaucetConfig> = {
   // Set VITE_FAUCET_API_URL_SEPOLIA to point to a separate instance if needed.
   11155111: {
     apiUrl:      import.meta.env.VITE_FAUCET_API_URL_SEPOLIA ?? DEFAULT_FAUCET_URL,
-    network:     'sepolia',
+    network:     'ethereum-sepolia',
     tokenSymbol: 'MockUSDC',
     chainName:   'Ethereum Sepolia',
     publicUrls: [
