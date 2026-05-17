@@ -1,44 +1,50 @@
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  Outlet,
+  useRouteError,
+  isRouteErrorResponse,
+} from 'react-router-dom';
 
-import { ROUTES } from './routes';
-import { ProtectedRoute } from './ProtectedRoute';
-import { AdminGuard } from './AdminGuard';
-import { SessionGuard } from './SessionGuard';
-import ScrollToTop from './ScrollToTop';
-import ErrorBoundary from './ErrorBoundary';
-import LoadingScreen from '@/components/common/LoadingScreen';
+import { lazy, Suspense }  from 'react';
+import { ROUTES }          from './routes';
+import { ProtectedRoute }  from './ProtectedRoute';
+import { AdminGuard }      from './AdminGuard';
+import { SessionGuard }    from './SessionGuard';
+import ScrollToTop         from './ScrollToTop';
+import ErrorBoundary       from './ErrorBoundary';
+import LoadingScreen       from '@/components/common/LoadingScreen';
+import Navbar              from '@/components/layout/Navbar';
+import Footer              from '@/components/layout/Footer';
+import { Analytics }       from '@vercel/analytics/react';
 
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { Analytics } from '@vercel/analytics/react';
-
-// Public pages
+// Public pages 
 const HomePage       = lazy(() => import('@/pages/public/LandingPage'));
 const CalculatorPage = lazy(() => import('@/pages/public/CalculatorPage'));
 const ContactPage    = lazy(() => import('@/pages/public/ContactPage'));
 const SurveyPage     = lazy(() => import('@/pages/public/SurveyPage'));
 const OurHistoryPage = lazy(() => import('@/pages/public/OurHistoryPage'));
-const SalePage       = lazy(() => import('@/pages/public/SalePage'));   
+const SalePage       = lazy(() => import('@/pages/public/SalePage'));
 const NotFoundPage   = lazy(() => import('@/pages/public/NotFoundPage'));
 
-// Legal pages
+// Legal pages 
 const PrivacyPage    = lazy(() => import('@/pages/legal/PrivacyPage'));
 const TermsPage      = lazy(() => import('@/pages/legal/TermsPage'));
 const DisclaimerPage = lazy(() => import('@/pages/legal/DisclaimerPage'));
 
-// User pages
-const DashboardPage  = lazy(() => import('@/pages/user/DashboardPage'));
-const CoursesPage    = lazy(() => import('@/pages/user/CoursesPage'));
-const LearningPage   = lazy(() => import('@/pages/user/LearningPage'));
+// User pages 
+const DashboardPage = lazy(() => import('@/pages/user/DashboardPage'));
+const CoursesPage   = lazy(() => import('@/pages/user/CoursesPage'));
+const LearningPage  = lazy(() => import('@/pages/user/LearningPage'));
 
-// Admin pages
+// Admin pages 
 const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboard'));
 const TreasuryPage      = lazy(() => import('@/pages/admin/TreasuryPage'));
 const ProtocolManager   = lazy(() => import('@/pages/admin/ProtocolManager'));
 const ContactManagement = lazy(() => import('@/pages/admin/ContactManagement'));
 
-// Layout principal
+// Root layout
 function RootLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-background-light">
@@ -56,81 +62,122 @@ function RootLayout() {
   );
 }
 
-const routerErrorBoundary = (
-  <ErrorBoundary
-    fallback={
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
-        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <span className="text-4xl">⚠️</span>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Algo salió mal</h1>
-        <p className="text-gray-500 mb-6 max-w-md">
-          Ocurrió un error inesperado. Por favor intenta recargar la página.
-        </p>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-6 py-3 bg-forest-green text-white rounded-lg font-semibold hover:opacity-90 transition"
-        >
-          Recargar Página
-        </button>
-      </div>
-    }
-  />
-);
+function RouteErrorFallback() {
+  const error  = useRouteError();
+  const is404  = isRouteErrorResponse(error) && error.status === 404;
 
+  const title  = is404
+    ? 'Page not found'
+    : 'Something went wrong';
+
+  const message = is404
+    ? "The page you're looking for doesn't exist."
+    : import.meta.env.DEV && error instanceof Error
+      ? error.message
+      : 'An unexpected error occurred. Please try reloading the page.';
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 text-center">
+      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <span className="text-4xl">{is404 ? '🔍' : '⚠️'}</span>
+      </div>
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">{title}</h1>
+      <p className="text-gray-500 mb-6 max-w-md text-sm">{message}</p>
+      <div className="flex gap-3">
+        {!is404 && (
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-forest-green text-white rounded-lg font-semibold hover:opacity-90 transition"
+          >
+            Reload page
+          </button>
+        )}
+        <a
+          href="/"
+          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 transition"
+        >
+          Go home
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// Router 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <RootLayout />,
-    errorElement: routerErrorBoundary,
+    path:         '/',
+    element:      <RootLayout />,
+    errorElement: <RouteErrorFallback />,  
     children: [
       { index: true,              element: <HomePage /> },
       { path: ROUTES.CALCULATOR,  element: <CalculatorPage /> },
       { path: ROUTES.CONTACT,     element: <ContactPage /> },
       { path: ROUTES.SURVEY,      element: <SurveyPage /> },
       { path: ROUTES.OUR_HISTORY, element: <OurHistoryPage /> },
-      { path: ROUTES.SALE,        element: <SalePage /> },     
+      { path: ROUTES.SALE,        element: <SalePage /> },
+
+      // Legal
       { path: ROUTES.PRIVACY,    element: <PrivacyPage /> },
       { path: ROUTES.TERMS,      element: <TermsPage /> },
       { path: ROUTES.DISCLAIMER, element: <DisclaimerPage /> },
+
+      // Protected — requires authenticated wallet
       {
-        path: ROUTES.DASHBOARD,
+        path:    ROUTES.DASHBOARD,
         element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
       },
       {
-        path: ROUTES.COURSES,
+        path:    ROUTES.COURSES,
         element: <ProtectedRoute><CoursesPage /></ProtectedRoute>,
       },
       {
-        path: ROUTES.LEARNING,
+        path:    ROUTES.LEARNING,
         element: <ProtectedRoute><LearningPage /></ProtectedRoute>,
       },
+
+      // Admin — requires on-chain admin role (AdminGuard)
       {
-        path: ROUTES.ADMIN,
+        path:    ROUTES.ADMIN,
         element: <AdminGuard />,
         children: [
-          { index: true, element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
-          { path: 'dashboard', element: <AdminDashboard /> },
-          { path: 'treasury',  element: <TreasuryPage /> },
-          { path: 'protocols', element: <ProtocolManager /> },
-          { path: 'contact',   element: <ContactManagement /> },
+          { index: true,         element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
+          { path: 'dashboard',   element: <AdminDashboard /> },
+          { path: 'treasury',    element: <TreasuryPage /> },
+          { path: 'protocols',   element: <ProtocolManager /> },
+          { path: 'contact',     element: <ContactManagement /> },
         ],
       },
 
+      // Legacy redirects — do not remove (linked from external sites / emails)
       { path: ROUTES.LEGACY_ADMIN_LOGIN, element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
-      { path: ROUTES.LEGACY_GOVERNANCE,  element: <Navigate to={ROUTES.DASHBOARD} replace /> },
-      { path: ROUTES.LEGACY_FUND,        element: <Navigate to={ROUTES.COURSES} replace /> },
+      { path: ROUTES.LEGACY_GOVERNANCE,  element: <Navigate to={ROUTES.DASHBOARD}       replace /> },
+      { path: ROUTES.LEGACY_FUND,        element: <Navigate to={ROUTES.COURSES}          replace /> },
+
+      // 404
       { path: ROUTES.NOT_FOUND, element: <NotFoundPage /> },
     ],
   },
 ]);
 
+// App entry point 
 export default function AppRouter() {
-  return <RouterProvider router={router} />;
+  return (
+    /**
+     * ErrorBoundary aquí captura errores de render de React que ocurren
+     * FUERA del árbol del router (ej: fallo al inicializar RouterProvider).
+     * Es el último recurso — distinto del errorElement que maneja errores
+     * dentro de las rutas.
+     */
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
 }
 
-export { ROUTES, ROUTE_META } from './routes';
-export type { AppRoute, RouteMeta, RouteGuard } from './routes';
-export { ProtectedRoute };
-export { default as ScrollToTop } from './ScrollToTop';
-export { default as ErrorBoundary } from './ErrorBoundary';
+// Re-exports de conveniencia (consumidos por index.ts) 
+export { ROUTES, ROUTE_META }                         from './routes';
+export type { AppRoute, RouteMeta, RouteGuard }        from './routes';
+export { ProtectedRoute }                             from './ProtectedRoute';
+export { default as ScrollToTop }                     from './ScrollToTop';
+export { default as ErrorBoundary }                   from './ErrorBoundary';

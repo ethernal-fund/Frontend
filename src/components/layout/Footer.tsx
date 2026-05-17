@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-green-600 transition"
                 aria-label="GitHub"
-              >"
+              >
                 <Github size={20} />
               </a>
               <a
