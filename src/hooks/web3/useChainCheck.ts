@@ -1,30 +1,16 @@
-/**
- * useChainCheck.ts
- *
- * Detecta la chain activa al conectar la wallet y expone:
- *  - isSupported:     la chain actual tiene config de faucet
- *  - isSwitching:     está en proceso de cambiar de chain
- *  - switchError:     error al intentar cambiar
- *  - switchToChain:   función para pedir al usuario que cambie
- *  - supportedChains: lista de chains con faucet configurado
- *
- * Uso en FaucetButton:
- *   const { isSupported, switchToChain, supportedChains } = useChainCheck()
- */
-
 import { useCallback, useState } from 'react'
 import { useChainId, useSwitchChain } from 'wagmi'
 import { CHAIN_FAUCET_CONFIG } from '@/services/faucet/faucet-client'
 
 export interface SupportedChainInfo {
-  chainId:   number
-  chainName: string
+  chainId:             number
+  chainName:           string
   hasFirstPartyFaucet: boolean
 }
 
 export function useChainCheck() {
-  const chainId                      = useChainId()
-  const { switchChainAsync, isPending } = useSwitchChain()
+  const chainId     = useChainId()
+  const switchChain = useSwitchChain()
   const [switchError, setSwitchError] = useState<string | null>(null)
 
   // Todas las chains que tienen config (con o sin faucet propio)
@@ -45,11 +31,11 @@ export function useChainCheck() {
     async (targetChainId: number) => {
       setSwitchError(null)
       try {
-        await switchChainAsync({ chainId: targetChainId })
+        await switchChain.mutateAsync({ chainId: targetChainId })
       } catch (err) {
         const msg =
           err instanceof Error
-            ? err.message.includes('User rejected')
+            ? err.message.includes('User rejected') || err.message.includes('user rejected')
               ? 'Rechazaste el cambio de red en tu wallet.'
               : err.message
             : 'No se pudo cambiar de red.'
@@ -57,7 +43,7 @@ export function useChainCheck() {
         throw new Error(msg)
       }
     },
-    [switchChainAsync],
+    [switchChain],
   )
 
   const clearSwitchError = useCallback(() => setSwitchError(null), [])
@@ -65,7 +51,7 @@ export function useChainCheck() {
   return {
     currentChainId:  chainId,
     isSupported,
-    isSwitching:     isPending,
+    isSwitching:     switchChain.isPending,
     switchError,
     switchToChain,
     clearSwitchError,

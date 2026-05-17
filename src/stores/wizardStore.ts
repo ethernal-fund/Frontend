@@ -5,8 +5,6 @@ import type { WizardStep, WizardState, CalculatorInput, CalculatorResult, Protoc
 import { calculate } from '@/lib/calculator';
 
 interface WizardStore extends WizardState {
-  fundAddr: `0x${string}` | null;
-
   // Navigation
   goStep:   (step: WizardStep) => void;
   nextStep: () => void;
@@ -21,7 +19,9 @@ interface WizardStore extends WizardState {
   // Tx
   setApproved: (approved: boolean) => void;
   setTxHash:   (hash: `0x${string}`) => void;
-  setFundAddr: (addr: `0x${string}`) => void;
+
+  // Fund address — disponible después del deploy exitoso
+  setFundAddr: (addr: `0x${string}` | null) => void;
 }
 
 const DEFAULT_CALCULATOR: CalculatorInput = {
@@ -40,6 +40,7 @@ const INITIAL_STATE: WizardState = {
   selectedProtocol: null,
   approved:         false,
   txHash:           null,
+  fundAddr:         null,
 };
 
 export const useWizardStore = create<WizardStore>()(
@@ -63,14 +64,14 @@ export const useWizardStore = create<WizardStore>()(
       selectProtocol: (protocol) =>
         set((s) => { s.selectedProtocol = protocol; }, false, 'wizard/selectProtocol'),
 
-      setFundAddr: (addr) =>
-        set((s) => { (s as any).fundAddr = addr; }, false, 'wizard/setFundAddr'),
-
       setApproved: (approved) =>
         set((s) => { s.approved = approved; }, false, 'wizard/setApproved'),
 
       setTxHash: (hash) =>
         set((s) => { s.txHash = hash; }, false, 'wizard/setTxHash'),
+
+      setFundAddr: (addr) =>
+        set((s) => { s.fundAddr = addr; }, false, 'wizard/setFundAddr'),
     })),
     {
       name:    'WizardStore',

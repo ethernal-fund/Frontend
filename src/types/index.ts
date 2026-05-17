@@ -58,6 +58,7 @@ export interface WizardState {
   selectedProtocol: Protocol | null;
   approved:         boolean;
   txHash:           `0x${string}` | null;
+  fundAddr:         `0x${string}` | null;
 }
 
 export type SupportedLocale = 'en' | 'es' | 'de' | 'it' | 'pt' | 'zh';
