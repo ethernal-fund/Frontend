@@ -5,6 +5,8 @@ import type { WizardStep, WizardState, CalculatorInput, CalculatorResult, Protoc
 import { calculate } from '@/lib/calculator';
 
 interface WizardStore extends WizardState {
+  fundAddr: `0x${string}` | null;
+
   // Navigation
   goStep:   (step: WizardStep) => void;
   nextStep: () => void;
@@ -19,6 +21,7 @@ interface WizardStore extends WizardState {
   // Tx
   setApproved: (approved: boolean) => void;
   setTxHash:   (hash: `0x${string}`) => void;
+  setFundAddr: (addr: `0x${string}`) => void;
 }
 
 const DEFAULT_CALCULATOR: CalculatorInput = {
@@ -59,6 +62,9 @@ export const useWizardStore = create<WizardStore>()(
 
       selectProtocol: (protocol) =>
         set((s) => { s.selectedProtocol = protocol; }, false, 'wizard/selectProtocol'),
+
+      setFundAddr: (addr) =>
+        set((s) => { (s as any).fundAddr = addr; }, false, 'wizard/setFundAddr'),
 
       setApproved: (approved) =>
         set((s) => { s.approved = approved; }, false, 'wizard/setApproved'),
