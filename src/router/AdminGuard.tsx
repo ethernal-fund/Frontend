@@ -1,28 +1,37 @@
-import { useChainId, useReadContract } from 'wagmi';
-import { Navigate, Outlet }            from 'react-router-dom';
-import { useWalletStore }              from '@/stores/walletStore';
-import { getContractAddresses }        from '@/config/addresses';
-import { FACTORY_ABI }                 from '@/config/abis';
-import LoadingScreen                   from '@/components/common/LoadingScreen';
-import { ROUTES }                      from '@/router/routes';
+/**
+ * Route guard for admin-only pages.
+ *
+ * Access is granted only if the connected wallet is a registered owner
+ * of the Gnosis Safe set as admin in PersonalFundFactory — not if it
+ * merely matches a single hardcoded address.
+ */
+
+import { Navigate, Outlet }     from 'react-router-dom';
+import { useChainId }           from 'wagmi';
+import { useWalletStore }       from '@/stores/walletStore';
+import { getContractAddresses } from '@/config/addresses';
+import { useSafeOwner }         from '@/hooks/useSafeOwner';
+import LoadingScreen            from '@/components/common/LoadingScreen';
+import { ROUTES }               from '@/router/routes';
 
 export function AdminGuard() {
   const address   = useWalletStore((s) => s.address);
   const chainId   = useChainId();
   const contracts = getContractAddresses(chainId);
-  const { data: adminAddr, isLoading } = useReadContract({
-    address:      contracts?.personalFundFactory,
-    abi:          FACTORY_ABI,
-    functionName: 'admin',
-    query:        { enabled: !!address && !!contracts?.personalFundFactory },
-  });
 
+  const { isSafeOwner, isLoading } = useSafeOwner();
+
+  // No wallet connected → send to landing
   if (!address) return <Navigate to={ROUTES.HOME} replace />;
+
+  // Chain not supported / contracts not deployed → send to landing
   if (!contracts?.personalFundFactory) return <Navigate to={ROUTES.HOME} replace />;
+
+  // Waiting for on-chain reads
   if (isLoading) return <LoadingScreen />;
 
-  const isAdmin = !!adminAddr &&
-    adminAddr.toLowerCase() === address.toLowerCase();
-  if (!isAdmin) return <Navigate to={ROUTES.DASHBOARD} replace />;
+  // Connected wallet is not a Safe owner → send to user dashboard
+  if (!isSafeOwner) return <Navigate to={ROUTES.DASHBOARD} replace />;
+
   return <Outlet />;
 }
