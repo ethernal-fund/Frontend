@@ -12,6 +12,7 @@ import { ROUTES }          from './routes';
 import { ProtectedRoute }  from './ProtectedRoute';
 import { AdminGuard }      from './AdminGuard';
 import { SessionGuard }    from './SessionGuard';
+import { WalletRoute }     from './WalletRoute';
 import ScrollToTop         from './ScrollToTop';
 import ErrorBoundary       from './ErrorBoundary';
 import LoadingScreen       from '@/components/common/LoadingScreen';
@@ -122,11 +123,12 @@ const router = createBrowserRouter([
       { path: ROUTES.TERMS,      element: <TermsPage /> },
       { path: ROUTES.DISCLAIMER, element: <DisclaimerPage /> },
 
-      // Protected — requires authenticated wallet
       {
-        path:    ROUTES.DASHBOARD,
-        element: <ProtectedRoute><DashboardPage /></ProtectedRoute>,
+        path: ROUTES.DASHBOARD,
+        element: <WalletRoute><DashboardPage/></WalletRoute>
       },
+
+      // Protected — requires authenticated wallet
       {
         path:    ROUTES.COURSES,
         element: <ProtectedRoute><CoursesPage /></ProtectedRoute>,

@@ -1,32 +1,10 @@
-/**
- * saleStore.ts
- *
- * Store global de Zustand para la página de venta de ETRF.
- *
- * RESPONSABILIDADES:
- *  - Caché de datos on-chain parseados (round, purchase, balances)
- *  - Estado de la última transacción en vuelo (tx)
- *
- * NO RESPONSABILIDADES (extraídos a componentes locales):
- *  - tokenomicsOpen → useState local en SalePage (UI efímera, no necesita persistencia)
- *  - activeTab      → useState local en SalePage (se puede derivar de round.status + hasPurchased)
- *
- * SINCRONIZACIÓN:
- *  useSale.ts escribe en el store via useEffect después de cada lectura on-chain
- *  y después de cada transacción confirmada. Los componentes pueden leer del store
- *  con selectores para evitar re-renders innecesarios, o directamente de useSale()
- *  si ya están suscritos a ese hook.
- *
- * PATRÓN: immer para mutations seguras + devtools solo en DEV.
- */
-
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
 import type { Hash } from 'viem'
 import type { RoundInfo, UserPurchase } from '@/sale/types'
 
-export type TxStatus = 'idle' | 'pending' | 'confirming' | 'confirmed' | 'error'
+export type TxStatus = 'idle' | 'pending' | 'confirming' | 'confirmed' | 'error' | 'awaiting_signatures'
 export interface TxState {
   status: TxStatus
   hash:   Hash | undefined
@@ -36,20 +14,21 @@ export interface TxState {
 export interface SaleState {
   round:         RoundInfo | null
   purchase:      UserPurchase | null
-  usdcBalance:   string   // formateado: "1234.56"
-  usdcAllowance: string   // formateado: "1234.56"
-  etrfBalance:   string   // formateado: "50000.00"
+  usdcBalance:   string                                 // formateado: "1234.56"
+  usdcAllowance: string                                 // formateado: "1234.56"
+  etrfBalance:   string                                 // formateado: "50000.00"
 
   tx: TxState
   setRound:        (round: RoundInfo | null)      => void
   setPurchase:     (purchase: UserPurchase | null) => void
   setBalances:     (usdc: string, allowance: string, etrf: string) => void
 
-  setTxPending:    (hash?: Hash)   => void
-  setTxConfirming: (hash: Hash)    => void
-  setTxConfirmed:  (hash: Hash)    => void
-  setTxError:      (error: string) => void
-  resetTx:         ()              => void
+  setTxPending:             (hash?: Hash)   => void
+  setTxConfirming:          (hash: Hash)    => void
+  setTxConfirmed:           (hash: Hash)    => void
+  setTxAwaitingSignatures:  (hash?: Hash)   => void
+  setTxError:               (error: string) => void
+  resetTx:                  ()              => void
   resetUser: () => void
 }
 
@@ -102,6 +81,14 @@ export const useSaleStore = create<SaleState>()(
           s.tx = { status: 'confirmed', hash, error: null }
         }),
 
+      // Called when the connected wallet is a Safe multisig signer and the tx
+      // has been submitted to the queue but not yet reached threshold signatures.
+      // UI should show a "waiting for co-signers" message instead of a spinner.
+      setTxAwaitingSignatures: (hash) =>
+        set((s) => {
+          s.tx = { status: 'awaiting_signatures', hash: hash ?? s.tx.hash, error: null }
+        }),
+
       setTxError: (error) =>
         set((s) => {
           s.tx = { status: 'error', hash: s.tx.hash, error }
@@ -131,8 +118,13 @@ export const selectTx           = (s: SaleState) => s.tx
 export const selectUsdcBalance  = (s: SaleState) => s.usdcBalance
 export const selectEtrfBalance  = (s: SaleState) => s.etrfBalance
 
+// "Busy" = wallet modal open or tx in flight. awaiting_signatures is NOT busy:
+// the user can navigate away while co-signers approve.
 export const selectIsBusy = (s: SaleState) =>
   s.tx.status === 'pending' || s.tx.status === 'confirming'
+
+export const selectIsAwaitingSignatures = (s: SaleState) =>
+  s.tx.status === 'awaiting_signatures'
 
 export const selectCanBuy = (s: SaleState) =>
   s.round?.status === 'active' && !selectIsBusy(s)

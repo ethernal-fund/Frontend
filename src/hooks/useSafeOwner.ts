@@ -1,16 +1,3 @@
-/**
- * Checks whether the currently connected wallet is an owner of the
- * Gnosis Safe that holds admin rights over PersonalFundFactory.
- *
- * Sequential on-chain read flow:
- *   1. factory.admin()          → safeAddress  (the Safe contract)
- *   2. safe.isOwner(wallet)     → isSafeOwner  (access gate)
- *   3. safe.getThreshold()      → threshold    (for UI display only)
- *
- * Both AdminGuard and Navbar import this hook — single source of truth,
- * no duplicated contract reads.
- */
-
 import { useChainId, useReadContract } from 'wagmi';
 import { useWalletStore }              from '@/stores/walletStore';
 import { getContractAddresses }        from '@/config/addresses';
@@ -18,14 +5,11 @@ import { FACTORY_ABI }                 from '@/config/abis';
 import { SAFE_ABI }                    from '@/config/safe';
 
 export interface SafeOwnerResult {
-  /** The Gnosis Safe address stored as admin in PersonalFundFactory */
   safeAddress: `0x${string}` | undefined;
-  /** True if the connected wallet is a registered owner of the Safe */
   isSafeOwner: boolean;
-  /** True while either on-chain read is still in flight */
   isLoading:   boolean;
-  /** Safe threshold — the N in "M-of-N required signatures" */
   threshold:   number | undefined;
+  ownerCount:  number | undefined;
 }
 
 export function useSafeOwner(): SafeOwnerResult {
@@ -33,7 +17,7 @@ export function useSafeOwner(): SafeOwnerResult {
   const chainId   = useChainId();
   const contracts = getContractAddresses(chainId);
 
-  // Step 1: factory.admin() → Safe address 
+  // Step 1: factory.admin() → Safe address
   // This is the single source of truth — no hardcoded Safe address in config.
   const {
     data:      safeAddressData,
@@ -63,11 +47,20 @@ export function useSafeOwner(): SafeOwnerResult {
     query:        { enabled: safeEnabled },
   });
 
-  // Step 3: safe.getThreshold() — UI display only 
+  // Step 3: safe.getThreshold() — UI display only
   const { data: thresholdData } = useReadContract({
     address:      safeAddress,
     abi:          SAFE_ABI,
     functionName: 'getThreshold',
+    query:        { enabled: safeEnabled },
+  });
+
+  // Step 4: safe.getOwners() → ownerCount — UI display only
+  // Returns the full array of owner addresses; we only expose the length.
+  const { data: ownersData } = useReadContract({
+    address:      safeAddress,
+    abi:          SAFE_ABI,
+    functionName: 'getOwners',
     query:        { enabled: safeEnabled },
   });
 
@@ -76,5 +69,6 @@ export function useSafeOwner(): SafeOwnerResult {
     isSafeOwner: !isOwnerError && !!isOwnerData,
     isLoading:   isLoadingAdmin || isLoadingOwner,
     threshold:   thresholdData !== undefined ? Number(thresholdData) : undefined,
+    ownerCount:  ownersData    !== undefined ? (ownersData as `0x${string}`[]).length : undefined,
   };
 }

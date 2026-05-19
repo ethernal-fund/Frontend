@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import type { FaucetRequest, FaucetResponse, FaucetClientConfig } from '@/services/faucet/faucet-client';
+import type { FaucetRequest, FaucetSuccessResponse, FaucetClientConfig } from '@/services/faucet/faucet-client';
 import { FaucetAPIClient } from '@/services/faucet/faucet-client';
 
 export function useFaucet(config?: FaucetClientConfig) {
@@ -13,7 +13,7 @@ export function useFaucet(config?: FaucetClientConfig) {
   );
 
   const requestTokens = useCallback(
-    async (data: FaucetRequest): Promise<FaucetResponse> => {
+    async (data: FaucetRequest): Promise<FaucetSuccessResponse> => {
       setLoading(true);
       setError(null);
       try {

@@ -1,16 +1,5 @@
-/**
- * @file src/components/layout/Navbar.tsx
- *
- * Admin access detection uses useSafeOwner():
- * - Reads factory.admin() on-chain → Safe address
- * - Reads safe.isOwner(connectedWallet) → boolean
- * - Safe owners see the Admin nav link (not the user Dashboard link)
- * - Wallet dropdown shows a Safe Multisig card with a direct link to
- *   app.safe.global when a Safe owner is connected
- */
-
-import { useState, useEffect, useRef, startTransition } from 'react';
-import { Link, useLocation }                            from 'react-router-dom';
+import { useState, useEffect, useRef, startTransition, useCallback } from 'react';
+import { Link, useLocation }                                         from 'react-router-dom';
 import {
   useConnection,
   useDisconnect,
@@ -18,9 +7,14 @@ import {
   useChainId,
   useSwitchChain,
 } from 'wagmi';
-import { formatUnits }    from 'viem';
-import { useAppKit }      from '@reown/appkit/react';
-import { useTranslation } from 'react-i18next';
+import { formatUnits }       from 'viem';
+import { useAppKit,
+  useDisconnect as useAppKitDisconnect } from '@reown/appkit/react';
+import { useTranslation }    from 'react-i18next';
+import { useQueryClient }    from '@tanstack/react-query';
+import { useAuthStore }      from '@/stores/authStore';
+import { useWizardStore }    from '@/stores/wizardStore';
+import { useSaleStore }      from '@/stores/saleStore';
 
 import {
   Wallet,
@@ -44,13 +38,29 @@ import { getSafeAppUrl, getSafeTxQueueUrl } from '@/config/safe';
 import { LanguageSwitcher }                 from '@/components/common/LanguageSwitcher';
 import logo                                 from '@/assets/logo.svg';
 
-// ─────────────────────────────────────────────────────────────────────────────
+function useLogout() {
+  const { mutate: disconnectWagmi }          = useDisconnect();
+  const { disconnect: disconnectAppKit }     = useAppKitDisconnect();
+  const logout                               = useAuthStore((s) => s.logout);
+  const resetWizard                          = useWizardStore((s) => s.reset);
+  const resetSale                            = useSaleStore((s) => s.resetUser);
+  const queryClient                          = useQueryClient();
+
+  return useCallback(() => {
+    logout();
+    resetWizard();
+    resetSale();
+    queryClient.clear();
+    disconnectWagmi();
+    try { disconnectAppKit(); } catch { /* no active WC session */ }
+  }, [logout, resetWizard, resetSale, queryClient, disconnectWagmi, disconnectAppKit]);
+}
 
 const Navbar: React.FC = () => {
   const location                        = useLocation();
   const { t }                           = useTranslation();
   const { address, isConnected, chain } = useConnection();
-  const { mutate: disconnect }          = useDisconnect();
+  const logout                          = useLogout();
   const { data: balance }               = useBalance({ address });
   const chainId                         = useChainId();
   const { mutate: switchChain }         = useSwitchChain();
@@ -61,24 +71,20 @@ const Navbar: React.FC = () => {
   const headerRef                               = useRef<HTMLElement>(null);
   const [headerHeight, setHeaderHeight]         = useState(0);
 
-  // ── Safe / admin detection ────────────────────────────────────────────────
-  // isSafeOwner  → connected wallet is a registered Gnosis Safe owner
-  // safeAddress  → the Safe contract address (= factory.admin())
-  // threshold    → M in "M-of-N required signatures" (shown in dropdown)
-  const { isSafeOwner, safeAddress, threshold } = useSafeOwner();
+  const { isSafeOwner, safeAddress, threshold, ownerCount } = useSafeOwner();
 
-  // ── Close mobile menu on route change ────────────────────────────────────
+  // Close mobile menu on route change 
   useEffect(() => {
     startTransition(() => setIsMobileMenuOpen(false));
   }, [location.pathname]);
 
-  // ── Lock body scroll while mobile menu is open ───────────────────────────
+  // Lock body scroll while mobile menu is open 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
   }, [isMobileMenuOpen]);
 
-  // ── Track real header height for mobile overlay offset ───────────────────
+  // Track real header height for mobile overlay offset 
   useEffect(() => {
     if (!headerRef.current) return;
     const observer = new ResizeObserver((entries) => {
@@ -89,7 +95,6 @@ const Navbar: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
   const isCorrectNetwork = isValidChain(chainId);
   const chainConfig      = appConfig.chain;
   const faucetUrl        = getFaucetUrl();
@@ -111,7 +116,6 @@ const Navbar: React.FC = () => {
       ? 'text-forest-green font-bold'
       : 'text-gray-700 hover:text-forest-green';
 
-  // ── Nav links ─────────────────────────────────────────────────────────────
   // Safe owners see Admin link (not Dashboard — they don't use the user panel)
   const navLinks = [
     { path: ROUTES.HOME,       label: t('nav.home')       },
@@ -126,7 +130,6 @@ const Navbar: React.FC = () => {
       : []),
   ];
 
-  // ─────────────────────────────────────────────────────────────────────────
   return (
     <header
       ref={headerRef}
@@ -144,7 +147,7 @@ const Navbar: React.FC = () => {
           </span>
         </Link>
 
-        {/* ── Desktop Nav ── */}
+        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
           {navLinks.map((link) => {
             if (link.isHighlighted) {
@@ -192,7 +195,7 @@ const Navbar: React.FC = () => {
           })}
         </nav>
 
-        {/* ── Right Side ── */}
+        {/* Right Side */}
         <div className="flex items-center gap-3">
 
           {/* Language Switcher — Desktop */}
@@ -200,7 +203,7 @@ const Navbar: React.FC = () => {
             <LanguageSwitcher />
           </div>
 
-          {/* Wallet — Desktop ──────────────────────────────────────────────── */}
+          {/* Wallet — Desktop */}
           <div className="hidden md:block relative">
             {isConnected ? (
               <>
@@ -313,7 +316,7 @@ const Navbar: React.FC = () => {
                           </div>
                         )}
 
-                        {/* ── Safe Multisig card — visible to Safe owners only ── */}
+                        {/* Safe Multisig card — visible to Safe owners only */}
                         {isSafeOwner && safeAddress && (
                           <div className="bg-green-50 border border-green-200 rounded-lg p-3 space-y-2">
                             <div className="flex items-center justify-between">
@@ -325,7 +328,7 @@ const Navbar: React.FC = () => {
                               </div>
                               {threshold !== undefined && (
                                 <span className="text-xs text-green-700 font-mono bg-green-100 px-1.5 py-0.5 rounded">
-                                  {threshold}-of-N sigs
+                                  {threshold}-of-{ownerCount ?? '?'} sigs
                                 </span>
                               )}
                             </div>
@@ -384,7 +387,7 @@ const Navbar: React.FC = () => {
                         {/* Disconnect */}
                         <button
                           onClick={() => {
-                            disconnect();
+                            logout();
                             setIsDropdownOpen(false);
                           }}
                           className="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg border border-red-200 hover:bg-red-100 transition text-sm font-medium"
@@ -422,7 +425,7 @@ const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* ── Mobile Buttons ── */}
+          {/* Mobile Buttons */}
           <div className="md:hidden flex items-center gap-2">
             <button
               onClick={() => { void open(isConnected ? { view: 'Account' } : undefined); }}
@@ -445,7 +448,7 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Mobile Menu ─────────────────────────────────────────────────────── */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <>
           {/* Backdrop */}
@@ -554,7 +557,7 @@ const Navbar: React.FC = () => {
                           </div>
                           {threshold !== undefined && (
                             <span className="text-xs text-green-700 font-mono bg-green-100 px-1.5 py-0.5 rounded">
-                              {threshold}-of-N sigs
+                              {threshold}-of-{ownerCount ?? '?'} sigs
                             </span>
                           )}
                         </div>
@@ -599,7 +602,7 @@ const Navbar: React.FC = () => {
                     {/* Disconnect */}
                     <button
                       onClick={() => {
-                        disconnect();
+                        logout();
                         setIsMobileMenuOpen(false);
                       }}
                       className="w-full px-4 py-3 bg-red-50 text-red-600 rounded-lg border border-red-200 hover:bg-red-100 transition font-medium"

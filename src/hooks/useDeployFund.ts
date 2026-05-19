@@ -1,5 +1,6 @@
 import { useState, useCallback }                        from 'react'
 import { usePublicClient, useWalletClient, useChainId } from 'wagmi'
+import { useQueryClient }                               from '@tanstack/react-query'
 import { parseAbiItem, decodeEventLog }                 from 'viem'
 import type { PublicClient }                            from 'viem'
 import { getContractAddresses }                         from '@/config/addresses'
@@ -8,6 +9,7 @@ import { useWizardStore }                               from '@/stores/wizardSto
 import { useToast }                                     from '@/stores/uiStore'
 import { toUsdcBigInt }                                 from '@/lib/calculator'
 import { fundsService }                                 from '@/services/fundsService'
+import { FUND_QUERY_KEY }                               from '@/hooks/useMyFund'
 
 export type DeployStatus =
   | 'idle' | 'approving' | 'approved' | 'deploying' | 'registering' | 'success' | 'error'
@@ -28,6 +30,11 @@ const GAS_CONFIG: Record<'testnet' | 'mainnet', GasConfig> = {
 const GAS_FLOOR:          Record<'testnet' | 'mainnet', bigint> = { testnet: 3_000_000n, mainnet: 1_000_000n }
 const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = { testnet: 160n,       mainnet: 130n }
 const bigintMax = (a: bigint, b: bigint) => a > b ? a : b
+
+function resolveTimelockYears(currentAge: number, retirementAge: number): bigint {
+  const yearsToRetirement = retirementAge - currentAge
+  return BigInt(Math.max(yearsToRetirement, 15))
+}
 
 async function getGasOverrides(publicClient: PublicClient, chainId: number) {
   const cfg = GAS_CONFIG[isTestnet(chainId) ? 'testnet' : 'mainnet']
@@ -65,6 +72,7 @@ export function useDeployFund() {
   const chainId                = useChainId()
   const publicClient           = usePublicClient()
   const { data: walletClient } = useWalletClient()
+  const queryClient            = useQueryClient() // FIX 3
 
   const {
     result,
@@ -83,8 +91,6 @@ export function useDeployFund() {
     if (!addrs) { toast.error(`No contracts deployed on chain ${chainId}`); return null }
     return addrs
   }, [chainId, toast])
-
-  // Approve USDC 
 
   const approveUsdc = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected');     return }
@@ -113,12 +119,12 @@ export function useDeployFund() {
     }
   }, [walletClient, publicClient, result, calculator, chainId, getAddresses, setApproved, toast])
 
-  // Deploy fund
-
   const deployFund = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected');      return }
     if (!result || !selectedProtocol)   { toast.error('Complete the wizard first'); return }
     const addrs = getAddresses(); if (!addrs) return
+    void fundsService.wakeUp()
+    const timelockYears = resolveTimelockYears(calculator.currentAge, calculator.retirementAge)
 
     const txArgs = [
       toUsdcBigInt(calculator.principal),
@@ -128,7 +134,7 @@ export function useDeployFund() {
       toUsdcBigInt(calculator.desiredMonthlyIncome),
       BigInt(calculator.paymentYears),
       BigInt(Math.round(calculator.apyPercent * 100)),
-      0n,
+      timelockYears,              // FIX 1: was 0n
       selectedProtocol.address,
     ] as const
 
@@ -199,12 +205,12 @@ export function useDeployFund() {
       return
     }
 
-    // Fund address extracted 
+    // ── Fund address extracted ────────────────────────────────────────────────
     setFundAddr(deployedFundAddr)
     storeSetFundAddr(deployedFundAddr)
     toast.success('Fund deployed on-chain! Registering… 🎉')
 
-    // Register in DB 
+    // ── Register in DB ────────────────────────────────────────────────────────
     // Transition to 'registering' so the UI can show a spinner while we call the backend.
     // fundsService.registerAndSync() has built-in retry (5 attempts, exponential backoff).
     // If all retries fail it saves to localStorage so useSiweAuth retries on next login.
@@ -220,11 +226,12 @@ export function useDeployFund() {
         payment_years:          calculator.paymentYears,
         // apy_percent: backend expects a plain percentage (e.g. 5.5), not basis points.
         apy_percent:            calculator.apyPercent,
-        // protocol_address: backend stores lowercase; sending checksum is fine,
+        // protocol_address: backend stores lowercase; sending checksum is fine —
         // fund_repo.py normalises with .lower() before querying.
         protocol_address:       selectedProtocol.address,
       })
       toast.success('Fund registered in database ✓')
+      await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY })
     } catch (err) {
       // The fund EXISTS on-chain — registration failure is recoverable.
       // fundsService already saved to localStorage; retryPendingRegister()
@@ -239,7 +246,7 @@ export function useDeployFund() {
   }, [
     walletClient, publicClient, result, calculator,
     selectedProtocol, chainId, chainType,
-    getAddresses, storeSetTxHash, storeSetFundAddr, toast,
+    getAddresses, storeSetTxHash, storeSetFundAddr, queryClient, toast,
   ])
 
   const approved =
