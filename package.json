@@ -27,6 +27,8 @@
     "@radix-ui/react-toast": "^1.2.15",
     "@reown/appkit": "^1.8.18",
     "@reown/appkit-adapter-wagmi": "^1.8.18",
+    "@safe-global/safe-apps-provider": "~0.18.6",
+    "@safe-global/safe-apps-sdk": "^9.1.0",
     "@sentry/react": "^10.39.0",
     "@supabase/supabase-js": "^2.97.0",
     "@tanstack/react-query": "^5.90.21",
