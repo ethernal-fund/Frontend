@@ -4,7 +4,7 @@ import { useQueryClient }                               from '@tanstack/react-qu
 import { parseAbiItem, decodeEventLog }                 from 'viem'
 import type { PublicClient }                            from 'viem'
 import { getContractAddresses }                         from '@/config/addresses'
-import { FACTORY_ABI, ERC20_ABI }                      from '@/config/abis'
+import { FACTORY_ABI, ERC20_ABI }                       from '@/config/abis'
 import { useWizardStore }                               from '@/stores/wizardStore'
 import { useToast }                                     from '@/stores/uiStore'
 import { toUsdcBigInt }                                 from '@/lib/calculator'
@@ -31,9 +31,44 @@ const GAS_FLOOR:          Record<'testnet' | 'mainnet', bigint> = { testnet: 3_0
 const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = { testnet: 160n,       mainnet: 130n }
 const bigintMax = (a: bigint, b: bigint) => a > b ? a : b
 
-function resolveTimelockYears(currentAge: number, retirementAge: number): bigint {
-  const yearsToRetirement = retirementAge - currentAge
-  return BigInt(Math.max(yearsToRetirement, 15))
+interface FactoryConfig {
+  minTimelockYears: bigint
+  maxTimelockYears: bigint
+  minMonthlyDeposit: bigint
+  minPrincipal: bigint
+  maxPrincipal: bigint
+  minAge: bigint
+  maxAge: bigint
+  minRetirementAge: bigint
+}
+
+function resolveTimelockYears(
+  currentAge: number,
+  retirementAge: number,
+  config: FactoryConfig,
+): bigint {
+  const years = BigInt(retirementAge - currentAge)
+  if (years < config.minTimelockYears) return config.minTimelockYears
+  if (years > config.maxTimelockYears) return config.maxTimelockYears
+  return years
+}
+
+async function fetchFactoryConfig(
+  publicClient: PublicClient,
+  factoryAddress: `0x${string}`,
+): Promise<FactoryConfig> {
+  const raw = await publicClient.readContract({
+    address:      factoryAddress,
+    abi:          FACTORY_ABI,
+    functionName: 'getConfiguration',
+  }) as {
+    minPrincipal:     bigint; maxPrincipal:     bigint
+    minMonthlyDeposit: bigint
+    minAge:           bigint; maxAge:           bigint
+    minRetirementAge: bigint
+    minTimelockYears: bigint; maxTimelockYears: bigint
+  }
+  return raw
 }
 
 async function getGasOverrides(publicClient: PublicClient, chainId: number) {
@@ -72,7 +107,7 @@ export function useDeployFund() {
   const chainId                = useChainId()
   const publicClient           = usePublicClient()
   const { data: walletClient } = useWalletClient()
-  const queryClient            = useQueryClient() // FIX 3
+  const queryClient            = useQueryClient()
 
   const {
     result,
@@ -99,15 +134,31 @@ export function useDeployFund() {
 
     setStatus('approving'); setErrorMsg(null)
     try {
+      const principalRaw = toUsdcBigInt(calculator.principal)
+      const monthlyRaw   = toUsdcBigInt(result.monthlyGross)
+
+      let initialDeposit: bigint
+      try {
+        initialDeposit = await publicClient.readContract({
+          address:      addrs.personalFundFactory,
+          abi:          FACTORY_ABI,
+          functionName: 'calculateInitialDeposit',
+          args:         [principalRaw, monthlyRaw],
+        }) as bigint
+      } catch {
+        // Fallback: principal + first monthly (previous behaviour)
+        initialDeposit = principalRaw + monthlyRaw
+      }
+
+      // Add 1 USDC buffer to absorb any rounding in the contract
+      const approveAmount = initialDeposit + 1_000_000n
+
       const gasOverrides = await getGasOverrides(publicClient, chainId)
       const hash = await walletClient.writeContract({
         address:      addrs.usdc,
         abi:          ERC20_ABI,
         functionName: 'approve',
-        args:         [
-          addrs.personalFundFactory,
-          toUsdcBigInt(calculator.principal) + toUsdcBigInt(result.monthlyGross),
-        ],
+        args:         [addrs.personalFundFactory, approveAmount],
         ...gasOverrides,
       })
       toast.info('Approval sent — waiting for confirmation…')
@@ -124,7 +175,22 @@ export function useDeployFund() {
     if (!result || !selectedProtocol)   { toast.error('Complete the wizard first'); return }
     const addrs = getAddresses(); if (!addrs) return
     void fundsService.wakeUp()
-    const timelockYears = resolveTimelockYears(calculator.currentAge, calculator.retirementAge)
+
+    let factoryConfig: FactoryConfig
+    try {
+      factoryConfig = await fetchFactoryConfig(publicClient, addrs.personalFundFactory)
+    } catch (cfgErr) {
+      const msg = extractErrorMsg(cfgErr)
+      setStatus('error'); setErrorMsg(msg)
+      toast.error(`Could not read factory config: ${msg}`)
+      return
+    }
+
+    const timelockYears = resolveTimelockYears(
+      calculator.currentAge,
+      calculator.retirementAge,
+      factoryConfig,
+    )
 
     const txArgs = [
       toUsdcBigInt(calculator.principal),
@@ -133,14 +199,14 @@ export function useDeployFund() {
       BigInt(calculator.retirementAge),
       toUsdcBigInt(calculator.desiredMonthlyIncome),
       BigInt(calculator.paymentYears),
-      BigInt(Math.round(calculator.apyPercent * 100)),
-      timelockYears,              // FIX 1: was 0n
+      BigInt(Math.round(calculator.apyPercent * 100)),   // bps: 5% → 500
+      timelockYears,
       selectedProtocol.address,
     ] as const
 
     setStatus('deploying'); setErrorMsg(null)
 
-    // ── Gas estimate ──
+    // ── Gas estimate (acts as a simulation — reverts surface here) 
     let gasEstimate: bigint
     try {
       gasEstimate = await publicClient.estimateContractGas({
@@ -159,7 +225,7 @@ export function useDeployFund() {
       return
     }
 
-    // ── Submit tx ──
+    // Submit tx 
     let hash: `0x${string}`
     try {
       hash = await walletClient.writeContract({
@@ -205,15 +271,12 @@ export function useDeployFund() {
       return
     }
 
-    // ── Fund address extracted ────────────────────────────────────────────────
+    // Fund address extracted 
     setFundAddr(deployedFundAddr)
     storeSetFundAddr(deployedFundAddr)
     toast.success('Fund deployed on-chain! Registering… 🎉')
 
-    // ── Register in DB ────────────────────────────────────────────────────────
-    // Transition to 'registering' so the UI can show a spinner while we call the backend.
-    // fundsService.registerAndSync() has built-in retry (5 attempts, exponential backoff).
-    // If all retries fail it saves to localStorage so useSiweAuth retries on next login.
+    // Register in DB 
     setStatus('registering')
     try {
       await fundsService.registerAndSync({
@@ -224,18 +287,12 @@ export function useDeployFund() {
         current_age:            calculator.currentAge,
         retirement_age:         calculator.retirementAge,
         payment_years:          calculator.paymentYears,
-        // apy_percent: backend expects a plain percentage (e.g. 5.5), not basis points.
         apy_percent:            calculator.apyPercent,
-        // protocol_address: backend stores lowercase; sending checksum is fine —
-        // fund_repo.py normalises with .lower() before querying.
         protocol_address:       selectedProtocol.address,
       })
       toast.success('Fund registered in database ✓')
       await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY })
     } catch (err) {
-      // The fund EXISTS on-chain — registration failure is recoverable.
-      // fundsService already saved to localStorage; retryPendingRegister()
-      // will pick it up automatically on the next SIWE login.
       console.error('[useDeployFund] DB registration failed after all retries:', err)
       toast.warning(
         'Fund created on-chain. Database registration will retry automatically on next login.',
