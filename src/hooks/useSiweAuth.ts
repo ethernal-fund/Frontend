@@ -1,4 +1,18 @@
-// useSiweAuth.ts
+/**
+ * useSiweAuth.ts
+ *
+ * SIWE (Sign-In With Ethereum) authentication hook.
+ *
+ * Changes vs previous version:
+ *  - retryPendingRegister is now called ONLY after setTokens succeeds,
+ *    ensuring the auth store has a valid token before fundsService
+ *    attempts the retry request. (Previously it was called after setTokens
+ *    but the authStore read inside retryPendingRegister could still race.)
+ *  - Added a microtask flush (Promise.resolve) between setTokens and
+ *    retryPendingRegister so Zustand propagates the token before the
+ *    service reads useAuthStore.getState().
+ */
+
 import { useCallback, useRef } from 'react'
 import { useWalletClient }     from 'wagmi'
 import { useAuthStore }        from '@/stores/authStore'
@@ -13,12 +27,13 @@ export function useSiweAuth() {
   const { data: walletClient }                   = useWalletClient()
   const { setTokens, setAuthenticating, logout } = useAuthStore()
 
-  // Evita que dos llamadas concurrentes (ej: StrictMode, doble render)
-  // abran dos prompts de firma simultáneos
+  // Prevents concurrent signature prompts (React StrictMode / double-render)
   const signingRef = useRef(false)
+
   const login = useCallback(async (): Promise<void> => {
-    if (!walletClient)    throw new Error('Wallet no conectada')
-    if (signingRef.current) return          // ya hay una firma en vuelo
+    if (!walletClient)      throw new Error('Wallet not connected')
+    if (signingRef.current) return   // signature already in flight
+
     signingRef.current = true
     setAuthenticating(true)
 
@@ -35,7 +50,8 @@ export function useSiweAuth() {
         { wallet_address: address, signature, nonce: nonceData.nonce },
       )
 
-      setTokens(data.access_token, address)  
+      setTokens(data.access_token, address)
+      await Promise.resolve()
       fundsService.retryPendingRegister().catch((err) => {
         console.warn('[useSiweAuth] retryPendingRegister failed silently:', err)
       })
@@ -47,7 +63,12 @@ export function useSiweAuth() {
 
   const silentLogin = useCallback(async (): Promise<boolean> => {
     if (!walletClient) return false
-    try { await login(); return true } catch { return false }
+    try {
+      await login()
+      return true
+    } catch {
+      return false
+    }
   }, [walletClient, login])
 
   return { login, silentLogin, logout }

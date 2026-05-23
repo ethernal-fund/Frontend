@@ -18,8 +18,8 @@
   "nav": {
     "home": "首页",
     "calculator": "计算器",
-    "dashboard": "控制台",
-    "contact": "联系我们",
+    "dashboard": "仪表盘",
+    "contact": "联系方式",
     "connectWallet": "连接钱包",
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单"
@@ -29,68 +29,70 @@
     "balance": "余额",
     "network": "网络",
     "unknownNetwork": "未知网络",
-    "switchTo": "切换至",
-    "correctNetwork": "网络正确 ✓",
-    "connectedTo": "已连接至",
-    "wrongNetwork": "网络错误",
+    "switchTo": "切换到",
+    "correctNetwork": "正确网络 ✓",
+    "connectedTo": "已连接到",
+    "wrongNetwork": "错误网络",
     "viewFullAccount": "查看完整账户",
     "disconnect": "断开连接",
     "needTestEth": "需要测试 ETH？",
-    "yourWallet": "你的钱包",
+    "yourWallet": "您的钱包",
     "language": "语言",
     "copyAddress": "复制地址",
     "viewOnExplorer": "在浏览器中查看",
     "account": "账户"
   },
   "footer": {
-    "tagline": "在区块链上安全透明地规划退休",
+    "tagline": "在区块链上安全透明地规划您的退休生活",
     "quickLinks": "快速链接",
     "followUs": "关注我们",
-    "copyright": "Ethernal. 保留所有权利。",
+    "copyright": "Ethernal。保留所有权利。",
     "privacy": "隐私政策",
     "terms": "使用条款",
     "disclaimer": "法律声明",
-    "builtOn": "基于 Ethereum · 安全 · 透明 · 去中心化"
+    "builtOn": "基于 Arbitrum 构建 · 安全 · 透明 · 去中心化"
   },
   "hero": {
-    "title": "你在区块链上的财务未来",
-    "subtitle": "使用 Ethernal 规划退休：安全、透明、在 Arbitrum 上去中心化",
-    "ctaDisconnected": "立即开始",
+    "title": "您在区块链上的财务未来",
+    "subtitle": "使用 Ethernal 规划您的退休生活：在以太坊上安全、透明且去中心化",
+    "ctaDisconnected": "开始使用",
     "ctaConnected": "前往计算器"
   },
   "features": {
     "title": "为什么选择 Ethernal？",
     "security": {
       "title": "安全与控制",
-      "description": "你的资金存储在经过审计的智能合约中。只有你拥有控制权。"
+      "description": "您的资金存放在经过审计的智能合约中。只有您能控制。",
+      "cta": "了解更多"
     },
     "education": {
       "title": "金融教育",
-      "description": "在储蓄的同时学习 DeFi 和退休策略。"
+      "description": "在储蓄的同时了解 DeFi 和退休策略。",
+      "cta": "探索资源"
     },
     "fees": {
       "title": "低费用",
-      "description": "无中间商。费用比传统基金低达 10 倍。",
+      "description": "无中介。费用比传统基金低 10 倍。",
       "cta": "查看费用对比"
     }
   },
   "about": {
     "title": "关于 Ethernal",
-    "description": "Ethernal 将区块链安全与传统金融规划相结合，为所有人提供去中心化、透明且可访问的退休体验。",
+    "description": "Ethernal 将区块链安全性与传统财务规划相结合，为所有人提供去中心化、透明且可及的退休体验。",
     "historyLink": "了解我们的完整故事"
   },
   "survey": {
     "title": "退休与区块链调查",
-    "subtitle": "帮助我们了解你对退休和区块链技术的看法",
-    "bannerText": "帮助我们改进！回答我们关于退休和区块链的简短调查。",
-    "bannerCta": "参加调查",
-    "question1": "你的年龄是多少？",
-    "question2": "你信任传统的退休系统（养老基金）吗？",
-    "question3": "你对区块链/DeFi 有多熟悉？",
-    "question4": "你对退休后的财务未来有多担忧？",
-    "question5": "你目前有退休计划吗？",
-    "question6": "退休中的价值观：安全还是增长？",
-    "question7": "你会对基于区块链的退休计划感兴趣吗？",
+    "subtitle": "帮助我们了解您对退休和区块链技术的看法",
+    "bannerText": "帮助我们改进！参与我们关于退休和区块链的简短调查。",
+    "bannerCta": "参与调查",
+    "question1": "您的年龄？",
+    "question2": "您信任传统的退休体系（养老金）吗？",
+    "question3": "您对区块链/DeFi 的熟悉程度如何？",
+    "question4": "您对退休后的财务未来有多担忧？",
+    "question5": "您目前有退休计划吗？",
+    "question6": "退休价值观：安全还是增长？",
+    "question7": "您对基于区块链的退休计划感兴趣吗？",
     "ageOptions": {
       "18-24": "18-24 岁",
       "25-34": "25-34 岁",
@@ -106,58 +108,58 @@
       "agree": "同意",
       "stronglyAgree": "非常同意"
     },
-    "selectAge": "请选择你的年龄",
+    "selectAge": "请选择您的年龄",
     "answerAll": "请回答所有问题",
     "submitting": "提交中...",
     "submit": "提交答案",
     "errorTitle": "提交错误",
-    "required": "必填项"
+    "required": "必填字段"
   },
   "followUp": {
-    "successTitle": "调查已完成！",
-    "successMessage": "感谢你的参与。你的回答帮助我们改进。",
-    "question1": "你想接收关于 Ethernal 的信息吗？",
-    "yesInterested": "是的，我想接收最新消息",
+    "successTitle": "调查完成！",
+    "successMessage": "感谢您的参与。您的回答帮助我们改进。",
+    "question1": "您想收到关于 Ethernal 的信息吗？",
+    "yesInterested": "是的，我想接收更新",
     "notNow": "不，谢谢",
-    "question2": "你的电子邮件地址",
-    "emailPlaceholder": "youremail@example.com",
+    "question2": "您的电子邮件地址",
+    "emailPlaceholder": "yourname@example.com",
     "finish": "完成",
     "thankYou": "谢谢！",
-    "willContact": "我们将很快与你联系并提供最新消息。",
-    "helpImprove": "你的意见帮助我们改进。",
-    "pleaseIndicate": "请表明你的偏好",
-    "enterEmail": "请输入你的电子邮件地址"
+    "willContact": "我们将尽快与您联系并提供更新。",
+    "helpImprove": "您的意见帮助我们改进。",
+    "pleaseIndicate": "请表明您的偏好",
+    "enterEmail": "请输入您的电子邮件地址"
   },
   "contact": {
     "title": "联系我们",
-    "subtitle": "有问题吗？我们的团队随时为你提供帮助",
+    "subtitle": "有问题？我们的团队随时为您提供帮助",
     "name": "全名",
     "namePlaceholder": "张三",
     "email": "电子邮件地址",
     "subject": "主题",
     "subjectPlaceholder": "例如：关于我的基金的问题",
-    "message": "消息",
-    "messagePlaceholder": "告诉我们如何帮助你...",
-    "messageHint": "最少 10 个字符",
+    "message": "留言",
+    "messagePlaceholder": "告诉我们如何帮助您...",
+    "messageHint": "至少 10 个字符",
     "send": "发送消息",
     "sending": "发送中...",
     "success": "消息已发送！",
-    "successDetail": "感谢你联系我们。我们将在 24-48 小时内回复。",
+    "successDetail": "感谢您联系我们。我们将在 24-48 小时内回复。",
     "error": "发送错误。请重试。",
     "walletConnected": "钱包已连接",
-    "walletIncluded": "我们将在消息中包含你的钱包：",
+    "walletIncluded": "我们将在消息中包含您的钱包：",
     "otherWays": "其他联系方式",
     "emailLabel": "电子邮件",
-    "responseTime": "响应时间",
+    "responseTime": "回复时间",
     "responseTimeValue": "24-48 个工作小时",
-    "requiredFields": "* 必填项",
+    "requiredFields": "* 必填字段",
     "validation": {
-      "nameRequired": "姓名为必填项",
+      "nameRequired": "姓名是必填项",
       "nameTooShort": "姓名至少需要 2 个字符",
-      "emailRequired": "电子邮件为必填项",
-      "emailInvalid": "请输入有效的电子邮件",
-      "messageRequired": "消息为必填项",
-      "messageTooShort": "消息至少需要 10 个字符",
+      "emailRequired": "电子邮件是必填项",
+      "emailInvalid": "请输入有效的电子邮件地址",
+      "messageRequired": "留言是必填项",
+      "messageTooShort": "留言至少需要 10 个字符",
       "formErrors": "请修正表单错误"
     }
   },
@@ -165,71 +167,121 @@
     "title": "退休计算器",
     "titleFull": "退休计算器",
     "titleShort": "计算器",
-    "subtitle": "模拟你的个性化退休计划",
-    "configurePlan": "配置你的计划",
+    "subtitle": "模拟您的个性化退休计划",
+    "configurePlan": "配置您的计划",
+    "configurePlanDesc": "输入您的退休目标 — 我们计算所需的每月存款。",
+    "desiredMonthly": "退休时期望的月收入 (USDC)",
+    "desiredMonthlyHint": "您希望每月收到多少",
     "currentAge": "当前年龄",
     "retirementAge": "期望退休年龄",
-    "initialCapital": "初始资本 (USDC)",
-    "monthlyContribution": "每月供款 (USDC)",
-    "expectedReturn": "预期年回报率 (%)",
-    "frequency": "供款频率",
+    "retirementAgeHint": "≥ 55，至少提前 15 年",
+    "initialCapital": "初始本金 (USDC)",
+    "initialCapitalHint": "可选一次性存款（最大 100,000 USDC）",
+    "monthlyContribution": "每月定投 (USDC)",
+    "expectedReturn": "预期年化收益率 (%)",
+    "expectedReturnHint": "使用协议的 APY — 例如 5 表示 5%",
+    "frequency": "定投频率",
     "frequencyMonthly": "每月",
     "frequencyQuarterly": "每季度",
     "frequencyAnnual": "每年",
-    "yearsReceivingIncome": "领取收入的年数",
+    "yearsReceivingIncome": "领取收入年数",
+    "yearsReceivingIncomeHint": "您退休收入的持续时间",
     "ageLabel": "岁",
     "monthlyDeposit": "每月储蓄 (USDC)",
     "currentSavings": "当前储蓄 (USDC)",
     "interestRate": "预期年利率 (%)",
     "calculate": "计算",
-    "dataError": "加载数据时出错。请重试。",
+    "dataError": "加载数据出错。请重试。",
     "growthProjection": "增长预测",
-    "fillFormToSeeChart": "填写表格查看你的预测",
+    "fillFormToSeeChart": "填写表单以查看您的预测",
     "depositSummary": "首次存款摘要",
     "totalDeposit": "总存款金额",
     "daoFee": "Ethernal 费用 (5%)",
     "goesToTreasury": "进入协议国库",
-    "forDefi": "用于你的 DeFi 基金",
-    "netToFund": "净存入基金",
-    "fundReady": "你的基金将在以下时间后准备就绪",
+    "forDefi": "用于您的 DeFi 基金",
+    "netToFund": "基金净额",
+    "fromWallet": "来自您的钱包",
+    "fundReady": "您的基金将在以下时间后准备就绪",
     "lastStep": "最后一步",
-    "monthlySavingsRequired": "所需每月储蓄",
+    "monthlySavingsRequired": "每月所需储蓄",
     "createContract": "创建合约",
     "createOnArbitrum": "在 Arbitrum 上创建",
-    "walletWillOpen": "你的钱包将打开以进行签名",
+    "walletWillOpen": "您的钱包将打开以供签名",
+    "goToDashboard": "前往仪表盘",
+    "contractAlreadyExists": "您已有一个活跃的智能合约",
     "getTestTokens": "获取测试代币",
-    "getTestTokensDesc": "你需要测试网 USDC 来创建基金",
+    "getTestTokensDesc": "您需要测试网 USDC 来创建您的基金",
     "howToStart": "如何开始？",
     "testnetOnly": "目前仅限测试网",
-    "testnetOnlyDesc": "我们在 Arbitrum Sepolia 上。基金没有实际价值。",
-    "step1Title": "连接你的钱包",
+    "testnetOnlyDesc": "我们在 Arbitrum Sepolia 上。资金没有实际价值。",
+    "step1Title": "连接您的钱包",
     "step1Desc": "MetaMask、WalletConnect 或任何兼容钱包",
     "step2Title": "获取测试网 USDC",
     "step2Desc": "使用水龙头接收测试代币",
-    "step3Title": "配置你的计划",
-    "step3Desc": "设置你的年龄、储蓄和退休目标",
-    "step4Title": "创建你的基金",
-    "step4Desc": "在区块链上部署你的个人合约",
+    "step3Title": "配置您的计划",
+    "step3Desc": "设定您的年龄、储蓄和退休目标",
+    "step4Title": "创建您的基金",
+    "step4Desc": "在区块链上部署您的个人合约",
+    "stepModal": {
+      "step1Title": "步骤 1：连接钱包并添加 MockUSDC",
+      "step1Content": {
+        "instruction1": "1. 点击“连接钱包”按钮连接您的钱包。",
+        "instruction2": "2. 确保您处于 **Arbitrum Sepolia** 网络。",
+        "tokenAddressLabel": "📋 MockUSDC 代币地址（测试网）",
+        "copyButton": "复制",
+        "manualImportHint": "在 MetaMask 中手动添加此代币 → “导入代币”",
+        "recommendation": "💡 建议：同时使用上面的“获取测试代币”按钮自动接收资金。"
+      },
+      "step2Title": "步骤 2：获取测试代币",
+      "step2Content": {
+        "instruction1": "1. 点击左上角的“获取测试代币”按钮。",
+        "instruction2": "2. 从水龙头请求 MockUSDC。",
+        "instruction3": "3. 等待几秒钟，然后在您的钱包中验证余额。",
+        "fallbackHint": "如果水龙头没有响应，请使用步骤 1 中的地址手动添加代币。"
+      },
+      "step3Title": "步骤 3：配置您的退休计划",
+      "step3Content": {
+        "instruction": "用您的个人信息填写计算器字段：",
+        "fieldsList": {
+          "income": "退休期间期望的月收入",
+          "years": "您希望领取收入的年数",
+          "age": "您的当前年龄和预计退休年龄",
+          "apy": "预期回报率（协议 APY）",
+          "principal": "初始本金（可选）"
+        },
+        "resultHint": "系统将自动计算所需的每月存款。"
+      },
+      "step4Title": "步骤 4：创建您的智能合约",
+      "step4Content": {
+        "instruction1": "查看结果后：",
+        "instruction2": "1. 验证每月金额是否正确。",
+        "instruction3": "2. 点击蓝色/金色大按钮。",
+        "instruction4": "3. 在您的钱包中签名交易。",
+        "instruction5": "4. 完成！您的去中心化退休基金已创建。",
+        "dashboardHint": "之后，您可以访问仪表盘来管理您的基金。"
+      },
+      "closeButton": "知道了"
+    },
     "validation": {
-      "ageRequired": "当前年龄为必填项",
+      "ageRequired": "当前年龄是必填项",
       "ageTooHigh": "当前年龄必须小于 80 岁",
-      "retirementAgeTooLow": "退休年龄必须比当前年龄大至少 5 岁",
-      "minYears": "你必须至少领取 5 年收入",
-      "contributionRequired": "每月供款必须大于 0",
+      "retirementAgeTooLow": "退休年龄必须比当前年龄至少大 5 岁",
+      "minYears": "您必须领取收入至少 5 年",
+      "contributionRequired": "每月定投必须大于 0",
       "rateRange": "年利率必须在 0% 到 50% 之间"
     },
     "results": {
       "projected": "退休预测",
-      "monthlyIncome": "估计月收入",
+      "monthlyIncome": "预估月收入",
       "totalSaved": "总储蓄",
-      "yearsCovered": "覆盖年数"
+      "yearsCovered": "覆盖年限"
     }
   },
   "createFund": {
     "title": "创建我的基金",
-    "subtitle": "已计算计划 · Arbitrum Sepolia",
+    "subtitle": "计算计划 · Arbitrum Sepolia",
     "steps": {
-      "review": "审查",
+      "review": "审核",
       "balance": "余额",
       "approve": "批准",
       "create": "创建",
@@ -241,72 +293,72 @@
       "monthlyDeposit": "每月储蓄",
       "currentAge": "当前/退休年龄",
       "desiredIncome": "期望月收入",
-      "yearsPayments": "领取收入的年数",
-      "interestRate": "预期年利率",
+      "yearsPayments": "领取收入年数",
+      "interestRate": "预期年化收益率",
       "timelock": "安全时间锁",
       "breakdown": {
         "title": "首次存款明细",
-        "fromWallet": "来自你的钱包",
+        "fromWallet": "来自您的钱包",
         "fee": "Ethernal 费用 (5%)",
-        "netToFund": "净存入 DeFi 基金"
+        "netToFund": "DeFi 基金净额"
       },
       "investment": {
         "title": "投资方式",
-        "subtitle": "选择如何增加你的退休储蓄",
-        "selectError": "请选择投资方式以继续。"
+        "subtitle": "选择您希望如何增值您的退休储蓄",
+        "selectError": "请选择一种投资方式以继续。"
       },
-      "immutability": "一旦创建合约，这些参数将无法修改。{years} 时间锁是永久的。",
+      "immutability": "合约一旦创建，这些参数将无法修改。{years} 年的时间锁是永久性的。",
       "continue": "验证余额"
     },
     "balance": {
       "title": "余额验证",
-      "subtitle": "我们在链上检查你的钱包。无需 gas，无需交易。",
-      "yourBalance": "你的 USDC 余额",
-      "required": "所需金额",
+      "subtitle": "我们在链上检查您的钱包。无需 Gas，无需交易。",
+      "yourBalance": "您的 USDC 余额",
+      "required": "所需",
       "insufficient": "不足",
       "sufficient": "充足",
-      "missing": "还差 {amount}",
+      "missing": "您缺少 {amount}",
       "allowance": {
         "title": "当前授权额度",
-        "alreadyApproved": "已批准",
-        "requiresApproval": "需要批准",
-        "needApproval": "你需要签署一次授权交易（1 次）。"
+        "alreadyApproved": "已授权",
+        "requiresApproval": "需要授权",
+        "needApproval": "您需要签署一次授权交易。"
       },
       "nextSteps": {
-        "title": "所需后续步骤",
-        "approve": "批准 — 为 Factory 进行 ERC-20 approve",
+        "title": "所需的后续步骤",
+        "approve": "授权 — 为工厂进行 ERC-20 approve",
         "create": "创建基金 — factory.createFund + 初始存款"
       },
-      "insufficientBalance": "余额不足。在继续之前请从计算器水龙头获取更多 USDC。",
+      "insufficientBalance": "余额不足。请先在计算器水龙头获取更多 USDC，然后再继续。",
       "refresh": "刷新",
-      "continueApprove": "继续至批准",
+      "continueApprove": "继续授权",
       "continueCreate": "继续创建基金"
     },
     "approve": {
       "title": "授权 USDC",
-      "subtitle": "允许 Factory 一次性移动你的代币",
+      "subtitle": "允许工厂一次性移动您的代币",
       "whatIs": {
-        "title": "什么是 Approve？",
-        "description": "在以太坊上，ERC-20 代币（如 USDC）需要你在合约移动它们之前明确授权。这是一个安全标准：合约只能花费你批准的金额。",
-        "note": "此批准不移动任何资金。移动发生在下一步。"
+        "title": "什么是授权？",
+        "description": "在以太坊上，ERC-20 代币（如 USDC）要求您在合约移动它们之前明确授权。这是一个安全标准：合约最多只能使用您授权的金额。",
+        "note": "此授权不会移动任何资金。资金移动将在下一步进行。"
       },
       "details": {
-        "contract": "接收合约",
+        "contract": "接收方合约",
         "token": "代币",
         "amount": "授权金额"
       },
-      "button": "批准 USDC",
+      "button": "授权 USDC",
       "waiting": "等待中…",
       "next": "继续创建基金"
     },
     "create": {
       "title": "创建基金",
-      "subtitle": "Factory 将部署你的个人合约并进行初始存款",
+      "subtitle": "工厂将部署您的个人合约并进行初始存款",
       "summary": {
         "title": "交易摘要",
         "initialDeposit": "初始存款",
         "fee": "Ethernal 费用 (5%)",
-        "netToFund": "净存入基金",
+        "netToFund": "基金净额",
         "protocol": "DeFi 协议",
         "timelock": "时间锁"
       },
@@ -315,17 +367,17 @@
     },
     "success": {
       "title": "基金已创建！",
-      "subtitle": "你的个人合约已存在于区块链上。",
+      "subtitle": "您的个人合约存在于区块链上。",
       "txHash": "交易哈希",
       "fundAddress": "基金地址",
       "nextSteps": {
         "title": "后续步骤",
-        "step1": "每月存入 {amount} 以实现你的目标。",
-        "step2": "从控制台监控你的进度和 DeFi 收益。",
-        "step3": "当时间锁到期时，你可以开始计划提款。"
+        "step1": "每月存款 {amount} 以达到您的目标。",
+        "step2": "通过仪表盘监控您的进度和 DeFi 回报。",
+        "step3": "时间锁到期后，您可以开始计划提款。"
       },
-      "goToDashboard": "前往控制台",
-      "redirecting": "将在 {seconds} 秒后自动重定向…"
+      "goToDashboard": "前往仪表盘",
+      "redirecting": "{seconds} 秒后自动跳转…"
     },
     "back": {
       "toCalculator": "返回计算器",
@@ -333,9 +385,9 @@
     }
   },
   "dashboard": {
-    "title": "你的 Ethernal 控制台",
+    "title": "您的 Ethernal 仪表盘",
     "welcome": "欢迎，{address}",
-    "subtitle": "在区块链上管理你的财务未来",
+    "subtitle": "在区块链上管理您的财务未来",
     "refresh": "刷新数据",
     "personalFund": {
       "title": "我的个人基金",
@@ -348,16 +400,16 @@
       "progress": {
         "title": "目标进度",
         "current": "当前",
-        "projected": "预测",
+        "projected": "预计",
         "target": "目标",
-        "monthsRemaining": "距时间锁还有 {months} 个月"
+        "monthsRemaining": "距离时间锁到期还有 {months} 个月"
       },
       "stats": {
         "principal": "本金",
-        "monthlyDeposit": "月存款",
+        "monthlyDeposit": "每月存款",
         "totalDeposits": "总存款",
         "retirementAge": "退休年龄",
-        "years": "岁",
+        "years": "年",
         "extraDeposit": "额外存款"
       },
       "contractAddress": "合约地址",
@@ -365,40 +417,40 @@
       "timelock": {
         "ends": "时间锁结束：",
         "never": "永不",
-        "daysRemaining": "还剩 {days} 天"
+        "daysRemaining": "剩余 {days} 天"
       },
       "actions": {
-        "deposit": "进行存款",
+        "deposit": "存款",
         "startRetirement": "开始退休",
         "createFund": "创建我的基金"
       },
-      "noFundMessage": "你还没有退休基金"
+      "noFundMessage": "您还没有退休基金"
     },
     "defiInvestments": {
       "title": "DeFi 投资",
-      "description": "你的资金可以投资于已批准的 DeFi 协议以产生收益",
+      "description": "您的资金可以投资于经批准的 DeFi 协议以产生回报",
       "viewOpportunities": "查看机会"
     },
     "preferences": {
       "title": "我的偏好",
-      "subtitle": "配置你的链上投资档案。这些参数决定你的存款如何路由。",
+      "subtitle": "配置您的链上投资档案。这些参数决定您的存款如何被路由。",
       "currentConfig": "当前配置：",
       "risk": {
-        "title": "风险级别",
+        "title": "风险等级",
         "conservador": "保守型",
         "moderado": "稳健型",
         "agresivo": "激进型",
-        "conservador_desc": "低风险，稳定收益和资本保护",
+        "conservador_desc": "低风险，稳定回报和资本保护",
         "moderado_desc": "增长与稳定之间的平衡，适合长期",
-        "agresivo_desc": "最大收益潜力，风险敞口更高"
+        "agresivo_desc": "最高回报潜力，但风险敞口更大"
       },
       "protocol": {
         "title": "首选协议",
-        "noProtocols": "没有已注册的活跃协议",
+        "noProtocols": "未注册活跃协议",
         "verified": "已验证",
         "apy": "APY"
       },
-      "saveSuccess": "偏好已链上保存",
+      "saveSuccess": "偏好已保存至链上",
       "saveError": "保存偏好时出错",
       "saveButton": "保存配置",
       "saving": "保存中..."
@@ -410,82 +462,82 @@
         "concentrado": "集中型",
         "diversificado": "分散型",
         "hibrido": "混合型",
-        "concentrado_desc": "全部投入最佳可用协议",
-        "diversificado_desc": "分配到多个协议以降低风险",
+        "concentrado_desc": "根据您的配置，全部投入最佳可用协议",
+        "diversificado_desc": "分散到多个协议以降低风险",
         "hibrido_desc": "根据市场表现动态调整组合"
       },
-      "saveSuccess": "策略已链上保存",
+      "saveSuccess": "策略已保存至链上",
       "saveButton": "保存策略",
       "saving": "保存中...",
       "activeProtocols": "活跃协议",
       "verified": "已验证",
-      "viewMore": "查看更多 {count} 个",
+      "viewMore": "查看其余 {count} 个",
       "noProtocols": "尚未注册协议"
     },
     "teamContent": {
       "title": "来自 Ethernal 团队",
-      "subtitle": "由管理员发布的财务建议和教育课程。"
+      "subtitle": "管理员发布的财务建议和教育课程。"
     },
     "support": {
       "title": "需要帮助？",
-      "description": "联系 Ethernal 团队，了解你的退休计划或投资策略",
+      "description": "联系 Ethernal 团队，咨询有关您的退休计划或投资策略的问题",
       "contact": "联系 Ethernal",
       "documentation": "查看文档"
     },
     "depositModal": {
-      "title": "进行存款",
+      "title": "存款",
       "monthly": "每月",
       "custom": "自定义",
-      "monthlyAmount": "已配置的月存款金额",
-      "amountLabel": "USDC 金额",
+      "monthlyAmount": "配置的每月存款额",
+      "amountLabel": "金额 (USDC)",
       "amountPlaceholder": "例如：500.00",
-      "amountError": "请输入有效金额（最多 6 位小数）",
-      "insufficientBalance": "USDC 余额不足。你还需要 {amount}。",
+      "amountError": "输入有效金额（最多 6 位小数）",
+      "insufficientBalance": "USDC 余额不足。您还需要 {amount}。",
       "twoTransactions": "需要 2 笔交易：USDC 授权和存款。",
       "status": {
-        "approving": "等待钱包授权...",
-        "approvingConfirming": "链上确认授权...",
-        "executing": "等待钱包存款...",
-        "confirming": "链上确认存款..."
+        "approving": "等待钱包中授权...",
+        "approvingConfirming": "正在链上确认授权...",
+        "executing": "等待钱包中存款...",
+        "confirming": "正在链上确认存款..."
       },
       "buttons": {
-        "approveAndDeposit": "批准并存款",
+        "approveAndDeposit": "授权并存款",
         "confirmDeposit": "确认存款",
         "processing": "处理中...",
         "cancel": "取消"
       }
     },
     "notifications": {
-      "riskUpdateAlert": "提醒：风险更新"
+      "riskUpdateAlert": "警报：风险更新"
     }
   },
   "errors": {
-    "somethingWrong": "出了些问题。请重试。",
-    "networkError": "网络错误。请检查你的连接。",
-    "walletRequired": "请连接钱包以继续",
+    "somethingWrong": "出了点问题。请重试。",
+    "networkError": "网络错误。请检查您的连接。",
+    "walletRequired": "请连接您的钱包以继续",
     "wrongNetwork": "网络错误。请切换到 Arbitrum Sepolia",
-    "wrongNetworkTitle": "网络错误",
+    "wrongNetworkTitle": "错误网络",
     "wrongNetworkMessage": "请切换到 {network}（链 ID {chainId}）以继续。",
-    "alreadyHaveFund": "你已有一个基金",
-    "alreadyHaveFundMessage": "每个钱包只能有一个基金。你的基金：{address}",
-    "approvalPending": "批准待处理。请等待批准确认后再继续。"
+    "alreadyHaveFund": "您已有一个基金",
+    "alreadyHaveFundMessage": "每个钱包只能有一个基金。您的基金：{address}",
+    "approvalPending": "授权待处理。请等待授权确认后再继续。"
   },
   "faucet": {
-    "connectWallet": "连接你的钱包以接收测试 USDC。",
+    "connectWallet": "连接您的钱包以接收测试 USDC。",
     "success": {
-      "title": "代币已接收！",
-      "amount": "已接收 USDC：{amount} USDC",
+      "title": "代币已收到！",
+      "amount": "收到 USDC：{amount} USDC",
       "balance": "当前余额：{balance} USDC"
     },
     "error": {
-      "title": "请求代币时出错",
-      "rateLimit": "已达到请求限制",
+      "title": "请求代币出错",
+      "rateLimit": "达到请求限制",
       "rateLimitMessage": "水龙头每个钱包每 24 小时允许一次请求。"
     },
     "info": {
       "mockUSDC": "MockUSDC",
-      "forFund": "用于你的基金",
-      "ethGas": "ETH gas",
+      "forFund": "用于您的基金",
+      "ethGas": "ETH Gas",
       "forTransactions": "用于交易"
     },
     "button": "接收测试 USDC",
@@ -494,34 +546,34 @@
   },
   "network": {
     "wrongDetected": "检测到错误网络",
-    "youAreOn": "你在 {network} 上。请切换到 {expected}。",
+    "youAreOn": "您当前在 {network} 网络上。请切换到 {expected}。",
     "switchButton": "切换到 {network}"
   },
   "loading": {
-    "ethernal": "加载 Ethernal 中",
-    "connecting": "正在连接区块链...",
-    "dashboard": "正在加载你的控制台...",
-    "verifyingFund": "正在区块链上验证您的基金...",
+    "ethernal": "正在加载 Ethernal",
+    "connecting": "正在连接到区块链...",
+    "dashboard": "正在加载您的仪表盘...",
+    "verifyingFund": "正在链上验证您的基金...",
     "updating": "更新中..."
   },
   "createContract": {
-    "factoryAddressNotConfigured": "此网络未配置 Factory 地址"
+    "factoryAddressNotConfigured": "此网络未配置工厂地址"
   },
   "feeModal": {
     "headerLabel": "对比分析",
-    "title": "你的退休，无需中间商。",
-    "subtitle": "计算当费用为你服务而非对抗你时，你能多积累多少。",
-    "monthlyDeposit": "月存款",
+    "title": "您的退休，没有中间人。",
+    "subtitle": "计算当费用为您服务而不是反对您时，您可以积累多少更多。",
+    "monthlyDeposit": "每月存款",
     "horizon": "投资期限",
     "years": "{{count}} 年",
     "yearsMin": "5 年",
     "yearsMax": "40 年",
-    "ethFeeLabel": "单次费用：每次存款 3%",
-    "ethApy": "DeFi：~{{apy}} APY (Aave)",
-    "extra": "额外收益",
+    "ethFeeLabel": "单次费用：每笔存款 3%",
+    "ethApy": "DeFi：~{{apy}}% APY (Aave)",
+    "extra": "额外",
     "corpName": "企业基金",
-    "corpFeeLabel": "管理 1.5% + 行政 0.5% + 入场 3%",
-    "corpApy": "总收益：~{{apy}}（净收益少得多）",
+    "corpFeeLabel": "管理费 1.5% + 行政费 0.5% + 申购费 3%",
+    "corpApy": "毛回报：~{{apy}}%（净回报低得多）",
     "year1": "第 1 年",
     "yearMid": "第 {{year}} 年",
     "yearEnd": "第 {{year}} 年",
@@ -534,16 +586,16 @@
       "finalCapital": "最终资本",
       "feesPaid": "已付费用",
       "returnOnCapital": "资本回报率",
-      "entryFee": "入场费",
-      "ethEntry": "单次 3%",
-      "corpEntry": "每次存款 3%",
+      "entryFee": "申购费",
+      "ethEntry": "3% 一次性",
+      "corpEntry": "每笔存款 3%",
       "annualFee": "年度管理费",
-      "exitFee": "退出费",
-      "ethExit": "0%（正常）",
+      "exitFee": "赎回费",
+      "ethExit": "0%（标准）",
       "corpExit": "1% + 罚金",
       "transparency": "透明度",
       "ethTransparency": "100% 链上",
-      "corpTransparency": "招募说明书 + 审计",
+      "corpTransparency": "招股说明书 + 审计",
       "custody": "托管",
       "ethCustody": "智能合约",
       "corpCustody": "金融机构"
@@ -552,49 +604,49 @@
     "corpStructureTitle": "企业 — 典型结构",
     "ethFees": [
       {
-        "label": "存款费用",
-        "value": "3% · 进入链上 Treasury",
-        "desc": "无隐藏费用，无年度管理费，无标准退出罚款。"
+        "label": "存款费",
+        "value": "3% · 进入链上国库",
+        "desc": "无隐藏费用，无年度管理费，无标准赎回罚金。"
       },
       {
-        "label": "提前提款",
-        "value": "7% · 仅在时间锁之前",
-        "desc": "不鼓励短期行为。如果等到到期，则为 0%。"
+        "label": "提前退出",
+        "value": "7% · 仅在时间锁到期前",
+        "desc": "抑制短期行为。如果您等到到期，则为 0%。"
       },
       {
-        "label": "Gas（Arbitrum L2）",
-        "value": "约 $0.01-$0.10/交易",
+        "label": "Gas (Arbitrum L2)",
+        "value": "约 $0.01-$0.10 / 笔",
         "desc": "与任何传统替代方案相比几乎可以忽略不计。"
       }
     ],
     "corpFees": [
       {
-        "label": "入场费",
-        "value": "每次存款 3%",
-        "desc": "从第一分钱就开始收费，在投资之前。"
+        "label": "申购费",
+        "value": "每笔存款 3%",
+        "desc": "从第一美元开始收取，投资前即扣除。"
       },
       {
         "label": "年度管理费 (TER)",
         "value": "余额的 1.5%",
-        "desc": "即使基金表现为负也会收取。"
+        "desc": "即使基金表现负回报也会收取。"
       },
       {
-        "label": "行政费用",
+        "label": "行政费",
         "value": "每年 0.5%",
         "desc": "运营成本转嫁给投资者。"
       },
       {
-        "label": "绩效费",
+        "label": "业绩报酬",
         "value": "收益的 20%",
-        "desc": "只在招募说明书中可见，很少出现在报表中。"
+        "desc": "仅在招股说明书中可见，很少在对账单中体现。"
       },
       {
         "label": "退出/赎回费",
         "value": "提款时 1%",
-        "desc": "清算头寸的罚款。"
+        "desc": "清算头寸的罚金。"
       }
     ],
-    "disclaimer": "指示性模拟 · 实际 DeFi 收益可能有所不同 · 非财务建议"
+    "disclaimer": "指示性模拟 · 实际 DeFi 回报可能有所不同 · 非财务建议"
   },
   "legal": {
     "badge": "法律文件",
@@ -602,179 +654,184 @@
     "effective": "自 {{date}} 起生效",
     "toc": "目录",
     "backToHome": "返回首页",
+    "whitepaper": "白皮书",
+    "tokenSaleAgreement": "代币销售协议",
+    "legalNotice": "这些文件仅供参考。不构成财务建议或证券要约。",
+    "sectionTitle": "法律文件",
+    "sectionSubtitle": "所有协议文件都是公开的。请在参与前阅读。",
     "privacy": {
       "title": "隐私政策",
       "s1": {
-        "title": "简介",
-        "body": "本隐私政策描述了 FondoRetiro DeFi（以下简称'协议'）如何处理与已部署在公共区块链上的智能合约进行交互的用户信息。使用本协议即表示您已阅读、理解并接受本文件中规定的条款。"
+        "title": "引言",
+        "body": "本隐私政策描述了 FondoRetiro DeFi（以下简称“协议”）如何处理与部署在公共区块链上的智能合约交互的用户的信息。使用本协议即表示您承认您已阅读、理解并接受本文所述的条款。"
       },
       "s2": {
-        "title": "区块链上记录的信息",
-        "b1": "用户钱包（wallet）地址。",
-        "b2": "存入、提取和转账金额（以 USDC 或其他已配置的 ERC-20 代币计）。",
+        "title": "记录在区块链上的信息",
+        "b1": "用户钱包地址。",
+        "b2": "存入、提取和转账的金额（以 USDC 或其他配置的 ERC-20 代币计）。",
         "b3": "通过 PersonalFundFactory 创建的个人基金地址。",
-        "b4": "基金参数：申报年龄、退休年龄、每月存款、初始资本、所选 DeFi 协议及 timelock 期限。",
-        "b5": "所选投资协议（MockAaveAdapter、MockOndoAdapter 或其他在 ProtocolRegistry 中注册的协议）。",
-        "b6": "UserPreferences 中的用户偏好配置（策略、风险承受度、autocompounding）。",
-        "b7": "所有交易的时间戳（timestamps）。",
+        "b4": "基金参数：申报年龄、退休年龄、每月存款额、初始资本、选定的 DeFi 协议和时间锁期限。",
+        "b5": "选定的投资协议（MockAaveAdapter、MockOndoAdapter 或在 ProtocolRegistry 中注册的其他协议）。",
+        "b6": "UserPreferences 中的用户偏好设置（策略、风险承受能力、自动复利）。",
+        "b7": "所有交易的时间戳。",
         "b8": "发出的事件：FundCreated、Deposited、Withdrawn、UserConfigUpdated、DepositRouted 等。"
       },
       "s3": {
-        "title": "我们不收集的信息",
-        "b1": "姓名、身份证件或区块链以外可识别个人身份的数据。",
+        "title": "我们不会收集的信息",
+        "b1": "姓名、姓氏、身份证件或区块链之外的个人身份信息。",
         "b2": "实际地址、电子邮件、电话号码或联系方式。",
-        "b3": "区块链操作以外的生物特征或财务信息。",
+        "b3": "区块链操作之外的生物识别或财务信息。",
         "b4": "Cookie、设备标识符或网页浏览/会话数据。",
-        "b5": "地理位置数据。"
+        "b5": "地理定位数据。"
       },
       "s4": {
-        "title": "数据的公开性质",
-        "body": "公共区块链上的每笔交易本质上是公开的、永久的且不可更改的。任何人都可以通过区块浏览器查询钱包地址的交易历史。协议无法删除、修改或隐藏已记录的信息。"
+        "title": "数据的公共性质",
+        "body": "公共区块链上的每笔交易，就其性质而言，都是公开、永久且不可变的。任何人都可以通过区块浏览器查询钱包地址的交易历史。协议无法删除、修改或隐藏已记录的信息。"
       },
       "s5": {
-        "title": "信息使用方式",
-        "b1": "计算并执行存款、提款及收益分配。",
-        "b2": "验证 timelock 条件和提款资格。",
-        "b3": "通过 UserPreferences 将存款路由至所选 DeFi 协议。",
-        "b4": "记录退休基金的缴款历史。",
+        "title": "信息的使用",
+        "b1": "计算和执行存款、取款和收益分配。",
+        "b2": "验证时间锁条件和提款资格。",
+        "b3": "通过 UserPreferences 将存款路由到选定的 DeFi 协议。",
+        "b4": "记录对退休基金的贡献历史。",
         "b5": "计算内部财务预测。"
       },
       "s6": {
         "title": "第三方数据",
-        "body": "协议与第三方 DeFi 协议（Aave v3、Ondo USDY）交互，这些协议的隐私政策独立适用。在选择协议之前，请查阅相关政策。"
+        "body": "协议与第三方 DeFi 协议（Aave v3、Ondo USDY）交互，这些协议有自己的隐私政策，独立适用。在选择协议之前，请查看这些政策。"
       },
       "s7": {
         "title": "安全性",
-        "body": "协议的安全性基于智能合约的不可篡改性以及通过管理员角色和授权合约进行的访问控制。用户对其私钥的安全性负全责。"
+        "body": "协议的安全性基于智能合约的不可变性和通过管理员角色和授权合约进行的访问控制。用户对其私钥的安全性负全部责任。"
       },
       "s8": {
         "title": "用户权利",
-        "b1": "通过任何区块浏览器自由访问其基金的所有公开信息。",
-        "b2": "通过 UserPreferences 中的 revokeContract 撤销授权合约的访问权限。",
-        "b3": "在 timelock 条件允许的情况下，选择和修改投资协议及策略。"
+        "b1": "通过任何区块浏览器自由访问其基金的所有公共信息。",
+        "b2": "通过 UserPreferences 中的 revokeContract 撤销授权合约的权限。",
+        "b3": "选择并修改其投资协议和策略，但须遵守时间锁条件。"
       },
       "s9": {
         "title": "本政策的变更",
-        "body": "本政策可能会更新以反映协议或适用法规的变化。变更将发布在项目的官方存储库中。"
+        "body": "本政策可能会更新以反映协议或适用法规的变化。更改将发布在官方项目存储库中。"
       },
       "s10": {
         "title": "联系方式",
-        "body": "如有与本政策相关的疑问，请通过项目官方渠道或发送邮件至 contact@ethernal.fund 与我们联系。"
+        "body": "如有与本政策相关的疑问，请通过官方项目渠道或 contact@ethernal.fund 与我们联系。"
       }
     },
     "terms": {
-      "title": "使用条款与条件",
+      "title": "使用条款和条件",
       "s1": {
         "title": "条款接受",
-        "body": "通过与 FondoRetiro DeFi 的智能合约（包括 PersonalFundFactory、PersonalFund、Treasury、UserPreferences 和 ProtocolRegistry）交互，用户完全且无条件地接受本使用条款与条件。"
+        "body": "通过交互 FondoRetiro DeFi 智能合约，包括 PersonalFundFactory、PersonalFund、Treasury、UserPreferences 和 ProtocolRegistry，用户完全无条件接受这些使用条款和条件。"
       },
       "s2": {
         "title": "协议描述",
         "b1": "通过 PersonalFundFactory 创建个人退休基金。",
-        "b2": "存入和提取管理员配置的 USDC 或其他稳定资产。",
-        "b3": "自动或手动将存款路由至已注册的 DeFi 协议。",
+        "b2": "存入和提取 USDC 或管理员配置的其他稳定资产。",
+        "b3": "自动或手动将存款路由到注册的 DeFi 协议。",
         "b4": "通过 UserPreferences 管理用户偏好和投资策略。",
         "b5": "计算退休财务预测。",
-        "b6": "应用 1 至 40 年可配置的锁定期（timelock）。"
+        "b6": "应用可配置的锁定期（时间锁），期限在 1 到 40 年之间。"
       },
       "s3": {
         "title": "资格要求",
         "b1": "申报年龄在 18 至 70 岁之间。",
         "b2": "申报最低退休年龄为 60 岁。",
-        "b3": "在配置的最低和最高范围内提供初始资本。",
-        "b4": "承诺支付已配置的最低每月存款。",
-        "b5": "在 ProtocolRegistry 中选择活跃且经批准的投资协议。",
-        "b6": "不得拥有先前的活跃基金（一名用户同时只能持有一个活跃基金）。"
+        "b3": "提供在配置的最小和最大范围内的初始资本。",
+        "b4": "承诺配置的最低每月存款额。",
+        "b5": "在 ProtocolRegistry 中选择一个活跃且经批准的投资协议。",
+        "b6": "之前没有活跃的基金（用户同时只能持有一个活跃基金）。"
       },
       "s4": {
         "title": "智能合约的性质",
-        "b1": "智能合约一旦部署，便以自主、确定性且不可更改的方式执行规则。",
-        "b2": "任何人工中介均无法撤销、取消或修改已确认的交易。",
-        "b3": "合约可能包含错误或漏洞。使用即意味着承担此风险。",
-        "b4": "交互需要支付 gas 费，费用因情况而异，由用户自行承担。"
+        "b1": "智能合约一旦部署，就会自主、确定且不可变地执行规则。",
+        "b2": "没有任何人为中介可以撤销、取消或修改已确认的交易。",
+        "b3": "合约可能包含错误或漏洞。使用即表示承担此风险。",
+        "b4": "交互需要支付 Gas 费，其成本各不相同，由用户全权负责。"
       },
       "s5": {
-        "title": "Timelock 期限与提款",
-        "b1": "资金将在创建基金时选定的 timelock 期限内被锁定（1 至 40 年）。",
-        "b2": "在 timelock 期间，除合约规定的紧急情况外，不得提款。",
-        "b3": "timelock 到期后，用户可根据配置的分配规则进行提款。",
-        "b4": "协议不保证任何收益。利率是底层 DeFi 协议的估算值。"
+        "title": "时间锁期限和提款",
+        "b1": "在创建基金时选择的时间锁期限内（1 至 40 年），资金将被锁定。",
+        "b2": "在时间锁期间，除非合同规定的紧急情况，否则无法提取资金。",
+        "b3": "时间锁到期后，用户可以根据配置的分配规则进行提取。",
+        "b4": "协议不保证任何回报。利率是来自底层 DeFi 协议的估计值。"
       },
       "s6": {
         "title": "管理员角色",
-        "b1": "配置系统参数（资本范围、手续费、已启用协议）。",
+        "b1": "配置系统参数（资本范围、费用、启用的协议）。",
         "b2": "在 UserPreferences 中授权和撤销合约。",
         "b3": "更新辅助合约（DateTime、UserPreferences）。",
-        "b4": "找回错误发送的代币（recoverTokens 函数）。"
+        "b4": "恢复错误发送的代币（recoverTokens 函数）。"
       },
       "s7": {
         "title": "相关风险",
-        "b1": "智能合约风险：代码中的错误、漏洞利用或安全漏洞。",
-        "b2": "DeFi 协议风险：第三方协议可能遭受故障或黑客攻击。",
-        "b3": "监管风险：适用法规可能发生变化，影响使用的合法性。",
+        "b1": "智能合约风险：代码中的错误、漏洞利用或弱点。",
+        "b2": "DeFi 协议风险：第三方协议可能遭受失败或被黑客攻击。",
+        "b3": "监管风险：适用的法规可能会改变并影响使用的合法性。",
         "b4": "托管风险：私钥丢失意味着永久失去访问权限。",
-        "b5": "流动性风险：在 timelock 期间，资金不具有流动性。",
+        "b5": "流动性风险：在时间锁期间，资金不具有流动性。",
         "b6": "市场风险：稳定资产的价值可能受到极端情况的影响。",
-        "b7": "网络风险：拥堵、分叉或中断可能影响交易执行。"
+        "b7": "网络风险：拥塞、分叉或中断可能影响交易执行。"
       },
       "s8": {
         "title": "责任限制",
-        "body": "在法律允许的最大范围内，协议、其开发者、贡献者和管理员对因使用或无法使用协议而导致的任何直接、间接、附带或惩罚性损害不承担责任。"
+        "body": "在法律允许的最大范围内，协议、其开发者、贡献者和管理员不对因使用或无法使用协议而导致的任何直接、间接、偶然或惩罚性损害承担责任。"
       },
       "s9": {
         "title": "知识产权",
-        "body": "智能合约的源代码在官方存储库中以已发布的许可证提供。用户可根据该许可证的条款审计和学习代码。"
+        "body": "智能合约的源代码在官方存储库中根据已发布的许可证提供。用户可以根据该许可证的条款审计和研究代码。"
       },
       "s10": {
-        "title": "协议修改",
-        "body": "条款和协议可能会更新。新版本自发布在官方存储库之日起生效。继续使用即表示接受新条款。"
+        "title": "协议的修改",
+        "body": "条款和协议可能会更新。新版本自发布到官方存储库起生效。继续使用即表示接受新条款。"
       },
       "s11": {
         "title": "适用法律",
-        "body": "本条款受协议开发总部所在司法管辖区的法律约束。任何争议将提交该司法管辖区的主管法院解决。"
+        "body": "这些条款受协议开发总部所在地的法律管辖。任何争议均应提交该司法管辖区的有管辖权的法院。"
       }
     },
     "disclaimer": {
-      "title": "法律声明与免责声明",
-      "warning": "重要提示：在与协议交互之前，请完整阅读本文件。",
+      "title": "法律声明和免责声明",
+      "warning": "重要通知：在与协议交互之前，请完整阅读本文档。",
       "s1": {
         "title": "项目性质",
-        "body": "FondoRetiro DeFi 是一个基于公共区块链智能合约的去中心化金融（DeFi）基础设施项目。它不是受监管的金融机构、银行、保险公司，也不是任何国家担保的基金。当前版本包含用于测试环境的模拟合约（Mock），这些合约不产生真实收益。"
+        "body": "FondoRetiro DeFi 是一个基于公共区块链上的智能合约的去中心化金融基础设施项目。它不是受监管的金融机构、银行、保险公司或国家担保基金。当前版本包括用于测试环境的模拟合约，不会产生实际回报。"
       },
       "s2": {
         "title": "不构成财务建议",
-        "body": "协议的任何内容、功能、预测或计算均不构成财务、投资、法律、税务或任何其他专业性质的建议。在根据协议做出任何投资决策之前，请咨询合格的顾问。"
+        "body": "协议的任何内容、功能、预测或计算均不构成财务、投资、法律、税务或任何其他专业建议。在根据协议做出任何投资决定之前，请咨询合格的顾问。"
       },
       "s3": {
-        "title": "资金全损风险",
-        "b1": "本协议或底层智能合约中的漏洞、错误（bugs）或漏洞利用。",
+        "title": "资金完全损失的风险",
+        "b1": "本协议或底层协议的智能合约中的漏洞、错误或利用。",
         "b2": "重入攻击、预言机操纵、闪电贷攻击或其他 DeFi 攻击向量。",
         "b3": "与用户钱包相关联的私钥丢失或泄露。",
-        "b4": "分叉、51% 攻击或底层区块链网络的其他中断。",
-        "b5": "USDC 或其他稳定币在脱锚（depeg）情况下的价值损失。",
+        "b4": "底层区块链网络的分叉、51% 攻击或其他中断。",
+        "b5": "USDC 或其他稳定币在脱锚情况下的价值损失。",
         "b6": "阻止访问或使用协议的监管变化。",
-        "b7": "已集成的第三方 DeFi 协议的故障或破产。"
+        "b7": "集成的第三方 DeFi 协议失败或资不抵债。"
       },
       "s4": {
-        "title": "无收益保证",
-        "body": "协议不保证任何收益、利率或资本保值。显示的收益是基于模拟合约的估算，不代表合同承诺。在生产环境中，收益将完全取决于所选 DeFi 协议的表现。"
+        "title": "不保证业绩",
+        "body": "协议不保证任何回报、利率或资本保值。显示的回报是基于模拟合约的估计，不构成合同承诺。在生产环境中，回报将完全取决于所选 DeFi 协议的表现。"
       },
       "s5": {
         "title": "用户责任",
-        "b1": "其私钥和钱包的保管与安全。",
-        "b2": "验证其交互的合约地址。",
-        "b3": "理解已配置参数及其财务影响。",
-        "b4": "遵守其司法管辖区法律规定的税务义务。",
-        "b5": "核实在其所在国家使用 DeFi 协议的监管状态。",
-        "b6": "在进行存款之前正确授权（approve）USDC。"
+        "b1": "保管和保护其私钥和钱包。",
+        "b2": "验证与之交互的合约地址。",
+        "b3": "理解配置的参数及其财务影响。",
+        "b4": "遵守其管辖范围内的法律规定的纳税义务。",
+        "b5": "验证在其所在国家/地区使用 DeFi 协议的监管状态。",
+        "b6": "在存款前正确授权 USDC。"
       },
       "s6": {
         "title": "无存款保险",
-        "body": "存入的资金不受任何存款保险制度、国家担保或同等机制的保护。如发生资金损失，用户无权向任何保护机构提出索赔。"
+        "body": "存入的资金不受任何存款保险制度、国家担保或同等机制的保障。如果资金损失，用户无权向任何保护机构索赔。"
       },
       "s7": {
-        "title": "在受限司法管辖区的使用",
-        "body": "协议在某些司法管辖区可能不可用或属于违法行为。用户是核实其在所在国家或地区是否允许使用的唯一责任人。"
+        "title": "在受限司法管辖区使用",
+        "body": "该协议在某些司法管辖区可能不可用或非法。用户全权负责验证其使用在其国家或居住地是否被允许。"
       },
       "s8": {
         "title": "测试环境中的合约",
@@ -784,11 +841,11 @@
       },
       "s9": {
         "title": "一般免责声明",
-        "body": "在法律允许的最大范围内，协议、其开发者、贡献者、审计员和管理员对因使用或无法使用协议而产生的任何损害、损失不承担任何责任。使用风险由用户自行承担。"
+        "body": "在法律允许的最大范围内，协议、其开发者、贡献者、审计师和管理员不对因使用或无法使用协议而引起的损害、损失或伤害承担任何责任。使用风险完全由用户自行承担。"
       },
       "s10": {
         "title": "生效日期",
-        "body": "本法律声明自标题中所注明的日期起生效，并与使用条款与条件同步更新。"
+        "body": "本法律声明自标题中注明的日期起生效，并与使用条款和条件一起更新。"
       }
     }
   },
@@ -796,24 +853,24 @@
     "Calculator": "计算器",
     "inputs": "配置您的退休计划",
     "Desired Income": "期望月收入",
-    "Payment Years": "领取年限",
+    "Payment Years": "支付年数",
     "Current Age": "当前年龄",
     "Retirement Age": "退休年龄",
-    "Apy": "预期年化收益率 (%)",
+    "Apy": "预期 APY (%)",
     "Principal": "初始本金 (USDC)",
-    "result": "计算结果",
+    "result": "结果",
     "corpus": "所需本金总额",
-    "Monthly Needed": "每月所需存款",
-    "Total Deposit": "累计存入",
-    "Years Left": "距退休年数",
-    "Fund at Retirement": "退休时预计基金总额",
-    "Income for": "领取收入",
-    "Fee Row": "平台手续费",
-    "Initial Deposit": "首次存款明细",
-    "First Monthly": "首月存款",
-    "Total Approve": "授权总额",
+    "Monthly Needed": "每月所需",
+    "Total Deposit": "总存款额",
+    "Years Left": "距离退休年数",
+    "Fund at Retirement": "退休时预估基金",
+    "Income For": "收入年限",
+    "Fee Row": "平台费",
+    "Initial Deposit": "初始存款明细",
+    "First Monthly": "首次每月存款",
+    "Total Approve": "总授权金额",
     "Select Protocol": "选择协议 →",
-    "monthlyTooLow": "每月存款至少需要 ${{min}} USDC"
+    "monthlyTooLow": "每月存款必须至少为 {{min}} USDC"
   },
   "wizard": {
     "Select Protocol": "选择协议",
@@ -822,18 +879,19 @@
     "approveUsdc": "授权 USDC",
     "approving": "授权中…",
     "approved": "已授权 ✓",
-    "deployFund": "创建基金",
+    "deployFund": "部署基金",
     "deploying": "部署中…",
     "viewOnExplorer": "在浏览器中查看",
     "Calcular": "计算"
   },
   "beta": {
-    "bannerText": "测试版本 — 您的反馈帮助我们改进。",
+    "bannerText": "这是一个测试版 — 您的反馈帮助我们改进。",
     "bannerCta": "分享您的想法 →"
   },
   "ourStory": {
     "pageTitle": "我们的故事",
-    "metaDescription": "了解一次在布宜诺斯艾利斯街头与孩子的对话如何催生了 Ethernal Fund 的诞生——一个去中心化退休平台。"
+    "metaDescription": "了解布宜诺斯艾利斯街头与一个孩子的对话如何促成了 Ethernal Fund（一个去中心化的退休平台）的创建。",
+    "fullStory": "这一切始于一个下午，我们的创始人 Cristian F. Taborda 去学校接孩子。在 Rodríguez Peña 和 Rivadavia 大道的拐角处遇到退休人员的示威活动时，他的儿子一个天真的问题揭示了一个痛苦的现实：养老金体系辜负了他自己家族的几代人。那一刻，他心中燃起了深深的决心：创造一个真正可持续的替代方案。由此诞生了一个去中心化应用程序的想法，让每个人都可以计算、创建和管理自己的退休基金 — 有尊严且自由。"
   },
   "security": {
     "modalTitle": "安全与控制",
@@ -841,17 +899,17 @@
       "privacy": {
         "label": "隐私",
         "title": "零知识登录",
-        "description": "无需用户名或密码。无个人数据。仅通过钱包账户访问——无黑客攻击面，无可出售的数据。"
+        "description": "无需用户名或密码。无个人数据。仅通过钱包账户访问 — 没有黑客的攻击面，没有可以出售的数据。"
       },
       "sovereignty": {
         "label": "主权",
         "title": "不可追踪的资金",
-        "description": "匿名钱包账户：不可追踪且不可没收。没有腐败政客可以侵占您的储蓄——您的钱属于您，只属于您。"
+        "description": "匿名钱包账户：不可追踪且不可扣押。没有腐败的政客可以挪用您的储蓄 — 您的钱是您自己的，只属于您自己。"
       },
       "succession": {
         "label": "继承",
         "title": "自动智能合约",
-        "description": "无需继承程序或受益人身份确认。达到退休年龄时，智能合约自动将资金释放到钱包——硬件钱包或应用程序。"
+        "description": "无需继承程序或受益人身份证明。达到退休年龄后，智能合约会自动将资金释放到钱包 — 硬件钱包或应用程序。"
       }
     },
     "pill": {
@@ -859,26 +917,26 @@
       "noPersonalData": "无个人数据",
       "antiHack": "防黑客",
       "anonymous": "匿名",
-      "nonSeizable": "不可没收",
-      "noIntermediaries": "无中间商",
-      "noFormalities": "无繁文缛节",
+      "nonSeizable": "不可扣押",
+      "noIntermediaries": "无中介",
+      "noFormalities": "无手续",
       "autoRetirement": "自动退休",
       "smartContract": "智能合约"
     },
     "stat": {
-      "exposed": "暴露数据",
-      "identity": "需要身份验证",
+      "exposed": "暴露的数据",
+      "identity": "需要身份",
       "formalities": "继承手续",
       "zero": "零",
       "none": "无"
     },
     "shieldTitle": "非托管架构。",
-    "shieldDescription": "钱包持有者是唯一能够访问资金的人——Ethernal Fund 和任何第三方均无法干预、没收或重定向资产。",
+    "shieldDescription": "钱包持有者是唯一可以访问资金的人 — 无论是 Ethernal Fund 还是任何第三方都不能干预、扣押或重定向资产。",
     "disclaimer": "ETHERNAL FUND · 链上合约 · ARBITRUM · 非托管"
   },
   "notFound": {
     "title": "页面未找到",
-    "subtitle": "您查找的页面不存在。",
+    "subtitle": "您正在寻找的页面不存在。",
     "goHome": "返回首页"
   },
   "sale": {
@@ -886,7 +944,7 @@
       "title": "代币销售",
       "subtitle": "参与 ETRF 种子轮，这是首个去中心化个人退休基金的实用代币。",
       "brand": "Ethernal Fund · ETRF",
-      "disclaimer": "ETRF 是实用代币。参与种子轮存在资本损失风险。",
+      "disclaimer": "ETRF 是实用代币。参与种子轮涉及资本损失风险。",
       "links": {
         "whitepaper": "白皮书",
         "audit": "合约审计",
@@ -897,39 +955,39 @@
       "live": "● 进行中",
       "ended": "已结束",
       "price": "价格",
-      "perToken": "每枚 ETRF",
-      "raised": "已筹集",
+      "perToken": "每 ETRF",
+      "raised": "已募集",
       "hardCap": "硬顶",
-      "nextRoundPrice": "下轮价格",
-      "walletCap": "钱包上限",
+      "nextRoundPrice": "下一轮价格",
+      "walletCap": "钱包限额",
       "tokensRemaining": "剩余代币",
-      "cliffVesting": "{{cliff}}月锁定 · {{vesting}}月归属",
-      "roundClosed": "当前轮次已结束。"
+      "cliffVesting": "{{cliff}} 个月悬崖 · {{vesting}} 个月释放",
+      "roundClosed": "当前轮次已关闭。"
     },
     "buy": {
       "title": "USDC 金额",
       "max": "最大：{{amount}} USDC",
-      "youWillReceive": "你将收到",
-      "pricePerToken": "每代币价格",
-      "cliff": "锁定期",
-      "vesting": "归属期",
-      "vestingLinear": "{{months}} 个月线性归属",
+      "youWillReceive": "您将收到",
+      "pricePerToken": "代币价格",
+      "cliff": "悬崖期",
+      "vesting": "释放期",
+      "vestingLinear": "{{months}} 个月线性",
       "cliffMonths": "{{months}} 个月",
-      "walletCapNote": "每个钱包上限 {{cap}} USDC · 仅限 USDC",
+      "walletCapNote": "每钱包上限 {{cap}} USDC · 仅限 USDC",
       "needsApproval": "授权 USDC 并购买",
       "buy": "购买 ETRF",
       "approving": "正在授权 USDC...",
       "buying": "正在购买 ETRF...",
-      "confirmWallet": "请在钱包中确认...",
+      "confirmWallet": "请在您的钱包中确认...",
       "invalidAmount": "金额无效",
-      "enterAmount": "请输入金额",
+      "enterAmount": "输入金额",
       "step1": "1. 授权 USDC",
       "step2": "2. 购买 ETRF",
       "success": {
         "title": "购买成功",
-        "bought": "你购买了 {{amount}} ETRF",
-        "vestingNote": "你的归属期将开始计算。查看「我的代币」进行追踪。",
-        "buyMore": "继续购买"
+        "bought": "您购买了 {{amount}} ETRF",
+        "vestingNote": "您的释放期将开始。请查看“我的代币”以跟踪进度。",
+        "buyMore": "购买更多"
       },
       "error": {
         "rejected": "交易被拒绝"
@@ -937,56 +995,334 @@
     },
     "vesting": {
       "title": "我的 ETRF 代币",
-      "totalLabel": "ETRF 总量",
+      "totalLabel": "ETRF 总额",
       "legend": {
         "claimed": "已领取",
-        "vestedAvailable": "已归属可用",
+        "vestedAvailable": "已解锁可用",
         "locked": "已锁定"
       },
       "stats": {
-        "vested": "已归属",
+        "vested": "已解锁",
         "claimed": "已领取",
         "locked": "已锁定",
         "available": "可用"
       },
       "cliff": {
-        "inDays": "锁定期还剩 {{days}} 天 · 购买后 {{months}} 个月",
-        "description": "达到锁定期后将释放首批代币"
+        "inDays": "悬崖期 {{days}} 天后 · 从购买起 {{months}} 个月",
+        "description": "第一批代币将在达到悬崖期后释放"
       },
       "claim": "领取 {{amount}} ETRF",
       "availableIn": "{{days}} 天后可用",
-      "noTokens": "暂无可用代币",
-      "confirmWallet": "请在钱包中确认...",
+      "noTokens": "没有可用的代币",
+      "confirmWallet": "请在您的钱包中确认...",
       "claimed": "✓ 代币领取成功",
       "myTokens": "我的代币"
     },
     "walletGate": {
-      "title": "连接钱包以参与",
-      "subtitle": "访问 ETRF 种子轮，开始构建你的去中心化退休基金。",
+      "title": "连接您的钱包以参与",
+      "subtitle": "访问 ETRF 种子轮，开始构建您的去中心化退休基金。",
       "supportedWallets": "MetaMask、Coinbase、WalletConnect",
       "connect": "连接钱包",
-      "disclaimer": "仅限符合白皮书条款的合格用户。连接即表示您接受",
-      "terms": "条款与条件"
+      "disclaimer": "仅限符合白皮书条款的合格用户。通过连接，您接受",
+      "terms": "条款和条件"
     },
     "tokenomics": {
       "title": "代币经济",
       "subtitle": "ETRF 供应分配",
       "supplyTotal": "总供应量",
       "viewFull": "查看完整分配",
-      "distributionSubtitle": "供应分配",
+      "distributionSubtitle": "分配",
       "slices": {
-        "publicSale": "公开销售",
+        "publicSale": "公开发售",
         "team": "团队",
         "ecosystem": "生态系统",
-        "treasury": "财库",
+        "treasury": "国库",
         "community": "社区",
         "reserve": "储备"
       },
       "stats": {
         "totalSupply": "总供应量",
         "seedRound": "种子轮",
-        "seedPrice": "种子价格"
+        "seedPrice": "种子轮价格"
+      }
+    },
+    "agreement": {
+      "title": "ETRF 代币销售协议",
+      "subtitle": "Ethernal Fund · 种子轮 v1.0 · 自 2026 年 5 月起生效",
+      "warning": "重要提示：参与本次销售涉及投入资本完全损失的风险。ETRF 代币是实用代币，不构成金融工具或证券。",
+      "downloadSection": {
+        "title": "下载官方文件",
+        "english": "代币销售协议 v1.0 — 英文版 (PDF)",
+        "spanish": "代币销售协议 v1.0 — 西班牙文版 (PDF)",
+        "governingNote": "西班牙文版本为官方文本。如果翻译版本之间发生冲突，以西班牙文版本为准。"
+      },
+      "sections": {
+        "definitions": {
+          "title": "定义",
+          "items": [
+            "\"Ethernal Fund\" 或 \"发行人\"：建立在 Arbitrum 网络上的去中心化个人退休储蓄协议，由 Cristian F. Taborda 领导的创始团队开发和维护。",
+            "\"ETRF\"：Ethernal Fund 协议的原生实用代币，作为 Arbitrum 网络上的智能合约实现。",
+            "\"代币销售\" 或 \"种子轮\"：本文件中描述的 ETRF 代币的首次代币销售事件，对应于协议的第一轮融资。",
+            "\"参与者\"：在代币销售期间通过官方智能合约购买 ETRF 代币的任何自然人或法人。",
+            "\"释放\"：在悬崖期过后，在定义的时间内逐步线性释放 ETRF 代币的机制。",
+            "\"悬崖期\"：初始的完全代币锁定期，在此期间参与者不能领取其购买的任何代币。",
+            "\"USDC\"：Circle Financial, LLC 发行的 USD Coin 稳定币 — 本次代币销售唯一接受的支付方式。"
+          ]
+        },
+        "nature": {
+          "title": "ETRF 代币的性质",
+          "items": [
+            "ETRF 是专门设计用于 Ethernal Fund 协议生态系统内的实用代币。其主要功能是授予对协议功能的访问权限，包括参与治理、访问高级功能以及用作内部记账单位。",
+            "购买 ETRF 代币不构成：对证券、股票、债券或任何受监管金融工具的投资。",
+            "它不是对发行人利润、股息或现金流的参与。",
+            "它不是对 Ethernal Fund 的所有权、投票权或控制权。",
+            "它不是对经济回报、价值增值或未来流动性的承诺或保证。",
+            "ETRF 作为实用代币或证券的最终分类将取决于参与者的司法管辖区和适用的监管解释。"
+          ]
+        },
+        "conditions": {
+          "title": "参与条件",
+          "items": [
+            "年满 18 周岁或您居住司法管辖区的法定成年年龄。",
+            "不居住在或位于任何被排除的司法管辖区（美国、中国、朝鲜、伊朗、古巴、叙利亚、委内瑞拉以及任何受 OFAC 全面制裁的国家）。",
+            "拥有兼容的 EVM 钱包，其中包含交易所需的 USDC 余额。",
+            "已完整阅读、理解并接受本文件、白皮书和隐私政策。",
+            "未被列入任何国际制裁名单（OFAC、联合国、欧盟或其他）。",
+            "使用合法且可验证来源的资金参与。"
+          ]
+        },
+        "seedRound": {
+          "title": "代币销售条件 — 种子轮",
+          "items": [
+            "可用代币：100,000,000 ETRF（一亿枚代币）。",
+            "代币价格：0.01 美元，以 Arbitrum 网络上的 USDC 支付。",
+            "硬顶和每钱包上限：部署时在智能合约中定义的最大金额。",
+            "接受的付款：仅限 USDC。",
+            "悬崖期和释放期：根据部署时在智能合约中定义的不可变参数。",
+            "在悬崖期内，不能领取任何代币。悬崖期过后，代币在释放期内线性释放。时间表从每个参与者个人购买之时开始运行。",
+            "未领取的代币不会过期，并保留在合约中。"
+          ]
+        },
+        "irreversibility": {
+          "title": "交易的不可逆性",
+          "body": "在 Arbitrum 区块链上执行的所有交易都是不可逆的。一旦 USDC 被转移到智能合约，就没有退款、撤销或取消机制。发行人不具备逆转链上交易的技术能力。"
+        },
+        "useOfFunds": {
+          "title": "募集资金的使用",
+          "items": [
+            "由顶级公司进行多次智能合约安全审计。",
+            "委托进行经济和代币经济审计。",
+            "技术开发和协议增长。",
+            "流动性储备和运营。",
+            "主要审计完成后将发布资金使用报告。"
+          ]
+        },
+        "risks": {
+          "title": "风险因素",
+          "items": [
+            "资本完全损失：ETRF 代币的价值可能降至零。参与者必须具备承受投资金额完全损失的经济能力。",
+            "智能合约风险：没有审计能保证没有漏洞。漏洞利用可能导致部分或全部资金损失。",
+            "监管风险：加密资产的监管框架不确定且不断变化。",
+            "流动性风险：不能保证 ETRF 代币会在任何交易所上市，也不能保证存在具有足够流动性的二级市场。",
+            "技术风险：协议依赖于 Arbitrum 和 Ethereum 网络。这些网络的故障或攻击可能影响协议的可用性。",
+            "项目风险：团队可能因技术、财务、监管或个人原因无法执行路线图。",
+            "托管风险：代币保存在参与者的钱包中。发行人无法访问私钥。钱包访问权限丢失意味着代币的永久丢失。"
+          ]
+        },
+        "kyc": {
+          "title": "KYC 和反洗钱",
+          "body": "发行人保留随时实施 KYC/AML 流程的权利。参与者声明所使用的资金来自合法活动，同意在要求时提供身份证明文件，并接受如果发现可疑活动，发行人可能会阻止代币领取。"
+        },
+        "ip": {
+          "title": "知识产权",
+          "body": "所有源代码、智能合约、用户界面、白皮书、“Ethernal Fund”品牌和徽标均为发行人的知识产权。购买 ETRF 代币并不授予对该知识产权的任何权利。"
+        },
+        "liability": {
+          "title": "责任限制",
+          "body": "在法律允许的最大范围内，发行人、其团队、合作者、审计师和顾问不对以下情况负责：因 ETRF 代币价值下跌造成的损失；因智能合约中的错误或漏洞造成的损失，即使经过审计；因钱包访问权限丢失造成的损失；因监管变化造成的损失；或任何间接的、后果性的、惩罚性的或特殊的损害。参与本次代币销售的风险由参与者自行承担。"
+        },
+        "amendments": {
+          "title": "本条款的修订",
+          "body": "发行人可随时修改这些条款，通过 ethernal.fund 和官方协议渠道进行通知。修改将在发布 48 小时后生效。已在链上执行的释放和悬崖条件是不可变的。"
+        },
+        "governingLaw": {
+          "title": "管辖法律和争议解决",
+          "items": [
+            "本文件应受适用于国际贸易和数字资产合同的一般法律原则管辖。",
+            "双方应首先通过直接沟通寻求友好解决。如果在 30 个工作日内未能达成协议，任何争议应提交国际商会 (ICC) 规则下的国际仲裁。",
+            "本文件以西班牙语起草。如果翻译版本与西班牙语版本发生冲突，应以西班牙语版本为准。"
+          ]
+        },
+        "general": {
+          "title": "一般规定",
+          "body": "本文件连同白皮书和隐私政策构成发行人与参与者之间关于代币销售的完整协议。如果任何条款被宣布无效或不可执行，其余条款将继续完全有效。"
+        }
       }
     }
+  },
+  "whitepaper": {
+    "title": "白皮书",
+    "subtitle": "Ethernal Fund · 自 2026 年 5 月起生效",
+    "downloadSection": {
+      "title": "下载官方文件",
+      "english": "白皮书 v1.1 — 英文版 (PDF)",
+      "spanish": "白皮书 v1.1 — 西班牙文版 (PDF)",
+      "governingNote": "西班牙文版本为官方文本。如果翻译版本之间发生冲突，以西班牙文版本为准。"
+    },
+    "sections": {
+      "executiveSummary": {
+        "title": "执行摘要",
+        "body": "Ethernal Fund 协议是一个建立在区块链（Arbitrum / Polygon）上的去中心化个人退休基金系统，允许世界上任何人自主、透明地创建和管理自己的退休基金，无需传统的金融中介。该协议结合了用 Vyper 编写的智能合约以及对成熟 DeFi 协议（Aave v3）和代币化现实世界资产（Ondo USDY / 美国国库券）的集成，为 USDC 存款提供安全的收益。"
+      },
+      "problemSolution": {
+        "title": "问题与解决方案",
+        "items": [
+          "传统的养老金体系面临结构性危机：日益增长的赤字、侵蚀购买力的通货膨胀以及日益严重的劳动非正规性。在拉丁美洲，只有不到 40% 的工人积极向正规养老金体系缴费。",
+          "传统的储蓄工具存在重大障碍：高门槛、不透明的费用、对中介的依赖以及地理上的限制。",
+          "Ethernal Fund 协议通过智能合约解决了这些限制，允许每个用户在区块链上创建自己的个人退休基金，使用自定义参数，并且不将其资产控制权交给任何第三方。",
+          "该协议利用 DeFi 提供非托管、透明、无国界、可编程和可组合的长期储蓄金融工具。"
+        ]
+      },
+      "architecture": {
+        "title": "协议架构",
+        "items": [
+          "PersonalFund.vy — 核心合约。每个用户都有自己的部署实例（最小代理 EIP-1167）。管理完整的基金生命周期。",
+          "PersonalFundFactory.vy — 使用最小代理模式（EIP-1167 / 克隆）部署新的 PersonalFund 实例，显著降低 Gas 成本。",
+          "Treasury.vy — 管理协议费用收集（默认 5%，最高 10%），并作为提前提款请求的仲裁者。",
+          "ProtocolRegistry.vy — 可用于投资的 DeFi 协议的精选目录，包含元数据：名称、类别、估计 APY、风险级别、TVL 和验证状态。",
+          "AaveV3Adapter.vy — 连接到 Arbitrum One 上 Aave v3 借贷市场的桥接器。",
+          "OndoUSDYAdapter.vy — 用于投资 USDY 的适配器，USDY 是一种由短期美国国库券支持的代币化本票（历史 APY：4.5%–5.5%）。"
+        ]
+      },
+      "lifecycle": {
+        "title": "个人基金生命周期",
+        "items": [
+          "基金创建：用户设置：本金（0–100,000 USDC）、每月存款额、当前年龄、退休年龄、期望月收入和时间锁年数（15–50）。",
+          "积累阶段：用户在锁定期内进行定期每月存款，并从 DeFi 协议中积累收益。",
+          "提前提款：需要通过 requestEarlyRetirement() 获得协议国库的批准。管理员可以批准或拒绝请求。",
+          "紧急提款：管理员可以宣布紧急情况，并设置 48 小时的强制等待期，之后用户可以执行 emergencyWithdraw()。",
+          "退休阶段：时间锁完成后，所有者激活 retirement()，系统自动配置每月自动提款。"
+        ]
+      },
+      "tokenomics": {
+        "title": "ETRF 代币 — 代币经济",
+        "items": [
+          "ETRF 仅是实用代币。它不代表股权、债务、股息或任何利润预期。总供应量：1,000,000,000 ETRF（固定，部署后不可铸造）。",
+          "高级模式：持有最低数量 ETRF 的用户可以解锁高级功能（报告、投资策略、警报）。该代币仅用于验证，不会被消耗。",
+          "费用折扣：用户可以使用 ETRF 而不是 USDC 支付管理费，并获得折扣。使用的 ETRF 代币将被销毁，从而减少流通供应量。",
+          "公开发售：30%（300,000,000）— 通过 SaleETRF → VestingETRF 分发。",
+          "团队：20%（200,000,000）— 1 年悬崖期 + 25% 立即解锁 + 75% 在 3 年内线性解锁。",
+          "生态系统：20%（200,000,000）— 激励、合作伙伴关系、集成。",
+          "国库：15%（150,000,000）。社区：10%（100,000,000）。储备：5%（50,000,000）。"
+        ]
+      },
+      "security": {
+        "title": "安全与风险管理",
+        "items": [
+          "所有核心合约均使用 Vyper 编写，该语言禁止多重继承、运算符重载、递归和内联修饰符 — 显著减少了攻击面。",
+          "智能合约风险：没有代码是 100% 无漏洞的。如果发生漏洞利用，资金可能会丢失。",
+          "DeFi 协议风险：Aave v3 和 Ondo USDY 是外部协议。这些协议中的漏洞利用可能会影响存入的资金。",
+          "稳定币脱锚风险：USDC 在极端情况下可能失去与美元的平价。",
+          "监管风险：数字资产的法律框架不确定，且因司法管辖区而异。",
+          "管理员风险：在协议未完全去中心化之前，依赖 Ethernal Foundation 进行关键的管理操作。"
+        ]
+      },
+      "legal": {
+        "title": "法律和监管框架",
+        "items": [
+          "核心合约（PersonalFund、Factory、Treasury、适配器）在 2030 年 12 月 31 日之前根据 BUSL-1.1 获得许可，之后将迁移到 GPL-2.0+。",
+          "基础设施和代币合约（ProtocolRegistry、UserPreferences、ETRF、SaleETRF、VestingETRF）根据 Apache-2.0 或 MIT 永久获得许可。",
+          "该协议以非托管方式运行，不需要在智能合约层面进行用户身份识别。",
+          "时间锁机制（15–50 年）通过架构设计（\"通过设计实现摩擦\"）包含了反洗钱合规属性。"
+        ]
+      },
+      "roadmap": {
+        "title": "路线图",
+        "items": [
+          "2026 年第二季度 — 测试网：在 Arbitrum Sepolia 上完整部署。安全审计。漏洞赏金计划。",
+          "2026 年第三季度 — 主网 v1：在 Arbitrum One 上启动。ETRF 公开发售（种子轮）。首批用户资金。",
+          "2026 年第四季度 — 扩展：集成新的 DeFi 协议。在 Polygon 上部署。更多 RWA 适配器。",
+          "2027 年 — 去中心化：协议注册表的链上治理。减少管理员权限。",
+          "2030 年 12 月 31 日 — 开源：从 BUSL-1.1 迁移到 GPL-2.0+ 许可证。完全开源的协议。"
+        ]
+      },
+      "team": {
+        "title": "团队与联系方式",
+        "body": "首席架构师：Cristian F. Taborda — Ethernal Foundation。电子邮件：contact@ethernal.fund | 法律事务：legal@ethernal.foundation | 网站：ethernal.fund | 文档：docs.ethernal.fund（即将推出）。"
+      },
+      "disclaimer": {
+        "title": "法律免责声明",
+        "body": "本白皮书仅用于提供有关 Ethernal Fund 协议和 ETRF 代币的信息。它不构成购买证券或金融工具的要约或招揽。投资加密货币和 DeFi 协议涉及重大风险，包括投入资本完全损失的可能性。Ethernal Foundation 不对直接、间接、偶然或后果性损失承担任何责任。"
+      }
+    }
+  },
+  "risk": {
+    "title": "风险披露",
+    "subtitle": "在使用 Ethernal Fund 之前，请阅读并理解这些风险。它们以通俗易懂的语言书写，以便您做出明智的决定。",
+    "criticalWarning": "本协议不受任何金融当局的监管或监督。不保证资金可恢复。它不是银行，不是受监管的投资基金，也不受任何存款保险的保障。仅使用您能够承受其完全损失的资金。",
+    "severityLegend": "严重程度等级",
+    "severity": {
+      "critical": "严重风险",
+      "high": "高风险",
+      "medium": "中等风险"
+    },
+    "guaranteed": {
+      "title": "协议设计所保证的内容",
+      "items": [
+        "资金总是返还给基金所有者 — 永远不会给第三方。",
+        "管理员不能将您的资金转移到除您以外的任何钱包。",
+        "任何紧急提款都有 48 小时的等待期，在此期间您可以取消它。",
+        "最高费用在合约中固定，不能超过 10%，无论基金会如何决定。",
+        "代码是公开的，任何人都可以在区块链上验证。"
+      ]
+    },
+    "questions": {
+      "title": "在继续之前，请问问自己：",
+      "items": [
+        "您是否理解您可能会损失 100% 的存入资金？",
+        "您存入的资金是您 15 年或更长时间内不需要的吗？",
+        "您是否理解区块链交易是不可逆的？",
+        "您知道什么是智能合约及其风险吗？",
+        "如果您有疑问，是否咨询过财务或法律顾问？"
+      ],
+      "footer": "如果您对以上任何问题的回答为“否”，我们建议您在存入资金之前多花些时间。您可以阅读技术白皮书或通过 contact@ethernal.fund 联系我们。"
+    },
+    "risks": [
+      {
+        "title": "您可能会损失您存入的一切",
+        "summary": "存入协议的资金可能会完全损失。",
+        "detail": "Ethernal Fund 在区块链智能合约上运行。如果代码中存在错误、安全漏洞或漏洞利用 — 即使经过审计 — 资金也可能不可逆地丢失。没有保险、国家担保或恢复机制。在存款之前，请确保您理解您完全承担该风险。"
+      },
+      {
+        "title": "交易是不可逆的",
+        "summary": "一旦您将 USDC 发送到协议，就不可能退款。",
+        "detail": "区块链操作是永久性的。该协议没有技术能力来撤销交易、错误地返还资金或处理退款。如果您将资金发送到错误的地址、使用错误的网络或在交易中犯任何错误，这些资金将永久丢失。"
+      },
+      {
+        "title": "您的资金将被锁定多年",
+        "summary": "时间锁至少为 15 年。未经协议批准，您不能提前提款。",
+        "detail": "创建退休基金时，您选择 15 到 50 年之间的锁定期。在此期间，除非请求并获得 Ethernal Foundation 的明确批准，否则您在任何情况下都不能提取您的资金。协议可能会拒绝该请求。请将此视为一个非常长期的承诺：不适合您在未来几年可能需要的资金。"
+      },
+      {
+        "title": "集成的 DeFi 协议也有风险",
+        "summary": "Aave v3 和 Ondo USDY 是外部协议。它们中的问题也会影响您。",
+        "detail": "Ethernal 将您的资金投资于 Aave v3（借贷）和 Ondo USDY（代币化国库券）等协议。这些是外部协议，具有其自身的风险：漏洞利用、紧急暂停、治理变更或流动性问题。这些协议中的任何一个发生事故都可能减少或消除您的余额，无论 Ethernal 的正确操作如何。"
+      },
+      {
+        "title": "USDC 可能会失去其价值",
+        "summary": "USDC 是一种稳定币，但不能保证始终与美元 1:1 挂钩。",
+        "detail": "尽管 USDC 旨在保持与美元的平价，但存在风险情景：Circle（发行人）的流动性问题、影响储备的监管变化或系统性市场事件。2023 年 3 月，USDC 暂时失去了其平价。您在协议中的余额以 USDC 计价，因此任何脱钩都会直接影响您。"
+      },
+      {
+        "title": "监管框架可能会改变",
+        "summary": "拉丁美洲和世界范围内针对加密资产的规则正在不断演变。",
+        "detail": "阿根廷、墨西哥、巴西和其他国家的监管机构正在制定数字资产的法律框架。监管变化可能会影响您使用协议的能力、您回报的税务分类或协议在您所在国家/地区的运营。由于新的法律要求，协议可能需要修改或限制其运营。"
+      },
+      {
+        "title": "协议管理员对您的基金的权力有限",
+        "summary": "Ethernal Foundation 可以在紧急情况下进行干预。",
+        "detail": "尽管 Ethernal Fund 是一个非托管协议，但基金会保留管理员角色，具有特定能力：可以批准或拒绝提前提款请求，宣布紧急情况并设置 48 小时等待期，以及管理哪些 DeFi 协议可用。这些功能出于安全和合规原因而存在。然而，资金总是返还给所有者 — 管理员不能将其转移给第三方。"
+      }
+    ]
   }
 }

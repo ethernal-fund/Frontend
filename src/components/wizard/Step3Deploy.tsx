@@ -1,33 +1,54 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { useTranslation }  from 'react-i18next';
-import { useChainId }      from 'wagmi';
-import { useNavigate }     from 'react-router-dom';
-import { useQueryClient }  from '@tanstack/react-query';
+/**
+ * Step3Deploy.tsx
+ *
+ * Responsibilities:
+ *  1. Drive the two on-chain transactions (approve + deploy) via useDeployFund.
+ *  2. Once the fund address is confirmed on-chain, run the post-deploy flow:
+ *       auth → register in DB → sync → poll until GET /funds/me returns data.
+ *
+ * Architecture notes:
+ *  - useDeployFund handles ONLY on-chain operations (no DB calls).
+ *  - This component owns ALL database registration logic.
+ *  - The useEffect that triggers runPostDeployFlow depends on BOTH `isSuccess`
+ *    AND `fundAddr` to prevent the race condition where isSuccess fires before
+ *    the fund address propagates from the hook's local state.
+ *  - hasTriggeredPostFlow ref prevents double-execution on re-renders.
+ */
+
+import { useEffect, useRef, useCallback, useState } from 'react'
+import { useTranslation }  from 'react-i18next'
+import { useChainId }      from 'wagmi'
+import { useNavigate }     from 'react-router-dom'
+import { useQueryClient }  from '@tanstack/react-query'
 import {
   ExternalLink, CheckCircle, Loader2, AlertCircle,
   LayoutDashboard, RefreshCw, ShieldCheck,
-} from 'lucide-react';
+} from 'lucide-react'
 
-import { useWizardStore }   from '@/stores/wizardStore';
-import { useDeployFund }    from '@/hooks/useDeployFund';
-import { useSiweAuth }      from '@/hooks/useSiweAuth';
-import { useAuthStore }     from '@/stores/authStore';
-import { fundsService }     from '@/services/fundsService';
-import { FUND_QUERY_KEY }   from '@/hooks/useMyFund';
-import { fmtUsdc }          from '@/lib/calculator';
-import { getExplorerUrl, getExplorerAddressUrl } from '@/config/chains';
-import { cn }               from '@/lib/cn';
-import { ROUTES }           from '@/router/routes';
+import { useWizardStore }   from '@/stores/wizardStore'
+import { useDeployFund }    from '@/hooks/useDeployFund'
+import { useSiweAuth }      from '@/hooks/useSiweAuth'
+import { useAuthStore }     from '@/stores/authStore'
+import { fundsService }     from '@/services/fundsService'
+import { FUND_QUERY_KEY }   from '@/hooks/useMyFund'
+import { fmtUsdc }          from '@/lib/calculator'
+import { getExplorerUrl, getExplorerAddressUrl } from '@/config/chains'
+import { cn }               from '@/lib/cn'
+import { ROUTES }           from '@/router/routes'
 
-const MAX_POLL_ATTEMPTS  = 15;
-const POLL_INTERVAL_MS   = 4_000;
-const MAX_SYNC_RETRIES   = 3;
-const SYNC_RETRY_DELAY   = 2_000;
-const MAX_LOGIN_ATTEMPTS = 2;
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const MAX_POLL_ATTEMPTS  = 15
+const POLL_INTERVAL_MS   = 4_000
+const MAX_SYNC_RETRIES   = 3
+const SYNC_RETRY_DELAY   = 2_000
+const MAX_LOGIN_ATTEMPTS = 2
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Step3Props {
-  onBack:    () => void;
-  onSuccess: () => void;
+  onBack:    () => void
+  onSuccess: () => void
 }
 
 type PostDeployStep =
@@ -39,72 +60,96 @@ type PostDeployStep =
   | 'ready'
   | 'auth_failed'
   | 'reg_failed'
-  | 'sync_failed';
+  | 'sync_failed'
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
-  const { t }       = useTranslation();
-  const chainId     = useChainId();
-  const navigate    = useNavigate();
-  const queryClient = useQueryClient();
+  const { t }       = useTranslation()
+  const chainId     = useChainId()
+  const navigate    = useNavigate()
+  const queryClient = useQueryClient()
 
-  const { calculator, result, selectedProtocol, prevStep, fundAddr: storeFundAddr } = useWizardStore();
-  const { status, txHash, errorMsg, approveUsdc, deployFund, approved } = useDeployFund();
-  const { login }       = useSiweAuth();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  // Wizard state — for display only (not for fundAddr resolution)
+  const { calculator, result, selectedProtocol, prevStep } = useWizardStore()
 
-  const [postStep,   setPostStep]   = useState<PostDeployStep>('idle');
-  const [syncErrMsg, setSyncErrMsg] = useState<string | null>(null);
+  // useDeployFund now sets status='success' immediately after extracting the
+  // fund address — no DB work inside the hook.
+  const {
+    status,
+    txHash,
+    errorMsg,
+    approveUsdc,
+    deployFund,
+    approved,
+    fundAddr: hookFundAddr,   // ← prefer hook's local state over store
+  } = useDeployFund()
 
-  const pollRef  = useRef<ReturnType<typeof setInterval> | null>(null);
-  const attempts = useRef(0);
+  // Fallback to store value in the unlikely case hookFundAddr is null but the
+  // store was already updated (e.g. after a page remount mid-flow).
+  const storeFundAddr = useWizardStore((s) => s.fundAddr)
+  const fundAddr      = hookFundAddr ?? storeFundAddr ?? null
 
-  const fundAddr     = storeFundAddr ?? null;
-  const totalApprove = calculator.principal + (result?.monthlyGross ?? 0);
-  const isDeploying  = status === 'approving' || status === 'deploying';
-  const isSuccess    = status === 'success';
-  const isError      = status === 'error';
+  const { login }       = useSiweAuth()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
-  // Post-deploy flow 
-  // Orden:
-  //   1. Asegurar autenticación (SIWE). Reintenta MAX_LOGIN_ATTEMPTS veces
-  //      antes de abortar — el flujo anterior abortaba en el primer fallo.
-  //   2. POST /funds/register  (con reintentos internos en fundsService)
-  //      409 = ya existe = ok.  Si falla, fundsService lo guarda en
-  //      localStorage y retryPendingRegister() lo reintentará en el
-  //      próximo login.
-  //   3. POST /funds/sync      (hasta MAX_SYNC_RETRIES con backoff)
-  //   4. Poll GET /funds/me    hasta que aparezca el registro o se agoten
-  //      los intentos.
+  const [postStep,   setPostStep]   = useState<PostDeployStep>('idle')
+  const [syncErrMsg, setSyncErrMsg] = useState<string | null>(null)
+
+  const pollRef               = useRef<ReturnType<typeof setInterval> | null>(null)
+  const attempts              = useRef(0)
+  // Prevents double-execution if the component re-renders while flow is running
+  const hasTriggeredPostFlow  = useRef(false)
+
+  const isDeploying = status === 'approving' || status === 'deploying'
+  const isSuccess   = status === 'success'
+  const isError     = status === 'error'
+
+  const totalApprove = calculator.principal + (result?.monthlyGross ?? 0)
+
+  // ── Post-deploy flow ──────────────────────────────────────────────────────
+  //
+  // Order:
+  //   1. Ensure SIWE auth (up to MAX_LOGIN_ATTEMPTS).
+  //      On failure: save to pending queue; show degraded UI.
+  //   2. POST /funds/register (internal retry + localStorage queue on failure).
+  //      409 = already exists = OK.
+  //   3. POST /funds/sync (up to MAX_SYNC_RETRIES with backoff).
+  //   4. Poll GET /funds/me until record appears or attempts are exhausted.
+
   const runPostDeployFlow = useCallback(async () => {
+    // This guard is the ultimate safety net, but the useEffect dependency
+    // array is the primary guard (fundAddr must be non-null).
     if (!fundAddr || !result || !selectedProtocol) {
-      console.warn('[Step3Deploy] runPostDeployFlow llamado sin fundAddr — abortando');
-      return;
+      console.warn('[Step3Deploy] runPostDeployFlow: missing required state — aborting')
+      return
     }
 
-    // Step 1: autenticar con reintentos 
+    // ── Step 1: Auth ────────────────────────────────────────────────────────
     if (!isAuthenticated) {
-      setPostStep('authenticating');
+      setPostStep('authenticating')
 
-      let loginOk = false;
+      let loginOk = false
       for (let attempt = 0; attempt < MAX_LOGIN_ATTEMPTS; attempt++) {
         try {
-          await login();
-          loginOk = true;
-          break;
+          await login()
+          loginOk = true
+          break
         } catch (authErr) {
-          console.warn(`[Step3Deploy] SIWE intento ${attempt + 1} fallido:`, authErr);
+          console.warn(`[Step3Deploy] SIWE attempt ${attempt + 1} failed:`, authErr)
           if (attempt < MAX_LOGIN_ATTEMPTS - 1) {
-            // Pequeña pausa antes de reintentar para que el usuario pueda
-            // reaccionar si rechazó la firma por error.
-            await new Promise((r) => setTimeout(r, 1_500));
+            await new Promise((r) => setTimeout(r, 1_500))
           }
         }
       }
 
       if (!loginOk) {
-        console.warn('[Step3Deploy] Auth fallida tras todos los reintentos — guardando en cola pendiente');
+        // Auth failed — save to pending queue so it retries on next login.
+        // fundsService.registerFund already persists to localStorage on failure.
+        console.warn('[Step3Deploy] Auth failed after all attempts — queuing register')
         fundsService.registerFund({
           contract_address:       fundAddr,
+          chain_id:               chainId,
           principal:              calculator.principal,
           monthly_deposit:        result.monthlyGross,
           desired_monthly_income: calculator.desiredMonthlyIncome,
@@ -114,23 +159,25 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
           apy_percent:            calculator.apyPercent,
           protocol_address:       selectedProtocol.address,
         }).catch(() => {
-          // registerFund ya guarda en localStorage si falla — ignorar el error aquí
-        });
+          // registerFund already saves to localStorage on failure — swallow here
+        })
         setSyncErrMsg(
-          'No se pudo autenticar. El fondo existe on-chain y se registrará automáticamente ' +
-          'la próxima vez que inicies sesión.',
-        );
-        setPostStep('auth_failed');
-        return;
+          'Authentication failed. Your fund exists on-chain and will be ' +
+          'registered automatically on your next login.',
+        )
+        setPostStep('auth_failed')
+        return
       }
     }
 
-    // Step 2: registrar en DB 
-    setPostStep('registering');
-    let regFailed = false;
+    // ── Step 2: Register in DB ──────────────────────────────────────────────
+    setPostStep('registering')
+    let regFailed = false
+
     try {
       await fundsService.registerFund({
         contract_address:       fundAddr,
+        chain_id:               chainId,
         principal:              calculator.principal,
         monthly_deposit:        result.monthlyGross,
         desired_monthly_income: calculator.desiredMonthlyIncome,
@@ -139,155 +186,191 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         payment_years:          calculator.paymentYears,
         apy_percent:            calculator.apyPercent,
         protocol_address:       selectedProtocol.address,
-      });
+      })
     } catch (regErr: unknown) {
-      const httpStatus = (regErr as { response?: { status?: number } })?.response?.status;
-      if (httpStatus === 409 || httpStatus === 200) {
-        // 409 = el registro ya existe (deploy duplicado o reintento exitoso previo)
-        console.info('[Step3Deploy] registerFund devolvió', httpStatus, '— tratado como éxito');
-      } else {
-        regFailed = true;
-        // fundsService ya guardó el payload en localStorage para reintento
-        console.warn('[Step3Deploy] registerFund falló — payload guardado en cola pendiente:', regErr);
-      }
+      // fundsService already handles 409 as success internally.
+      // Any error reaching here is a genuine failure; payload is already queued.
+      regFailed = true
+      console.warn('[Step3Deploy] registerFund failed — payload queued:', regErr)
     }
 
-    // Step 3: sincronizar datos on-chain 
-    setPostStep('syncing');
-    let synced = false;
+    // ── Step 3: Sync on-chain data ──────────────────────────────────────────
+    setPostStep('syncing')
+    let synced = false
+
     for (let attempt = 0; attempt < MAX_SYNC_RETRIES; attempt++) {
       try {
-        await fundsService.syncFund(fundAddr);
-        synced = true;
-        break;
+        await fundsService.syncFund(fundAddr)
+        synced = true
+        break
       } catch (syncErr) {
-        console.warn(`[Step3Deploy] sync intento ${attempt + 1} fallido:`, syncErr);
+        console.warn(`[Step3Deploy] sync attempt ${attempt + 1} failed:`, syncErr)
         if (attempt < MAX_SYNC_RETRIES - 1) {
-          await new Promise((r) => setTimeout(r, SYNC_RETRY_DELAY * (attempt + 1)));
+          await new Promise((r) => setTimeout(r, SYNC_RETRY_DELAY * (attempt + 1)))
         }
       }
     }
 
     if (!synced && regFailed) {
       setSyncErrMsg(
-        'Registro y sincronización fallaron. El fondo existe on-chain; ' +
-        'se registrará automáticamente la próxima vez que inicies sesión.',
-      );
-      setPostStep('sync_failed');
-      return;
+        'Registration and sync failed. Your fund exists on-chain and will ' +
+        'appear in the dashboard after your next login.',
+      )
+      setPostStep('sync_failed')
+      return
     }
 
     if (!synced) {
       setSyncErrMsg(
-        'No se pudo sincronizar. El fondo existe on-chain y aparecerá en el Dashboard pronto.',
-      );
-      setPostStep('sync_failed');
-      return;
+        'Sync failed. Your fund exists on-chain and will appear in the dashboard shortly.',
+      )
+      setPostStep('sync_failed')
+      return
     }
 
     if (regFailed) {
       setSyncErrMsg(
-        'El registro en DB está pendiente, pero la sincronización fue exitosa. ' +
-        'El fondo aparecerá en el Dashboard al iniciar sesión nuevamente.',
-      );
-      setPostStep('reg_failed');
-      return;
+        'DB registration is queued. Sync succeeded — your fund will appear soon.',
+      )
+      setPostStep('reg_failed')
+      // Don't return — continue to poll so the user gets feedback if it works
     }
 
-    // Step 4: poll hasta que GET /funds/me devuelva el registro
-    setPostStep('polling');
-    attempts.current = 0;
+    // ── Step 4: Poll until GET /funds/me returns the record ────────────────
+    setPostStep('polling')
+    attempts.current = 0
 
-    await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY });
+    await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY })
+
     pollRef.current = setInterval(async () => {
-      attempts.current += 1;
+      attempts.current += 1
       try {
         const record = await queryClient.fetchQuery({
-          queryKey: FUND_QUERY_KEY,
+          queryKey:  FUND_QUERY_KEY,
           staleTime: 0,
-        });
+        })
         if (record || attempts.current >= MAX_POLL_ATTEMPTS) {
-          clearInterval(pollRef.current!);
-          setPostStep(record ? 'ready' : 'sync_failed');
-          if (!record) {
-            setSyncErrMsg('El fondo no apareció en la base de datos aún. Podés ir al Dashboard igual.');
+          clearInterval(pollRef.current!)
+          if (record) {
+            setPostStep('ready')
+          } else {
+            setPostStep('sync_failed')
+            setSyncErrMsg(
+              'Fund not yet visible in the database. ' +
+              'You can still go to the Dashboard — it will appear shortly.',
+            )
           }
         }
       } catch {
         if (attempts.current >= MAX_POLL_ATTEMPTS) {
-          clearInterval(pollRef.current!);
-          setPostStep('sync_failed');
-          setSyncErrMsg('No se pudo verificar el fondo en la base de datos.');
+          clearInterval(pollRef.current!)
+          setPostStep('sync_failed')
+          setSyncErrMsg('Could not verify fund in the database.')
         }
       }
-    }, POLL_INTERVAL_MS);
+    }, POLL_INTERVAL_MS)
   }, [
     fundAddr,
+    chainId,
     isAuthenticated,
     login,
     queryClient,
     calculator,
     result,
     selectedProtocol,
-  ]);
+  ])
 
-  const runPostDeployFlowRef = useRef(runPostDeployFlow);
+  // Keep ref fresh so handleRetryLogin always has the latest closure
+  const runPostDeployFlowRef = useRef(runPostDeployFlow)
   useEffect(() => {
-    runPostDeployFlowRef.current = runPostDeployFlow;
-  }, [runPostDeployFlow]);
+    runPostDeployFlowRef.current = runPostDeployFlow
+  }, [runPostDeployFlow])
+
+  // ── Trigger post-deploy flow ──────────────────────────────────────────────
+  //
+  // Depends on BOTH isSuccess AND fundAddr.
+  //
+  // Previously only isSuccess was in the dep array, so the effect could fire
+  // with fundAddr=null if React batched the state updates from useDeployFund
+  // and the component re-rendered before the Zustand store propagated.
+  // Now we wait for fundAddr to be non-null before proceeding.
 
   useEffect(() => {
-    if (!isSuccess) return;
-    void runPostDeployFlowRef.current();
+    if (!isSuccess || !fundAddr) return
+    if (hasTriggeredPostFlow.current) return
+
+    hasTriggeredPostFlow.current = true
+    void runPostDeployFlowRef.current()
+
     return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, [isSuccess]);
+      if (pollRef.current) clearInterval(pollRef.current)
+    }
+  }, [isSuccess, fundAddr]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Cleanup poll on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current)
+    }
+  }, [])
+
+  // ── Retry login handler ───────────────────────────────────────────────────
 
   const handleRetryLogin = useCallback(async () => {
-    setSyncErrMsg(null);
-    setPostStep('authenticating');
+    setSyncErrMsg(null)
+    setPostStep('authenticating')
     try {
-      await login();
-      await runPostDeployFlowRef.current();
+      await login()
+      // Reset trigger guard so the flow re-runs with a fresh auth token
+      hasTriggeredPostFlow.current = false
+      await runPostDeployFlowRef.current()
     } catch (retryErr) {
-      console.warn('[Step3Deploy] SIWE retry fallido:', retryErr);
-      setSyncErrMsg('Autenticación rechazada nuevamente. Intentá de nuevo.');
-      setPostStep('auth_failed');
+      console.warn('[Step3Deploy] SIWE retry failed:', retryErr)
+      setSyncErrMsg('Authentication rejected again. Please try once more.')
+      setPostStep('auth_failed')
     }
-  }, [login]);
+  }, [login])
+
+  // ── Navigation ────────────────────────────────────────────────────────────
 
   const handleGoToDashboard = useCallback(() => {
-    onSuccess();
+    onSuccess()
     navigate(ROUTES.DASHBOARD, {
       state:   { newFundAddr: fundAddr },
       replace: true,
-    });
-  }, [onSuccess, navigate, fundAddr]);
+    })
+  }, [onSuccess, navigate, fundAddr])
+
+  // ── Derived UI flags ──────────────────────────────────────────────────────
 
   const showDashboardBtn =
     isSuccess &&
-    (postStep === 'ready' || postStep === 'sync_failed' || postStep === 'reg_failed' || postStep === 'auth_failed');
-  const showRetryLoginBtn = isSuccess && !isAuthenticated && postStep === 'auth_failed';
-  const dashboardBtnGreen = postStep === 'ready';
+    (postStep === 'ready'      ||
+     postStep === 'sync_failed' ||
+     postStep === 'reg_failed'  ||
+     postStep === 'auth_failed')
+
+  const showRetryLoginBtn  = isSuccess && !isAuthenticated && postStep === 'auth_failed'
+  const dashboardBtnGreen  = postStep === 'ready'
 
   const postStepConfig: Record<PostDeployStep, { label: string; color: string }> = {
-    idle:           { label: '',                                                                                      color: '' },
-    authenticating: { label: 'Firmá el mensaje en tu wallet…',                                                       color: 'text-(--accent2) border-(--accent2)' },
-    registering:    { label: 'Registrando fondo en la base de datos…',                                               color: 'text-(--accent2) border-(--accent2)' },
-    syncing:        { label: 'Sincronizando datos on-chain…',                                                         color: 'text-(--accent2) border-(--accent2)' },
-    polling:        { label: 'Verificando fondo en la red…',                                                          color: 'text-(--accent2) border-(--accent2)' },
-    ready:          { label: '¡Fondo verificado y listo!',                                                            color: 'text-(--success) border-(--success)'   },
-    auth_failed:    { label: syncErrMsg ?? 'Auth fallida — el fondo se registrará al iniciar sesión.',                color: 'text-(--warn) border-(--warn)'         },
-    reg_failed:     { label: syncErrMsg ?? 'Registro pendiente — el indexer lo completará.',                          color: 'text-(--warn) border-(--warn)'         },
-    sync_failed:    { label: syncErrMsg ?? 'Sync falló — el fondo existe on-chain.',                                  color: 'text-(--warn) border-(--warn)'         },
-  };
+    idle:           { label: '',                                                                        color: '' },
+    authenticating: { label: 'Sign the message in your wallet…',                                       color: 'text-(--accent2) border-(--accent2)' },
+    registering:    { label: 'Registering fund in the database…',                                      color: 'text-(--accent2) border-(--accent2)' },
+    syncing:        { label: 'Syncing on-chain data…',                                                 color: 'text-(--accent2) border-(--accent2)' },
+    polling:        { label: 'Verifying fund on the network…',                                         color: 'text-(--accent2) border-(--accent2)' },
+    ready:          { label: 'Fund verified and ready!',                                               color: 'text-(--success) border-(--success)'  },
+    auth_failed:    { label: syncErrMsg ?? 'Auth failed — fund will register on next login.',          color: 'text-(--warn) border-(--warn)'        },
+    reg_failed:     { label: syncErrMsg ?? 'Registration queued — indexer will complete it.',          color: 'text-(--warn) border-(--warn)'        },
+    sync_failed:    { label: syncErrMsg ?? 'Sync failed — fund exists on-chain.',                      color: 'text-(--warn) border-(--warn)'        },
+  }
 
-  // Render 
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
     <div className="space-y-6">
 
-      {/* Summary */}
+      {/* ── Summary ── */}
       <div className="bg-(--surface2) border border-(--border2) rounded-xl p-5">
         <div className="font-mono text-[0.65rem] text-(--muted) uppercase tracking-widest mb-4">
           Summary
@@ -309,13 +392,13 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       </div>
 
-      {/* Allowance note */}
+      {/* ── Allowance note ── */}
       <div className="bg-[#7b4dff11] border border-[#7b4dff44] rounded-xl px-4 py-3 font-mono text-xs text-(--accent2)">
-        Aprobarás <strong>{fmtUsdc(totalApprove)}</strong> para el contrato Factory,
-        luego se desplegará tu PersonalFund en una transacción.
+        You will approve <strong>{fmtUsdc(totalApprove)}</strong> to the Factory contract,
+        then your PersonalFund will be deployed in one transaction.
       </div>
 
-      {/* Action buttons */}
+      {/* ── Action buttons ── */}
       <div className="space-y-3">
         {/* Approve USDC */}
         <button
@@ -351,7 +434,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </button>
       </div>
 
-      {/* On-chain status */}
+      {/* ── On-chain tx status ── */}
       {(txHash || isSuccess || isError) && (
         <div className={cn(
           'flex items-start gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
@@ -367,7 +450,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
             {isError && <div>{errorMsg}</div>}
             {isSuccess && fundAddr && (
               <div>
-                🎉 Fondo deployado en{' '}
+                🎉 Fund deployed at{' '}
                 <a
                   href={getExplorerAddressUrl(chainId, fundAddr)}
                   target="_blank"
@@ -392,7 +475,7 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       )}
 
-      {/* Post-deploy status */}
+      {/* ── Post-deploy status ── */}
       {isSuccess && postStep !== 'idle' && (
         <div className={cn(
           'flex items-center gap-3 border rounded-xl px-4 py-3 font-mono text-sm',
@@ -410,28 +493,28 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         </div>
       )}
 
-      {/* Back button — oculto una vez deployado */}
+      {/* ── Back button — hidden once deployed ── */}
       {!isSuccess && (
         <button
-          onClick={() => { prevStep(); onBack(); }}
+          onClick={() => { prevStep(); onBack() }}
           disabled={isDeploying}
           className="text-sm text-(--muted) hover:text-(--text) transition disabled:opacity-40"
         >
-          ← Volver a Protocolo
+          ← Back to Protocol
         </button>
       )}
 
-      {/* Retry login — solo cuando SIWE falló y el usuario sigue sin autenticar */}
+      {/* ── Retry login ── */}
       {showRetryLoginBtn && (
         <button
           onClick={() => void handleRetryLogin()}
-          className="w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base bg-(--accent2) text-white hover:opacity-90 transition disabled:opacity-50 disabled:cursor-wait"
+          className="w-full flex items-center justify-center gap-3 py-4 rounded-xl font-bold text-base bg-(--accent2) text-white hover:opacity-90 transition"
         >
-          <><ShieldCheck size={18} /> Reintentar login</>
+          <ShieldCheck size={18} /> Retry Login
         </button>
       )}
 
-      {/* Dashboard button — disponible incluso en estados de fallo parcial */}
+      {/* ── Dashboard button — available even on partial failure ── */}
       {showDashboardBtn && (
         <button
           onClick={handleGoToDashboard}
@@ -444,11 +527,12 @@ export function Step3Deploy({ onBack, onSuccess }: Step3Props) {
         >
           <LayoutDashboard size={18} />
           {dashboardBtnGreen
-            ? 'Ir al Dashboard'
-            : 'Ir al Dashboard (sync pendiente)'
+            ? 'Go to Dashboard'
+            : 'Go to Dashboard (sync pending)'
           }
         </button>
       )}
+
     </div>
-  );
+  )
 }

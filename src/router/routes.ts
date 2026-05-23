@@ -24,6 +24,8 @@ export const ROUTES = {
   PRIVACY:     '/privacy',
   TERMS:       '/terms',
   DISCLAIMER:  '/disclaimer',
+  TOKEN:       '/token-sale',
+  WHITEPAPER:  '/whitepaper',
 
   // Legacy redirects (do not remove — linked from external sites / emails)
   LEGACY_ADMIN_LOGIN:  '/admin/login',
@@ -156,5 +158,17 @@ export const ROUTE_META: Partial<Record<AppRoute, RouteMeta>> = {
     navbar: false,
     footer: false,
     title: 'Disclaimer',
+  },
+  [ROUTES.TOKEN]: {
+    guard: 'public',
+    navbar: false,
+    footer: false,
+    title: 'Token Sale',
+  },
+  [ROUTES.WHITEPAPER]: {
+    guard: 'public',
+    navbar: false,
+    footer: false,
+    title: 'White Paper',
   },
 };

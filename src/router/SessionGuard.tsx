@@ -18,6 +18,8 @@ const PRESERVE_ON_ENTRY: string[] = [
   ROUTES.PRIVACY,
   ROUTES.TERMS,
   ROUTES.DISCLAIMER,
+  ROUTES.WHITEPAPER,
+  ROUTES.TOKEN,
   ROUTES.ADMIN_DASHBOARD,
   ROUTES.ADMIN_TREASURY,
   ROUTES.ADMIN_PROTOCOL,
@@ -116,8 +118,6 @@ export function SessionGuard() {
     }
 
   }, [isConnected, address, isReconnecting, isAuth, tokenAddress, logout])
-
-  // Cleanup al desmontar
   useEffect(() => () => {
     if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current)
   }, [])

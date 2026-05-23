@@ -62,11 +62,13 @@
     "title": "Why Ethernal?",
     "security": {
       "title": "Security & Control",
-      "description": "Your funds are in audited smart contracts. Only you have control."
+      "description": "Your funds are in audited smart contracts. Only you have control.",
+      "cta": "Learn more"
     },
     "education": {
       "title": "Financial Education",
-      "description": "Learn about DeFi and retirement strategies while you save."
+      "description": "Learn about DeFi and retirement strategies while you save.",
+      "cta": "Explore resources"
     },
     "fees": {
       "title": "Low Fees",
@@ -167,16 +169,23 @@
     "titleShort": "Calculator",
     "subtitle": "Simulate your personalized retirement plan",
     "configurePlan": "Configure your plan",
+    "configurePlanDesc": "Enter your retirement goal — we calculate the monthly deposit needed.",
+    "desiredMonthly": "Desired Monthly at Retirement (USDC)",
+    "desiredMonthlyHint": "How much you want to receive per month",
     "currentAge": "Current age",
     "retirementAge": "Desired retirement age",
+    "retirementAgeHint": "≥ 55, at least 15 yrs ahead",
     "initialCapital": "Initial capital (USDC)",
+    "initialCapitalHint": "Optional lump-sum deposit (max 100,000 USDC)",
     "monthlyContribution": "Monthly contribution (USDC)",
     "expectedReturn": "Expected annual return (%)",
+    "expectedReturnHint": "Use the protocol APY — e.g. 5 for 5%",
     "frequency": "Contribution frequency",
     "frequencyMonthly": "Monthly",
     "frequencyQuarterly": "Quarterly",
     "frequencyAnnual": "Annual",
     "yearsReceivingIncome": "Years receiving income",
+    "yearsReceivingIncomeHint": "Duration of your retirement income",
     "ageLabel": "years",
     "monthlyDeposit": "Monthly savings (USDC)",
     "currentSavings": "Current savings (USDC)",
@@ -191,12 +200,15 @@
     "goesToTreasury": "Goes to protocol treasury",
     "forDefi": "For your DeFi fund",
     "netToFund": "Net in your fund",
+    "fromWallet": "From your wallet",
     "fundReady": "Your fund will be ready in",
     "lastStep": "Last step",
     "monthlySavingsRequired": "Monthly savings required",
     "createContract": "Create contract",
     "createOnArbitrum": "Create on Arbitrum",
     "walletWillOpen": "Your wallet will open to sign",
+    "goToDashboard": "Dashboard",
+    "contractAlreadyExists": "You already have an active Smart Contract",
     "getTestTokens": "Get test tokens",
     "getTestTokensDesc": "You need testnet USDC to create your fund",
     "howToStart": "How to get started?",
@@ -210,6 +222,46 @@
     "step3Desc": "Set your age, savings and retirement goals",
     "step4Title": "Create your fund",
     "step4Desc": "Deploy your personal contract on the blockchain",
+    "stepModal": {
+      "step1Title": "Step 1: Connect Wallet & Add MockUSDC",
+      "step1Content": {
+        "instruction1": "1. Connect your wallet by clicking the \"Connect Wallet\" button.",
+        "instruction2": "2. Make sure you are on the **Arbitrum Sepolia** network.",
+        "tokenAddressLabel": "📋 MockUSDC Token Address (Testnet)",
+        "copyButton": "Copy",
+        "manualImportHint": "Add this token manually in MetaMask → \"Import tokens\"",
+        "recommendation": "💡 Recommendation: Also use the \"Get Test Tokens\" button above to automatically receive funds."
+      },
+      "step2Title": "Step 2: Get Test Tokens",
+      "step2Content": {
+        "instruction1": "1. Click the \"Get Test Tokens\" button located in the upper left section.",
+        "instruction2": "2. Request MockUSDC from the faucet.",
+        "instruction3": "3. Wait a few seconds and verify the balance in your wallet.",
+        "fallbackHint": "If the faucet doesn't respond, add the token manually using the address from Step 1."
+      },
+      "step3Title": "Step 3: Configure Your Retirement Plan",
+      "step3Content": {
+        "instruction": "Complete the calculator fields with your personal information:",
+        "fieldsList": {
+          "income": "Desired monthly income during retirement",
+          "years": "Number of years you want to receive income",
+          "age": "Your current age and estimated retirement age",
+          "apy": "Expected return (protocol APY)",
+          "principal": "Initial capital (optional)"
+        },
+        "resultHint": "The system will automatically calculate the required monthly deposit."
+      },
+      "step4Title": "Step 4: Create Your Smart Contract",
+      "step4Content": {
+        "instruction1": "Once you've reviewed the result:",
+        "instruction2": "1. Verify that the monthly amount is correct.",
+        "instruction3": "2. Click the large blue/gold button.",
+        "instruction4": "3. Sign the transaction in your wallet.",
+        "instruction5": "4. Done! Your decentralized retirement fund has been created.",
+        "dashboardHint": "Afterwards, you can access the Dashboard to manage your fund."
+      },
+      "closeButton": "Got it"
+    },
     "validation": {
       "ageRequired": "Current age is required",
       "ageTooHigh": "Current age must be less than 80",
@@ -605,6 +657,8 @@
     "whitepaper": "Whitepaper",
     "tokenSaleAgreement": "Token Sale Agreement",
     "legalNotice": "These documents are for informational purposes only. They do not constitute financial advice or an offer of securities.",
+    "sectionTitle": "Legal Documentation",
+    "sectionSubtitle": "All protocol documents are publicly available. Please read them before participating.",
     "privacy": {
       "title": "Privacy Policy",
       "s1": {
@@ -836,7 +890,8 @@
   },
   "ourStory": {
     "pageTitle": "Our Story",
-    "metaDescription": "Learn how a conversation with a child on the streets of Buenos Aires sparked the creation of Ethernal Fund — a decentralized retirement platform."
+    "metaDescription": "Learn how a conversation with a child on the streets of Buenos Aires sparked the creation of Ethernal Fund — a decentralized retirement platform.",
+    "fullStory": "It all started one afternoon while our founder, Cristian F. Taborda, was picking up his children from school. Encountering a demonstration by retirees at the corner of Rodríguez Peña and Avenida Rivadavia, an innocent question from his son revealed a painful reality: the pension system had failed several generations of his own family. That moment awakened in him a profound determination: to create a real and sustainable alternative. Thus was born the idea of a decentralized application where every person can calculate, create, and manage their own retirement fund — with dignity and freedom."
   },
   "security": {
     "modalTitle": "Security & Control",
@@ -990,6 +1045,284 @@
         "seedRound": "Seed Round",
         "seedPrice": "Seed Price"
       }
+    },
+    "agreement": {
+      "title": "ETRF Token Sale Agreement",
+      "subtitle": "Ethernal Fund · Seed Round v1.0 · Effective May 2026",
+      "warning": "IMPORTANT: Participation in this sale involves the risk of total loss of invested capital. ETRF tokens are utility tokens and do NOT constitute financial instruments or securities.",
+      "downloadSection": {
+        "title": "Download Official Document",
+        "english": "Token Sale Agreement v1.0 — English (PDF)",
+        "spanish": "Token Sale Agreement v1.0 — Español (PDF)",
+        "governingNote": "The Spanish version is the governing document. In case of conflict between translations, the Spanish version prevails."
+      },
+      "sections": {
+        "definitions": {
+          "title": "Definitions",
+          "items": [
+            "\"Ethernal Fund\" or \"the Issuer\": The decentralized personal retirement savings protocol built on the Arbitrum network, developed and maintained by the founding team led by Cristian F. Taborda.",
+            "\"ETRF\": The native utility token of the Ethernal Fund protocol, implemented as a smart contract on the Arbitrum network.",
+            "\"Token Sale\" or \"Seed Round\": The primary token sale event for ETRF tokens described in this document, corresponding to the first funding round of the protocol.",
+            "\"Participant\": Any natural or legal person who acquires ETRF tokens through the official smart contract during the Token Sale period.",
+            "\"Vesting\": The mechanism of gradual and linear release of ETRF tokens over a defined period, once the cliff period has elapsed.",
+            "\"Cliff\": The initial total token lock-up period, during which the Participant cannot claim any fraction of their purchased tokens.",
+            "\"USDC\": The USD Coin stablecoin issued by Circle Financial, LLC — the sole accepted means of payment in this Token Sale."
+          ]
+        },
+        "nature": {
+          "title": "Nature of the ETRF Token",
+          "items": [
+            "ETRF is a utility token designed exclusively for use within the Ethernal Fund protocol ecosystem. Its primary function is to grant access to protocol features, including governance participation, access to premium features, and use as an internal unit of account.",
+            "THE ACQUISITION OF ETRF TOKENS DOES NOT CONSTITUTE: an investment in securities, shares, bonds, or any regulated financial instrument.",
+            "It is NOT a participation in the Issuer's profits, dividends, or cash flows.",
+            "It is NOT a right of ownership, voting, or control over Ethernal Fund.",
+            "It is NOT a promise or guarantee of economic return, value appreciation, or future liquidity.",
+            "The final classification of ETRF as a utility token or security will depend on the Participant's jurisdiction and applicable regulatory interpretation."
+          ]
+        },
+        "conditions": {
+          "title": "Participation Conditions",
+          "items": [
+            "Be at least 18 years of age or the legal age of majority in your jurisdiction of residence.",
+            "Not reside or be located in any excluded jurisdiction (United States, China, North Korea, Iran, Cuba, Syria, Venezuela, and any country subject to comprehensive OFAC sanctions).",
+            "Have a compatible EVM wallet with the necessary USDC balance for the transaction.",
+            "Have read, understood, and accepted this document, the Whitepaper, and the Privacy Policy in their entirety.",
+            "Not be included on any international sanctions lists (OFAC, UN, EU, or others).",
+            "Participate using funds of lawful and verifiable origin."
+          ]
+        },
+        "seedRound": {
+          "title": "Token Sale Conditions — Seed Round",
+          "items": [
+            "Available tokens: 100,000,000 ETRF (one hundred million tokens).",
+            "Price per token: USD 0.01 payable in USDC on the Arbitrum network.",
+            "Hard Cap and per-wallet cap: maximum amounts defined in the Smart Contract at deployment.",
+            "Accepted payment: USDC exclusively.",
+            "Cliff and vesting: per immutable parameters defined in the Smart Contract at deployment.",
+            "During the cliff period, no tokens can be claimed. After the cliff, tokens are released linearly over the vesting period. The schedule runs from the time of each individual Participant's purchase.",
+            "Unclaimed tokens do not expire and remain available in the contract."
+          ]
+        },
+        "irreversibility": {
+          "title": "Transaction Irreversibility",
+          "body": "All transactions executed on the Arbitrum blockchain are irreversible. Once USDC has been transferred to the Smart Contract, there is no refund, reversal, or cancellation mechanism. The Issuer does not have the technical capacity to reverse on-chain transactions."
+        },
+        "useOfFunds": {
+          "title": "Use of Raised Funds",
+          "items": [
+            "Conducting multiple smart contract security audits by top-tier firms.",
+            "Commissioning an economic and tokenomics audit.",
+            "Technical development and protocol growth.",
+            "Liquidity reserves and operations.",
+            "A fund usage report will be published once the main audits are completed."
+          ]
+        },
+        "risks": {
+          "title": "Risk Factors",
+          "items": [
+            "Total Loss of Capital: the value of ETRF tokens may fall to zero. The Participant must have the economic capacity to absorb the total loss of the invested amount.",
+            "Smart Contract Risk: no audit guarantees the absence of bugs. An exploit could result in partial or total loss of funds.",
+            "Regulatory Risk: the regulatory framework for crypto assets is uncertain and constantly changing.",
+            "Liquidity Risk: there is no guarantee that ETRF tokens will be listed on any exchange or that a secondary market with sufficient liquidity will exist.",
+            "Technology Risk: the protocol depends on the Arbitrum and Ethereum networks. Failures or attacks on these networks could affect protocol availability.",
+            "Project Risk: the team may fail to execute the roadmap for technical, financial, regulatory, or personal reasons.",
+            "Custody Risk: tokens are held in the Participant's wallet. The Issuer has no access to private keys. Loss of wallet access means permanent loss of tokens."
+          ]
+        },
+        "kyc": {
+          "title": "KYC and Anti-Money Laundering",
+          "body": "The Issuer reserves the right to implement KYC/AML processes at any time. The Participant declares that the funds used originate from lawful activities, agrees to provide identity documentation when required, and accepts that the Issuer may block token claims if suspicious activity is detected."
+        },
+        "ip": {
+          "title": "Intellectual Property",
+          "body": "All source code, smart contracts, user interface, whitepaper, the \"Ethernal Fund\" brand, and logo are the intellectual property of the Issuer. The acquisition of ETRF tokens does not grant any rights over said intellectual property."
+        },
+        "liability": {
+          "title": "Disclaimer of Liability",
+          "body": "To the maximum extent permitted by law, the Issuer, its team, collaborators, auditors, and advisors SHALL NOT be liable for: losses from a decline in ETRF token value; losses from bugs or exploits in smart contracts, even if audited; losses from loss of wallet access; losses from regulatory changes; or any indirect, consequential, punitive, or special damage. PARTICIPATION IN THIS TOKEN SALE IS AT THE PARTICIPANT'S SOLE RISK."
+        },
+        "amendments": {
+          "title": "Amendments to These Terms",
+          "body": "The Issuer may modify these Terms at any time, notifying through ethernal.fund and official protocol channels. Modifications will take effect 48 hours after publication. Vesting and cliff conditions already executed on-chain are immutable."
+        },
+        "governingLaw": {
+          "title": "Governing Law and Dispute Resolution",
+          "items": [
+            "This document shall be governed by the general principles of law applicable to international commerce and contracts for digital assets.",
+            "The parties shall first seek an amicable resolution through direct communication. If no agreement is reached within 30 business days, any dispute shall be submitted to international arbitration under the rules of the International Chamber of Commerce (ICC).",
+            "This document is drafted in Spanish. In the event of a conflict between translated versions and the Spanish version, the Spanish version shall prevail."
+          ]
+        },
+        "general": {
+          "title": "General Provisions",
+          "body": "This document, together with the Whitepaper and Privacy Policy, constitutes the entire agreement between the Issuer and the Participant regarding the Token Sale. If any clause is declared invalid or unenforceable, the remaining clauses shall continue in full force."
+        }
+      }
     }
+  },
+  "whitepaper": {
+    "title": "Whitepaper",
+    "subtitle": "Ethernal Fund · Effective May 2026",
+    "downloadSection": {
+      "title": "Download Official Document",
+      "english": "Whitepaper v1.1 — English (PDF)",
+      "spanish": "Whitepaper v1.1 — Español (PDF)",
+      "governingNote": "The Spanish version is the governing document. In case of conflict between translations, the Spanish version prevails."
+    },
+    "sections": {
+      "executiveSummary": {
+        "title": "Executive Summary",
+        "body": "Ethernal Fund Protocol is a decentralized personal retirement fund system built on blockchain (Arbitrum / Polygon), enabling anyone in the world to create and manage their own retirement fund autonomously, transparently, and without traditional financial intermediaries. The protocol combines smart contracts written in Vyper with integrations to established DeFi protocols (Aave v3) and tokenized real-world assets (Ondo USDY / US T-Bills) to offer secure yields on USDC deposits."
+      },
+      "problemSolution": {
+        "title": "Problem and Solution",
+        "items": [
+          "Traditional pension systems face a structural crisis: growing deficits, inflation eroding purchasing power, and increasing labor informality. In Latin America, less than 40% of workers actively contribute to formal pension systems.",
+          "Conventional savings instruments present significant barriers: high minimums, opaque fees, dependence on intermediaries, and geographically restricted access.",
+          "Ethernal Fund Protocol resolves these limitations through smart contracts that allow each user to create their own personal retirement fund on blockchain, with customized parameters and without ceding control of their assets to any third party.",
+          "The protocol leverages DeFi to offer non-custodial, transparent, borderless, programmable, and composable financial instruments for long-term savings."
+        ]
+      },
+      "architecture": {
+        "title": "Protocol Architecture",
+        "items": [
+          "PersonalFund.vy — The central contract. Each user has their own deployed instance (minimal proxy EIP-1167). Manages the complete fund lifecycle.",
+          "PersonalFundFactory.vy — Deploys new PersonalFund instances using the minimal proxy pattern (EIP-1167 / clones), significantly reducing gas costs.",
+          "Treasury.vy — Manages protocol fee collection (default 5%, maximum 10%) and acts as arbiter for early withdrawal requests.",
+          "ProtocolRegistry.vy — Curated catalog of DeFi protocols available for investment, with metadata: name, category, estimated APY, risk level, TVL, and verification status.",
+          "AaveV3Adapter.vy — Bridge to the Aave v3 lending market on Arbitrum One.",
+          "OndoUSDYAdapter.vy — Adapter for investing in USDY, a tokenized promissory note backed by short-term US Treasury bills (historical APY: 4.5%–5.5%)."
+        ]
+      },
+      "lifecycle": {
+        "title": "Personal Fund Lifecycle",
+        "items": [
+          "Fund Creation: user sets principal (0–100,000 USDC), monthly deposit, current age, retirement age, desired monthly income, and timelock years (15–50).",
+          "Accumulation Phase: user makes periodic monthly deposits and accumulates yield from DeFi protocols during the lockup period.",
+          "Early Withdrawal: requires approval from the protocol Treasury via requestEarlyRetirement(). The admin can approve or reject the request.",
+          "Emergency Withdrawal: the admin can announce an emergency with a mandatory 48-hour waiting period before the user can execute emergencyWithdraw().",
+          "Retirement Phase: upon timelock completion, the owner activates retirement() and the system automatically configures monthly auto-withdrawals."
+        ]
+      },
+      "tokenomics": {
+        "title": "ETRF Token — Tokenomics",
+        "items": [
+          "ETRF is exclusively a utility token. It does NOT represent equity, debt, dividends, or any expectation of profit. Total supply: 1,000,000,000 ETRF (fixed, non-mintable post-deploy).",
+          "Premium Mode: users holding a minimum of ETRF unlock advanced features (reports, investment strategies, alerts). The token is only verified, not consumed.",
+          "Fee Discount: users can pay management fees in ETRF instead of USDC, receiving a discount. ETRF tokens used are burned, reducing circulating supply.",
+          "Public Sale: 30% (300,000,000) — distributed via SaleETRF → VestingETRF.",
+          "Team: 20% (200,000,000) — 1-year cliff + 25% unlock + 75% linear over 3 years.",
+          "Ecosystem: 20% (200,000,000) — incentives, partnerships, integrations.",
+          "Treasury: 15% (150,000,000). Community: 10% (100,000,000). Reserve: 5% (50,000,000)."
+        ]
+      },
+      "security": {
+        "title": "Security and Risk Management",
+        "items": [
+          "All core contracts are written in Vyper, which prohibits multiple inheritance, operator overloading, recursion, and inline modifiers — significantly reducing attack surface.",
+          "Smart contract risk: no code is 100% bug-free. Funds may be lost in the event of an exploit.",
+          "DeFi protocol risk: Aave v3 and Ondo USDY are external protocols. An exploit there could affect deposited funds.",
+          "Stablecoin depeg risk: USDC may lose its USD parity under extreme circumstances.",
+          "Regulatory risk: the legal framework for digital assets is uncertain and varies by jurisdiction.",
+          "Admin risk: dependence on the Ethernal Foundation for key administrative operations while the protocol is not fully decentralized."
+        ]
+      },
+      "legal": {
+        "title": "Legal and Regulatory Framework",
+        "items": [
+          "Core contracts (PersonalFund, Factory, Treasury, adapters) are licensed under BUSL-1.1 until 2030-12-31, then migrate to GPL-2.0+.",
+          "Infrastructure and token contracts (ProtocolRegistry, UserPreferences, ETRF, SaleETRF, VestingETRF) are licensed under Apache-2.0 or MIT perpetually.",
+          "The protocol operates in a non-custodial manner and does not require user identification at the smart contract level.",
+          "The timelock mechanism (15–50 years) incorporates an anti-money-laundering compliance property by architectural design (\"friction by design\")."
+        ]
+      },
+      "roadmap": {
+        "title": "Roadmap",
+        "items": [
+          "Q2 2026 — Testnet: Full deployment on Arbitrum Sepolia. Security audit. Bug bounty program.",
+          "Q3 2026 — Mainnet v1: Launch on Arbitrum One. ETRF public sale (Seed Round). First user funds.",
+          "Q4 2026 — Expansion: Integration of new DeFi protocols. Deployment on Polygon. More RWA adapters.",
+          "2027 — Decentralization: On-chain governance for Protocol Registry. Reduction of admin privileges.",
+          "2030-12-31 — Open Source: Migration from BUSL-1.1 to GPL-2.0+ licenses. Fully open-source protocol."
+        ]
+      },
+      "team": {
+        "title": "Team and Contact",
+        "body": "Lead Architect: Cristian F. Taborda — Ethernal Foundation. Email: contact@ethernal.fund | Legal: legal@ethernal.foundation | Website: ethernal.fund | Docs: docs.ethernal.fund (coming soon)."
+      },
+      "disclaimer": {
+        "title": "Legal Disclaimer",
+        "body": "This whitepaper has been prepared solely for informational purposes about the Ethernal Fund Protocol and the ETRF token. It does not constitute an offer or solicitation to purchase securities or financial instruments. Investment in cryptocurrencies and DeFi protocols entails substantial risks, including the possibility of total loss of invested capital. The Ethernal Foundation accepts no liability for direct, indirect, incidental, or consequential losses."
+      }
+    }
+  },
+  "risk": {
+    "title": "Risk Disclosure",
+    "subtitle": "Before using Ethernal Fund, read and understand these risks. They are written in plain language so you can make an informed decision.",
+    "criticalWarning": "This protocol is not regulated or supervised by any financial authority. There is no guarantee of fund recovery. It is not a bank, not a regulated investment fund, and is not covered by any deposit insurance. ONLY USE FUNDS WHOSE TOTAL LOSS YOU CAN AFFORD.",
+    "severityLegend": "Severity scale",
+    "severity": {
+      "critical": "Critical Risk",
+      "high": "High Risk",
+      "medium": "Medium Risk"
+    },
+    "guaranteed": {
+      "title": "What IS guaranteed by the protocol's design",
+      "items": [
+        "Funds always return to the fund owner — never to third parties.",
+        "The admin cannot transfer your funds to any wallet other than yours.",
+        "Any emergency withdrawal has a 48-hour waiting period, during which you can cancel it.",
+        "The maximum fee is fixed in the contract and cannot exceed 10%, regardless of what the Foundation decides.",
+        "The code is public and verifiable on the blockchain by anyone."
+      ]
+    },
+    "questions": {
+      "title": "Before you continue, ask yourself:",
+      "items": [
+        "Do you understand that you can lose 100% of the deposited funds?",
+        "Are you depositing money that you won't need for 15 years or more?",
+        "Do you understand that blockchain transactions are irreversible?",
+        "Do you know what a smart contract is and what its risks are?",
+        "Have you consulted with a financial or legal advisor if you have doubts?"
+      ],
+      "footer": "If you answered \"no\" to any of these questions, we recommend taking more time before depositing funds. You can read the technical Whitepaper or contact us at contact@ethernal.fund."
+    },
+    "risks": [
+      {
+        "title": "You can lose everything you deposit",
+        "summary": "Funds deposited in the protocol can be lost in their entirety.",
+        "detail": "Ethernal Fund operates on blockchain smart contracts. If there is a bug, security vulnerability, or exploit in the code — even after being audited — funds can be irreversibly lost. There is no insurance, state guarantee, or recovery mechanism. Before depositing, make sure you understand that you are fully assuming that risk."
+      },
+      {
+        "title": "Transactions are irreversible",
+        "summary": "Once you send USDC to the protocol, there is no possible refund.",
+        "detail": "Blockchain operations are permanent. The protocol does not have the technical capacity to reverse transactions, return funds by mistake, or process refunds. If you send funds to the wrong address, use the wrong network, or make any error in the transaction, those funds will be permanently lost."
+      },
+      {
+        "title": "Your funds will be locked for years",
+        "summary": "The timelock is a minimum of 15 years. You cannot withdraw early without protocol approval.",
+        "detail": "When creating a retirement fund, you choose a lock-up period between 15 and 50 years. During that time, you cannot withdraw your funds under any circumstances without requesting and receiving explicit approval from the Ethernal Foundation. The protocol may reject the request. Think of this as a very long-term commitment: it is not for funds you might need in the coming years."
+      },
+      {
+        "title": "Integrated DeFi protocols also have risks",
+        "summary": "Aave v3 and Ondo USDY are external protocols. A problem in them also affects you.",
+        "detail": "Ethernal invests your funds in protocols like Aave v3 (lending) and Ondo USDY (tokenized Treasury bonds). These are external protocols with their own risks: exploits, emergency pauses, governance changes, or liquidity issues. An incident in any of those protocols could reduce or eliminate your balance, regardless of Ethernal's correct operation."
+      },
+      {
+        "title": "USDC can lose its value",
+        "summary": "USDC is a stablecoin, but it is not guaranteed 1:1 with the dollar at all times.",
+        "detail": "Although USDC is designed to maintain parity with the US dollar, risk scenarios exist: liquidity issues at Circle (the issuer), regulatory changes affecting reserves, or systemic market events. In March 2023, USDC temporarily lost its parity. Your balance in the protocol is denominated in USDC, so any depegging directly affects you."
+      },
+      {
+        "title": "The regulatory framework may change",
+        "summary": "Rules for crypto assets in LATAM and the world are constantly evolving.",
+        "detail": "Regulators in Argentina, Mexico, Brazil, and other countries are developing legal frameworks for digital assets. Regulatory changes could affect your ability to use the protocol, the tax classification of your returns, or the protocol's operation in your country. The protocol may need to modify or restrict its operation due to new legal requirements."
+      },
+      {
+        "title": "The protocol admin has limited powers over your fund",
+        "summary": "The Ethernal Foundation can intervene in emergency situations.",
+        "detail": "Although Ethernal Fund is a non-custodial protocol, the Foundation maintains an administrator role with specific capabilities: it can approve or reject early withdrawal requests, announce emergencies with a 48-hour waiting period, and manage which DeFi protocols are available. These functions exist for security and regulatory compliance reasons. However, funds always return to the owner — the admin cannot transfer them to third parties."
+      }
+    ]
   }
 }

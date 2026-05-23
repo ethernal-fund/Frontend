@@ -33,6 +33,8 @@ const NotFoundPage   = lazy(() => import('@/pages/public/NotFoundPage'));
 const PrivacyPage    = lazy(() => import('@/pages/legal/PrivacyPage'));
 const TermsPage      = lazy(() => import('@/pages/legal/TermsPage'));
 const DisclaimerPage = lazy(() => import('@/pages/legal/DisclaimerPage'));
+const TokenSalePage  = lazy(() => import('@/pages/legal/TokenSalePage'));
+const WhitePaperPage = lazy(() => import('@/pages/legal/WhitePaperPage'));
 
 // User pages 
 const DashboardPage = lazy(() => import('@/pages/user/DashboardPage'));
@@ -122,6 +124,8 @@ const router = createBrowserRouter([
       { path: ROUTES.PRIVACY,    element: <PrivacyPage /> },
       { path: ROUTES.TERMS,      element: <TermsPage /> },
       { path: ROUTES.DISCLAIMER, element: <DisclaimerPage /> },
+      { path: ROUTES.TOKEN,      element: <TokenSalePage /> },
+      { path: ROUTES.WHITEPAPER, element: <WhitePaperPage /> },
 
       {
         path: ROUTES.DASHBOARD,
@@ -165,12 +169,6 @@ const router = createBrowserRouter([
 // App entry point 
 export default function AppRouter() {
   return (
-    /**
-     * ErrorBoundary aquí captura errores de render de React que ocurren
-     * FUERA del árbol del router (ej: fallo al inicializar RouterProvider).
-     * Es el último recurso — distinto del errorElement que maneja errores
-     * dentro de las rutas.
-     */
     <ErrorBoundary>
       <RouterProvider router={router} />
     </ErrorBoundary>

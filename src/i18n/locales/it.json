@@ -1,31 +1,31 @@
 {
   "common": {
     "error": "Errore",
-    "loading": "Caricamento...",
+    "loading": "Caricamento in corso...",
     "save": "Salva",
     "cancel": "Annulla",
     "close": "Chiudi",
     "back": "Indietro",
     "next": "Continua",
-    "finish": "Termina",
+    "finish": "Fine",
     "confirm": "Conferma",
     "yes": "Sì",
     "no": "No",
-    "wallet": "Wallet",
+    "wallet": "Portafoglio",
     "copy": "Copia",
     "copied": "Copiato!"
   },
   "nav": {
     "home": "Home",
-    "calculator": "Calcolatore",
+    "calculator": "Calcolatrice",
     "dashboard": "Dashboard",
-    "contact": "Contatto",
-    "connectWallet": "Connetti Wallet",
+    "contact": "Contatti",
+    "connectWallet": "Connetti Portafoglio",
     "openMenu": "Apri menu",
     "closeMenu": "Chiudi menu"
   },
   "wallet": {
-    "connectedWallet": "Wallet Connessa",
+    "connectedWallet": "Portafoglio Connesso",
     "balance": "Saldo",
     "network": "Rete",
     "unknownNetwork": "Rete sconosciuta",
@@ -35,8 +35,8 @@
     "wrongNetwork": "Rete errata",
     "viewFullAccount": "Visualizza account completo",
     "disconnect": "Disconnetti",
-    "needTestEth": "Hai bisogno di ETH di test?",
-    "yourWallet": "La tua Wallet",
+    "needTestEth": "Hai bisogno di ETH di prova?",
+    "yourWallet": "Il Tuo Portafoglio",
     "language": "Lingua",
     "copyAddress": "Copia indirizzo",
     "viewOnExplorer": "Visualizza su explorer",
@@ -47,50 +47,52 @@
     "quickLinks": "Link rapidi",
     "followUs": "Seguici",
     "copyright": "Ethernal. Tutti i diritti riservati.",
-    "privacy": "Informativa sulla privacy",
-    "terms": "Termini di utilizzo",
-    "disclaimer": "Avviso legale",
+    "privacy": "Informativa sulla Privacy",
+    "terms": "Termini di Utilizzo",
+    "disclaimer": "Avviso Legale",
     "builtOn": "Costruito su Arbitrum · Sicuro · Trasparente · Decentralizzato"
   },
   "hero": {
-    "title": "Il tuo futuro finanziario su Blockchain",
+    "title": "Il Tuo Futuro Finanziario su Blockchain",
     "subtitle": "Pianifica la tua pensione con Ethernal: Sicuro, Trasparente e Decentralizzato su Ethereum",
-    "ctaDisconnected": "Inizia ora",
-    "ctaConnected": "Vai al Calcolatore"
+    "ctaDisconnected": "Inizia",
+    "ctaConnected": "Vai alla Calcolatrice"
   },
   "features": {
     "title": "Perché Ethernal?",
     "security": {
       "title": "Sicurezza e Controllo",
-      "description": "I tuoi fondi sono in smart contract verificati. Solo tu hai il controllo."
+      "description": "I tuoi fondi sono in contratti intelligenti verificati. Solo tu hai il controllo.",
+      "cta": "Scopri di più"
     },
     "education": {
       "title": "Educazione Finanziaria",
-      "description": "Impara su DeFi e strategie pensionistiche mentre risparmi."
+      "description": "Impara DeFi e strategie pensionistiche mentre risparmi.",
+      "cta": "Esplora risorse"
     },
     "fees": {
       "title": "Commissioni Basse",
-      "description": "Nessun intermediario. Commissioni fino a 10x inferiori ai fondi tradizionali.",
-      "cta": "Vedi confronto commissioni"
+      "description": "Nessun intermediario. Commissioni fino a 10 volte inferiori rispetto ai fondi tradizionali.",
+      "cta": "Confronta le commissioni"
     }
   },
   "about": {
-    "title": "Informazioni su Ethernal",
+    "title": "Chi siamo",
     "description": "Ethernal combina la sicurezza della blockchain con la pianificazione finanziaria tradizionale per offrire un'esperienza pensionistica decentralizzata, trasparente e accessibile a tutti.",
-    "historyLink": "Scopri la nostra storia completa"
+    "historyLink": "La nostra storia"
   },
   "survey": {
     "title": "Sondaggio su Pensione e Blockchain",
     "subtitle": "Aiutaci a capire come percepisci la pensione e la tecnologia blockchain",
     "bannerText": "Aiutaci a migliorare! Rispondi al nostro breve sondaggio su pensione e blockchain.",
     "bannerCta": "Partecipa al sondaggio",
-    "question1": "Quanti anni hai?",
+    "question1": "Qual è la tua età?",
     "question2": "Ti fidi dei sistemi pensionistici tradizionali (fondi pensione)?",
-    "question3": "Quanto conosci la blockchain/DeFi?",
+    "question3": "Quanto hai familiarità con blockchain/DeFi?",
     "question4": "Quanto sei preoccupato per il tuo futuro finanziario in pensione?",
     "question5": "Hai attualmente un piano pensionistico?",
     "question6": "Valori in pensione: sicurezza o crescita?",
-    "question7": "Ti interesserebbe un piano pensionistico basato su blockchain?",
+    "question7": "Saresti interessato a un piano pensionistico basato su blockchain?",
     "ageOptions": {
       "18-24": "18-24 anni",
       "25-34": "25-34 anni",
@@ -120,8 +122,8 @@
     "yesInterested": "Sì, voglio ricevere aggiornamenti",
     "notNow": "No, grazie",
     "question2": "Il tuo indirizzo email",
-    "emailPlaceholder": "tuaemail@esempio.com",
-    "finish": "Termina",
+    "emailPlaceholder": "tuoemail@esempio.com",
+    "finish": "Fine",
     "thankYou": "Grazie!",
     "willContact": "Ti contatteremo presto con aggiornamenti.",
     "helpImprove": "La tua opinione ci aiuta a migliorare.",
@@ -131,7 +133,7 @@
   "contact": {
     "title": "Contattaci",
     "subtitle": "Domande? Il nostro team è qui per aiutarti",
-    "name": "Nome completo",
+    "name": "Nome e cognome",
     "namePlaceholder": "Mario Rossi",
     "email": "Indirizzo email",
     "subject": "Oggetto",
@@ -142,45 +144,52 @@
     "send": "Invia messaggio",
     "sending": "Invio in corso...",
     "success": "Messaggio inviato!",
-    "successDetail": "Grazie per averci contattato. Ti risponderemo entro 24-48 ore.",
-    "error": "Errore di invio. Riprova.",
-    "walletConnected": "Wallet connessa",
-    "walletIncluded": "Includeremo la tua wallet nel messaggio:",
+    "successDetail": "Grazie per averci contattato. Risponderemo entro 24-48 ore.",
+    "error": "Errore durante l'invio. Riprova.",
+    "walletConnected": "Portafoglio connesso",
+    "walletIncluded": "Includeremo il tuo portafoglio nel messaggio:",
     "otherWays": "Altri metodi di contatto",
     "emailLabel": "Email",
-    "responseTime": "Tempo di risposta",
+    "responseTime": "Tempi di risposta",
     "responseTimeValue": "24-48 ore lavorative",
     "requiredFields": "* Campi obbligatori",
     "validation": {
       "nameRequired": "Il nome è obbligatorio",
-      "nameTooShort": "Il nome deve avere almeno 2 caratteri",
+      "nameTooShort": "Il nome deve contenere almeno 2 caratteri",
       "emailRequired": "L'email è obbligatoria",
       "emailInvalid": "Inserisci un'email valida",
       "messageRequired": "Il messaggio è obbligatorio",
-      "messageTooShort": "Il messaggio deve avere almeno 10 caratteri",
+      "messageTooShort": "Il messaggio deve contenere almeno 10 caratteri",
       "formErrors": "Correggi gli errori del modulo"
     }
   },
   "calculator": {
     "title": "Calcolatore Pensionistico",
     "titleFull": "Calcolatore Pensionistico",
-    "titleShort": "Calcolatore",
+    "titleShort": "Calcolatrice",
     "subtitle": "Simula il tuo piano pensionistico personalizzato",
     "configurePlan": "Configura il tuo piano",
+    "configurePlanDesc": "Inserisci il tuo obiettivo pensionistico — calcoliamo il deposito mensile necessario.",
+    "desiredMonthly": "Reddito mensile desiderato in pensione (USDC)",
+    "desiredMonthlyHint": "Quanto vuoi ricevere al mese",
     "currentAge": "Età attuale",
-    "retirementAge": "Età pensionistica desiderata",
+    "retirementAge": "Età pensionabile desiderata",
+    "retirementAgeHint": "≥ 55, almeno 15 anni di anticipo",
     "initialCapital": "Capitale iniziale (USDC)",
+    "initialCapitalHint": "Deposito una tantum opzionale (max 100.000 USDC)",
     "monthlyContribution": "Contributo mensile (USDC)",
     "expectedReturn": "Rendimento annuo atteso (%)",
-    "frequency": "Frequenza dei contributi",
+    "expectedReturnHint": "Usa l'APY del protocollo — es. 5 per 5%",
+    "frequency": "Frequenza di contribuzione",
     "frequencyMonthly": "Mensile",
     "frequencyQuarterly": "Trimestrale",
     "frequencyAnnual": "Annuale",
-    "yearsReceivingIncome": "Anni di percepimento del reddito",
+    "yearsReceivingIncome": "Anni di percezione del reddito",
+    "yearsReceivingIncomeHint": "Durata del tuo reddito pensionistico",
     "ageLabel": "anni",
     "monthlyDeposit": "Risparmio mensile (USDC)",
     "currentSavings": "Risparmi attuali (USDC)",
-    "interestRate": "Tasso di interesse annuo atteso (%)",
+    "interestRate": "Tasso d'interesse annuo atteso (%)",
     "calculate": "Calcola",
     "dataError": "Errore nel caricamento dei dati. Riprova.",
     "growthProjection": "Proiezione di crescita",
@@ -188,35 +197,78 @@
     "depositSummary": "Riepilogo primo deposito",
     "totalDeposit": "Totale da depositare",
     "daoFee": "Commissione Ethernal (5%)",
-    "goesToTreasury": "Va al treasury del protocollo",
+    "goesToTreasury": "Va al tesoro del protocollo",
     "forDefi": "Per il tuo fondo DeFi",
     "netToFund": "Netto nel tuo fondo",
+    "fromWallet": "Dal tuo portafoglio",
     "fundReady": "Il tuo fondo sarà pronto in",
-    "lastStep": "Ultimo passaggio",
+    "lastStep": "Ultimo passo",
     "monthlySavingsRequired": "Risparmio mensile richiesto",
     "createContract": "Crea contratto",
     "createOnArbitrum": "Crea su Arbitrum",
-    "walletWillOpen": "La tua wallet si aprirà per firmare",
-    "getTestTokens": "Ottieni token di test",
-    "getTestTokensDesc": "Hai bisogno di USDC testnet per creare il tuo fondo",
+    "walletWillOpen": "Il tuo portafoglio si aprirà per firmare",
+    "goToDashboard": "Vai alla Dashboard",
+    "contractAlreadyExists": "Hai già un contratto intelligente attivo",
+    "getTestTokens": "Ottieni token di prova",
+    "getTestTokensDesc": "Hai bisogno di USDC di prova per creare il tuo fondo",
     "howToStart": "Come iniziare?",
     "testnetOnly": "Solo testnet per ora",
     "testnetOnlyDesc": "Siamo su Arbitrum Sepolia. I fondi non hanno valore reale.",
-    "step1Title": "Connetti la tua wallet",
-    "step1Desc": "MetaMask, WalletConnect o qualsiasi wallet compatibile",
-    "step2Title": "Ottieni USDC testnet",
-    "step2Desc": "Usa il faucet per ricevere token di test",
+    "step1Title": "Connetti il tuo portafoglio",
+    "step1Desc": "MetaMask, WalletConnect o qualsiasi portafoglio compatibile",
+    "step2Title": "Ottieni USDC di prova",
+    "step2Desc": "Usa il faucet per ricevere token di prova",
     "step3Title": "Configura il tuo piano",
-    "step3Desc": "Imposta la tua età, risparmi e obiettivi pensionistici",
+    "step3Desc": "Imposta età, risparmi e obiettivi pensionistici",
     "step4Title": "Crea il tuo fondo",
     "step4Desc": "Distribuisci il tuo contratto personale sulla blockchain",
+    "stepModal": {
+      "step1Title": "Passo 1: Connetti il Portafoglio e Aggiungi MockUSDC",
+      "step1Content": {
+        "instruction1": "1. Connetti il tuo portafoglio cliccando su \"Connetti Portafoglio\".",
+        "instruction2": "2. Assicurati di essere sulla rete **Arbitrum Sepolia**.",
+        "tokenAddressLabel": "📋 Indirizzo del token MockUSDC (Testnet)",
+        "copyButton": "Copia",
+        "manualImportHint": "Aggiungi manualmente questo token in MetaMask → \"Importa token\"",
+        "recommendation": "💡 Consiglio: usa anche il pulsante \"Ottieni token di prova\" per ricevere fondi automaticamente."
+      },
+      "step2Title": "Passo 2: Ottieni Token di Prova",
+      "step2Content": {
+        "instruction1": "1. Clicca sul pulsante \"Ottieni token di prova\" situato nella sezione in alto a sinistra.",
+        "instruction2": "2. Richiedi MockUSDC dal faucet.",
+        "instruction3": "3. Attendi qualche secondo e verifica il saldo nel tuo portafoglio.",
+        "fallbackHint": "Se il faucet non risponde, aggiungi manualmente il token usando l'indirizzo del Passo 1."
+      },
+      "step3Title": "Passo 3: Configura il Tuo Piano Pensionistico",
+      "step3Content": {
+        "instruction": "Completa i campi della calcolatrice con le tue informazioni personali:",
+        "fieldsList": {
+          "income": "Reddito mensile desiderato durante la pensione",
+          "years": "Numero di anni in cui desideri ricevere il reddito",
+          "age": "La tua età attuale e l'età pensionabile stimata",
+          "apy": "Rendimento atteso (APY del protocollo)",
+          "principal": "Capitale iniziale (opzionale)"
+        },
+        "resultHint": "Il sistema calcolerà automaticamente il deposito mensile richiesto."
+      },
+      "step4Title": "Passo 4: Crea il Tuo Contratto Intelligente",
+      "step4Content": {
+        "instruction1": "Dopo aver esaminato il risultato:",
+        "instruction2": "1. Verifica che l'importo mensile sia corretto.",
+        "instruction3": "2. Clicca sul grande pulsante blu/dorato.",
+        "instruction4": "3. Firma la transazione nel tuo portafoglio.",
+        "instruction5": "4. Fatto! Il tuo fondo pensionistico decentralizzato è stato creato.",
+        "dashboardHint": "Successivamente, puoi accedere alla Dashboard per gestire il tuo fondo."
+      },
+      "closeButton": "Capito"
+    },
     "validation": {
       "ageRequired": "L'età attuale è obbligatoria",
       "ageTooHigh": "L'età attuale deve essere inferiore a 80 anni",
-      "retirementAgeTooLow": "L'età pensionistica deve essere almeno 5 anni superiore all'attuale",
-      "minYears": "Devi ricevere reddito per almeno 5 anni",
+      "retirementAgeTooLow": "L'età pensionabile deve essere almeno 5 anni maggiore dell'età attuale",
+      "minYears": "Devi ricevere un reddito per almeno 5 anni",
       "contributionRequired": "Il contributo mensile deve essere maggiore di 0",
-      "rateRange": "Il tasso annuo deve essere tra 0% e 50%"
+      "rateRange": "Il tasso annuo deve essere compreso tra 0% e 50%"
     },
     "results": {
       "projected": "Proiezione pensionistica",
@@ -226,7 +278,7 @@
     }
   },
   "createFund": {
-    "title": "Crea il Mio Fondo",
+    "title": "Crea Il Mio Fondo",
     "subtitle": "Piano calcolato · Arbitrum Sepolia",
     "steps": {
       "review": "Revisione",
@@ -239,14 +291,14 @@
       "title": "Parametri del Piano",
       "initialDeposit": "Deposito iniziale",
       "monthlyDeposit": "Risparmio mensile",
-      "currentAge": "Età attuale / pensionistica",
+      "currentAge": "Età attuale / pensionabile",
       "desiredIncome": "Reddito mensile desiderato",
-      "yearsPayments": "Anni di percepimento del reddito",
+      "yearsPayments": "Anni di percezione del reddito",
       "interestRate": "Tasso annuo atteso",
-      "timelock": "Timelock di sicurezza",
+      "timelock": "Blocco di sicurezza (timelock)",
       "breakdown": {
-        "title": "Dettaglio primo deposito",
-        "fromWallet": "Dalla tua wallet",
+        "title": "Riepilogo primo deposito",
+        "fromWallet": "Dal tuo portafoglio",
         "fee": "Commissione Ethernal (5%)",
         "netToFund": "Netto nel tuo fondo DeFi"
       },
@@ -255,13 +307,13 @@
         "subtitle": "Scegli come vuoi far crescere i tuoi risparmi pensionistici",
         "selectError": "Seleziona un metodo di investimento per continuare."
       },
-      "immutability": "Una volta creato il contratto, questi parametri non potranno essere modificati. Il timelock di {years} è permanente.",
+      "immutability": "Una volta creato il contratto, questi parametri non possono essere modificati. Il blocco di {years} anni è permanente.",
       "continue": "Verifica Saldo"
     },
     "balance": {
-      "title": "Verifica del Saldo",
-      "subtitle": "Controlliamo la tua wallet on-chain. Nessun gas, nessuna transazione.",
-      "yourBalance": "Il tuo Saldo USDC",
+      "title": "Verifica Saldo",
+      "subtitle": "Controlliamo il tuo portafoglio on-chain. Senza gas, senza transazione.",
+      "yourBalance": "Il Tuo Saldo USDC",
       "required": "Richiesto",
       "insufficient": "Insufficiente",
       "sufficient": "Sufficiente",
@@ -270,28 +322,28 @@
         "title": "Allowance Attuale",
         "alreadyApproved": "Già approvato",
         "requiresApproval": "Richiede approvazione",
-        "needApproval": "Dovrai firmare una tx di approvazione (1 volta)."
+        "needApproval": "Dovrai firmare una transazione di approvazione (1 volta)."
       },
       "nextSteps": {
         "title": "Prossimi passi richiesti",
-        "approve": "Approva — ERC-20 approve per la Factory",
+        "approve": "Approva — Approvazione ERC-20 per la Factory",
         "create": "Crea fondo — factory.createFund + deposito iniziale"
       },
-      "insufficientBalance": "Saldo insufficiente. Ottieni più USDC dal faucet del calcolatore prima di continuare.",
+      "insufficientBalance": "Saldo insufficiente. Ottieni più USDC dal faucet della calcolatrice prima di continuare.",
       "refresh": "Aggiorna",
       "continueApprove": "Continua all'Approvazione",
       "continueCreate": "Continua alla Creazione del Fondo"
     },
     "approve": {
       "title": "Autorizza USDC",
-      "subtitle": "Permetti alla Factory di spostare i tuoi token una sola volta",
+      "subtitle": "Consenti alla Factory di muovere i tuoi token una volta sola",
       "whatIs": {
-        "title": "Cos'è l'Approve?",
+        "title": "Cos'è Approve?",
         "description": "Su Ethereum, i token ERC-20 (come USDC) richiedono che tu autorizzi esplicitamente un contratto prima che possa spostarli. È uno standard di sicurezza: il contratto può spendere solo fino all'importo che approvi.",
-        "note": "Questa approvazione non sposta alcun fondo. Lo spostamento avviene nel passaggio successivo."
+        "note": "Questa approvazione non sposta alcun fondo. Il movimento avviene nel passaggio successivo."
       },
       "details": {
-        "contract": "Contratto destinatario",
+        "contract": "Contratto ricevente",
         "token": "Token",
         "amount": "Importo da autorizzare"
       },
@@ -301,7 +353,7 @@
     },
     "create": {
       "title": "Crea il Fondo",
-      "subtitle": "La factory distribuirà il tuo contratto personale ed effettuerà il deposito iniziale",
+      "subtitle": "La Factory distribuirà il tuo contratto personale ed effettuerà il deposito iniziale",
       "summary": {
         "title": "Riepilogo transazione",
         "initialDeposit": "Deposito iniziale",
@@ -310,32 +362,32 @@
         "protocol": "Protocollo DeFi",
         "timelock": "Timelock"
       },
-      "button": "Crea il Mio Fondo",
-      "processing": "Elaborazione…"
+      "button": "Crea Il Mio Fondo",
+      "processing": "Elaborazione in corso…"
     },
     "success": {
       "title": "Fondo Creato!",
       "subtitle": "Il tuo contratto personale vive sulla blockchain.",
-      "txHash": "Hash Transazione",
+      "txHash": "Hash della transazione",
       "fundAddress": "Indirizzo del Fondo",
       "nextSteps": {
         "title": "Prossimi passi",
         "step1": "Effettua depositi mensili di {amount} per raggiungere il tuo obiettivo.",
-        "step2": "Monitora i tuoi progressi e i rendimenti DeFi dal Dashboard.",
-        "step3": "Alla scadenza del timelock, potrai avviare il prelievo programmato."
+        "step2": "Monitora i tuoi progressi e i rendimenti DeFi dalla Dashboard.",
+        "step3": "Quando il timelock scade, puoi avviare il prelievo programmato."
       },
-      "goToDashboard": "Vai al Dashboard",
-      "redirecting": "Reindirizzamento automatico in {seconds}s…"
+      "goToDashboard": "Vai alla Dashboard",
+      "redirecting": "Reindirizzamento automatico tra {seconds} secondi…"
     },
     "back": {
-      "toCalculator": "Torna al Calcolatore",
-      "previous": "Passaggio precedente"
+      "toCalculator": "Torna alla Calcolatrice",
+      "previous": "Passo precedente"
     }
   },
   "dashboard": {
-    "title": "Il tuo Dashboard Ethernal",
+    "title": "La Tua Dashboard Ethernal",
     "welcome": "Benvenuto, {address}",
-    "subtitle": "Gestisci il tuo futuro finanziario sulla blockchain",
+    "subtitle": "Gestisci il tuo futuro finanziario su blockchain",
     "refresh": "Aggiorna Dati",
     "personalFund": {
       "title": "Il Mio Fondo Personale",
@@ -343,8 +395,8 @@
       "noFund": "Nessun Fondo",
       "currentBalance": "Saldo Attuale",
       "fundStatus": "Stato del Fondo",
-      "retired": "In Pensione",
-      "saving": "Risparmiando",
+      "retired": "Pensionato",
+      "saving": "Risparmio",
       "progress": {
         "title": "Progresso verso l'obiettivo",
         "current": "Attuale",
@@ -356,11 +408,11 @@
         "principal": "Capitale",
         "monthlyDeposit": "Deposito Mensile",
         "totalDeposits": "Depositi Totali",
-        "retirementAge": "Età Pensionistica",
+        "retirementAge": "Età Pensionabile",
         "years": "anni",
         "extraDeposit": "Deposito Extra"
       },
-      "contractAddress": "Indirizzo Contratto",
+      "contractAddress": "Indirizzo del Contratto",
       "viewOnArbiscan": "Visualizza su Arbiscan",
       "timelock": {
         "ends": "Timelock termina:",
@@ -369,7 +421,7 @@
       },
       "actions": {
         "deposit": "Effettua Deposito",
-        "startRetirement": "Avvia Pensione",
+        "startRetirement": "Inizia Pensione",
         "createFund": "Crea Il Mio Fondo"
       },
       "noFundMessage": "Non hai ancora un fondo pensionistico"
@@ -381,11 +433,11 @@
     },
     "preferences": {
       "title": "Le Mie Preferenze",
-      "subtitle": "Configura il tuo profilo di investimento on-chain. Questi parametri determinano come vengono indirizzati i tuoi depositi.",
-      "currentConfig": "Config attuale: ",
+      "subtitle": "Configura il tuo profilo di investimento on-chain. Questi parametri determinano come vengono instradati i tuoi depositi.",
+      "currentConfig": "Configurazione attuale: ",
       "risk": {
         "title": "Livello di Rischio",
-        "conservador": "Conservativo",
+        "conservador": "Conservatore",
         "moderado": "Moderato",
         "agresivo": "Aggressivo",
         "conservador_desc": "Basso rischio, rendimenti stabili e protezione del capitale",
@@ -401,36 +453,36 @@
       "saveSuccess": "Preferenze salvate on-chain",
       "saveError": "Errore nel salvataggio delle preferenze",
       "saveButton": "Salva Configurazione",
-      "saving": "Salvataggio..."
+      "saving": "Salvataggio in corso..."
     },
     "strategy": {
-      "title": "Protocol Registry",
+      "title": "Registro dei Protocolli",
       "subtitle": "Strategia di instradamento dei depositi e metriche dei protocolli verificati.",
       "types": {
         "concentrado": "Concentrato",
         "diversificado": "Diversificato",
         "hibrido": "Ibrido",
-        "concentrado_desc": "Tutto nel miglior protocollo disponibile secondo il tuo profilo",
+        "concentrado_desc": "Tutto nel miglior protocollo disponibile in base al tuo profilo",
         "diversificado_desc": "Distribuzione su più protocolli per ridurre il rischio",
-        "hibrido_desc": "Combinazione dinamica adattata alle performance del mercato"
+        "hibrido_desc": "Combinazione dinamica adattata alle prestazioni del mercato"
       },
       "saveSuccess": "Strategia salvata on-chain",
       "saveButton": "Salva Strategia",
-      "saving": "Salvataggio...",
+      "saving": "Salvataggio in corso...",
       "activeProtocols": "Protocolli Attivi",
-      "verified": "verificati",
-      "viewMore": "Visualizza altri {count}",
+      "verified": "verificato",
+      "viewMore": "Vedi {count} altro",
       "noProtocols": "Nessun protocollo registrato ancora"
     },
     "teamContent": {
-      "title": "Dal Team Ethernal",
+      "title": "Dal Team di Ethernal",
       "subtitle": "Raccomandazioni finanziarie e corsi educativi pubblicati dall'Admin."
     },
     "support": {
       "title": "Hai bisogno di aiuto?",
-      "description": "Contatta il team Ethernal per domande sul tuo piano pensionistico o strategie di investimento",
+      "description": "Contatta il team di Ethernal per domande sul tuo piano pensionistico o sulle strategie di investimento",
       "contact": "Contatta Ethernal",
-      "documentation": "Visualizza Documentazione"
+      "documentation": "Vedi Documentazione"
     },
     "depositModal": {
       "title": "Effettua Deposito",
@@ -440,13 +492,13 @@
       "amountLabel": "Importo in USDC",
       "amountPlaceholder": "Es.: 500.00",
       "amountError": "Inserisci un importo valido (massimo 6 decimali)",
-      "insufficientBalance": "Saldo USDC insufficiente. Ti servono {amount} in più.",
-      "twoTransactions": "Saranno necessarie 2 transazioni: approvazione USDC e deposito.",
+      "insufficientBalance": "Saldo USDC insufficiente. Hai bisogno di altri {amount}.",
+      "twoTransactions": "Sono richieste 2 transazioni: approvazione USDC e deposito.",
       "status": {
-        "approving": "In attesa di approvazione nella tua wallet...",
-        "approvingConfirming": "Conferma approvazione on-chain...",
-        "executing": "In attesa di deposito nella tua wallet...",
-        "confirming": "Conferma deposito on-chain..."
+        "approving": "In attesa di approvazione nel tuo portafoglio...",
+        "approvingConfirming": "Conferma dell'approvazione on-chain...",
+        "executing": "In attesa del deposito nel tuo portafoglio...",
+        "confirming": "Conferma del deposito on-chain..."
       },
       "buttons": {
         "approveAndDeposit": "Approva e Deposita",
@@ -456,31 +508,31 @@
       }
     },
     "notifications": {
-      "riskUpdateAlert": "Avviso: Aggiornamento Rischio"
+      "riskUpdateAlert": "Avviso: Aggiornamento del Rischio"
     }
   },
   "errors": {
-    "somethingWrong": "Qualcosa è andato storto. Riprova.",
-    "networkError": "Errore di rete. Controlla la connessione.",
-    "walletRequired": "Connetti la tua wallet per continuare",
+    "somethingWrong": "Qualcosa è andato storto. Per favore, riprova.",
+    "networkError": "Errore di rete. Controlla la tua connessione.",
+    "walletRequired": "Connetti il tuo portafoglio per continuare",
     "wrongNetwork": "Rete errata. Passa ad Arbitrum Sepolia",
     "wrongNetworkTitle": "Rete Errata",
     "wrongNetworkMessage": "Passa a {network} (Chain ID {chainId}) per continuare.",
-    "alreadyHaveFund": "Hai già un Fondo",
-    "alreadyHaveFundMessage": "Puoi avere solo un fondo per wallet. Il tuo fondo: {address}",
-    "approvalPending": "Approvazione in sospeso. Aspetta che l'approvazione si confermi prima di continuare."
+    "alreadyHaveFund": "Hai Già un Fondo",
+    "alreadyHaveFundMessage": "Puoi avere un solo fondo per portafoglio. Il tuo fondo: {address}",
+    "approvalPending": "Approvazione in sospeso. Attendere la conferma dell'approvazione prima di continuare."
   },
   "faucet": {
-    "connectWallet": "Connetti la tua wallet per ricevere USDC di test.",
+    "connectWallet": "Connetti il tuo portafoglio per ricevere USDC di prova.",
     "success": {
       "title": "Token ricevuti!",
-      "amount": "USDC ricevuto: {amount} USDC",
+      "amount": "USDC ricevuti: {amount} USDC",
       "balance": "Saldo attuale: {balance} USDC"
     },
     "error": {
-      "title": "Errore nella richiesta di token",
+      "title": "Errore nella richiesta dei token",
       "rateLimit": "Limite di richieste raggiunto",
-      "rateLimitMessage": "Il faucet consente una richiesta ogni 24 ore per wallet."
+      "rateLimitMessage": "Il faucet consente una richiesta ogni 24 ore per portafoglio."
     },
     "info": {
       "mockUSDC": "MockUSDC",
@@ -488,9 +540,9 @@
       "ethGas": "ETH gas",
       "forTransactions": "per le transazioni"
     },
-    "button": "Ricevi USDC di Test",
-    "minting": "USDC in fase di minting…",
-    "disclaimer": "USDC su Arbitrum Sepolia · Limite: 1 richiesta / 24h per wallet"
+    "button": "Ricevi USDC di Prova",
+    "minting": "Conio USDC in corso…",
+    "disclaimer": "USDC su Arbitrum Sepolia · Limite: 1 richiesta / 24h per portafoglio"
   },
   "network": {
     "wrongDetected": "Rete Errata Rilevata",
@@ -500,12 +552,12 @@
   "loading": {
     "ethernal": "Caricamento Ethernal",
     "connecting": "Connessione alla blockchain...",
-    "dashboard": "Caricamento del tuo Dashboard...",
+    "dashboard": "Caricamento della tua Dashboard...",
     "verifyingFund": "Verifica del tuo fondo sulla blockchain...",
-    "updating": "Aggiornamento..."
+    "updating": "Aggiornamento in corso..."
   },
   "createContract": {
-    "factoryAddressNotConfigured": "Indirizzo factory non configurato per questa rete"
+    "factoryAddressNotConfigured": "Indirizzo Factory non configurato per questa rete"
   },
   "feeModal": {
     "headerLabel": "Analisi comparativa",
@@ -518,42 +570,42 @@
     "yearsMax": "40 anni",
     "ethFeeLabel": "Commissione unica: 3% per deposito",
     "ethApy": "DeFi: ~{{apy}} APY (Aave)",
-    "extra": "IN PIÙ",
-    "corpName": "Fondo Aziendale",
-    "corpFeeLabel": "Gestione 1,5% + Admin 0,5% + Ingresso 3%",
-    "corpApy": "Lordo: ~{{apy}} (netto molto meno)",
+    "extra": "EXTRA",
+    "corpName": "Fondo Corporate",
+    "corpFeeLabel": "Gestione 1.5% + Admin 0.5% + Ingresso 3%",
+    "corpApy": "Lordo: ~{{apy}} (netto molto inferiore)",
     "year1": "Anno 1",
     "yearMid": "Anno {{year}}",
     "yearEnd": "Anno {{year}}",
     "tabResults": "Risultati",
-    "tabBreakdown": "Confronto",
+    "tabBreakdown": "Comparazione",
     "tabFees": "Commissioni",
     "colMetric": "Metrica",
-    "colCorp": "Az.",
+    "colCorp": "Corp.",
     "row": {
       "finalCapital": "Capitale finale",
       "feesPaid": "Commissioni pagate",
       "returnOnCapital": "Rendimento sul capitale",
       "entryFee": "Commissione d'ingresso",
-      "ethEntry": "3% unica",
+      "ethEntry": "3% una tantum",
       "corpEntry": "3% ogni deposito",
-      "annualFee": "Commissione annua gestione",
-      "exitFee": "Commissione di uscita",
-      "ethExit": "0% (normale)",
+      "annualFee": "Commissione di gestione annuale",
+      "exitFee": "Commissione d'uscita",
+      "ethExit": "0% (standard)",
       "corpExit": "1% + penale",
       "transparency": "Trasparenza",
       "ethTransparency": "100% on-chain",
-      "corpTransparency": "Prospetto + revisione",
+      "corpTransparency": "Prospetto + audit",
       "custody": "Custodia",
-      "ethCustody": "Smart contract",
-      "corpCustody": "Ente finanziario"
+      "ethCustody": "Contratto intelligente",
+      "corpCustody": "Entità finanziaria"
     },
     "ethStructureTitle": "Ethernal — Struttura semplice",
-    "corpStructureTitle": "Aziendale — Struttura tipica",
+    "corpStructureTitle": "Corporate — Struttura tipica",
     "ethFees": [
       {
         "label": "Commissione di deposito",
-        "value": "3% · Va al Treasury on-chain",
+        "value": "3% · Va al Tesoro on-chain",
         "desc": "Nessuna commissione nascosta, nessuna gestione annuale, nessuna penale di uscita standard."
       },
       {
@@ -563,24 +615,24 @@
       },
       {
         "label": "Gas (Arbitrum L2)",
-        "value": "~$0,01-$0,10 per tx",
+        "value": "~$0.01-$0.10 per tx",
         "desc": "Praticamente trascurabile rispetto a qualsiasi alternativa tradizionale."
       }
     ],
     "corpFees": [
       {
-        "label": "Commissione d'ingresso",
+        "label": "Carico d'ingresso",
         "value": "3% su ogni deposito",
-        "desc": "Addebita dal primo euro, prima di investire."
+        "desc": "Addebitato dal primo dollaro, prima di investire."
       },
       {
-        "label": "Commissione annua di gestione (TER)",
-        "value": "1,5% sul saldo",
-        "desc": "Addebitata anche se il fondo performa negativamente."
+        "label": "Commissione di gestione annuale (TER)",
+        "value": "1.5% sul saldo",
+        "desc": "Addebitata anche se il fondo ha performance negative."
       },
       {
-        "label": "Commissione amministrativa",
-        "value": "0,5% annuo",
+        "label": "Commissione di amministrazione",
+        "value": "0.5% all'anno",
         "desc": "Costi operativi trasferiti all'investitore."
       },
       {
@@ -589,9 +641,9 @@
         "desc": "Visibile solo nel prospetto, raramente negli estratti conto."
       },
       {
-        "label": "Commissione di uscita/rimborso",
-        "value": "1% al prelievo",
-        "desc": "Penale per liquidare la posizione."
+        "label": "Commissione d'uscita / rimborso",
+        "value": "1% sul prelievo",
+        "desc": "Penale per la liquidazione della tua posizione."
       }
     ],
     "disclaimer": "Simulazione indicativa · I rendimenti DeFi reali possono variare · Non è consulenza finanziaria"
@@ -600,181 +652,186 @@
     "badge": "Documento Legale",
     "version": "Versione {{version}}",
     "effective": "In vigore dal {{date}}",
-    "toc": "Sommario",
-    "backToHome": "Torna alla home",
+    "toc": "Indice",
+    "backToHome": "Torna alla Home",
+    "whitepaper": "Whitepaper",
+    "tokenSaleAgreement": "Accordo di Vendita Token",
+    "legalNotice": "Questi documenti sono solo a scopo informativo. Non costituiscono consulenza finanziaria o un'offerta di titoli.",
+    "sectionTitle": "Documentazione Legale",
+    "sectionSubtitle": "Tutti i documenti del protocollo sono disponibili pubblicamente. Si prega di leggerli prima di partecipare.",
     "privacy": {
       "title": "Informativa sulla Privacy",
       "s1": {
         "title": "Introduzione",
-        "body": "La presente Informativa sulla Privacy descrive come FondoRetiro DeFi (di seguito, 'il Protocollo') tratta le informazioni degli utenti che interagiscono con i contratti intelligenti distribuiti su blockchain pubblica. Utilizzando il Protocollo, l'utente riconosce di aver letto, compreso e accettato i termini qui stabiliti."
+        "body": "La presente Informativa sulla Privacy descrive come FondoRetiro DeFi (di seguito, 'il Protocollo') gestisce le informazioni degli utenti che interagiscono con i contratti intelligenti distribuiti sulla blockchain pubblica. Utilizzando il Protocollo, l'utente riconosce di aver letto, compreso e accettato i termini qui stabiliti."
       },
       "s2": {
-        "title": "Informazioni registrate su Blockchain",
-        "b1": "Indirizzo del portafoglio (wallet) dell'utente.",
+        "title": "Informazioni Registrate su Blockchain",
+        "b1": "Indirizzo del portafoglio dell'utente.",
         "b2": "Importi depositati, prelevati e trasferiti (in USDC o altri token ERC-20 configurati).",
         "b3": "Indirizzo del fondo personale creato tramite PersonalFundFactory.",
-        "b4": "Parametri del fondo: età dichiarata, età pensionistica, deposito mensile, capitale iniziale, protocollo DeFi selezionato e periodo di timelock.",
+        "b4": "Parametri del fondo: età dichiarata, età pensionabile, deposito mensile, capitale iniziale, protocollo DeFi selezionato e periodo di timelock.",
         "b5": "Protocollo di investimento selezionato (MockAaveAdapter, MockOndoAdapter o altri registrati in ProtocolRegistry).",
-        "b6": "Configurazione delle preferenze utente in UserPreferences (strategia, tolleranza al rischio, autocompounding).",
+        "b6": "Impostazioni delle preferenze dell'utente in UserPreferences (strategia, tolleranza al rischio, autocompounding).",
         "b7": "Timestamp di tutte le transazioni.",
         "b8": "Eventi emessi: FundCreated, Deposited, Withdrawn, UserConfigUpdated, DepositRouted, tra gli altri."
       },
       "s3": {
-        "title": "Informazioni che NON raccogliamo",
+        "title": "Informazioni che NON Raccogliamo",
         "b1": "Nome, cognome, documento d'identità o dati personali identificabili al di fuori della blockchain.",
-        "b2": "Indirizzo fisico, e-mail, numero di telefono o dati di contatto.",
-        "b3": "Informazioni biometriche o finanziarie al di fuori delle operazioni su blockchain.",
-        "b4": "Cookie, identificatori di dispositivo o dati di navigazione/sessione web.",
+        "b2": "Indirizzo fisico, email, numero di telefono o dati di contatto.",
+        "b3": "Informazioni biometriche o finanziarie al di fuori delle operazioni blockchain.",
+        "b4": "Cookie, identificatori di dispositivo o dati di navigazione web/sessione.",
         "b5": "Dati di geolocalizzazione."
       },
       "s4": {
-        "title": "Natura pubblica dei dati",
-        "body": "Ogni transazione su blockchain pubblica è, per natura, pubblica, permanente e immutabile. Chiunque può consultare la cronologia delle transazioni di un indirizzo wallet tramite block explorer. Il Protocollo non può eliminare, modificare né nascondere informazioni già registrate."
+        "title": "Natura Pubblica dei Dati",
+        "body": "Ogni transazione su una blockchain pubblica è, per natura, pubblica, permanente e immutabile. Chiunque può consultare la cronologia delle transazioni di un indirizzo del portafoglio tramite explorer di blocco. Il Protocollo non può cancellare, modificare o nascondere le informazioni già registrate."
       },
       "s5": {
-        "title": "Utilizzo delle informazioni",
+        "title": "Uso delle Informazioni",
         "b1": "Calcolare ed eseguire depositi, prelievi e distribuzione dei rendimenti.",
-        "b2": "Verificare le condizioni di timelock e l'idoneità al prelievo.",
-        "b3": "Instradare i depositi verso i protocolli DeFi selezionati tramite UserPreferences.",
+        "b2": "Verificare le condizioni del timelock e l'idoneità al prelievo.",
+        "b3": "Instradare i depositi ai protocolli DeFi selezionati tramite UserPreferences.",
         "b4": "Registrare la cronologia dei contributi al fondo pensione.",
         "b5": "Calcolare proiezioni finanziarie interne."
       },
       "s6": {
-        "title": "Dati di terze parti",
-        "body": "Il Protocollo interagisce con protocolli DeFi di terze parti (Aave v3, Ondo USDY) le cui politiche sulla privacy si applicano in modo indipendente. Consultare tali politiche prima di selezionare un protocollo."
+        "title": "Dati di Terze Parti",
+        "body": "Il Protocollo interagisce con protocolli DeFi di terze parti (Aave v3, Ondo USDY) le cui proprie politiche sulla privacy si applicano in modo indipendente. Rivedere tali politiche prima di selezionare un protocollo."
       },
       "s7": {
         "title": "Sicurezza",
-        "body": "La sicurezza del Protocollo si basa sull'immutabilità dei contratti intelligenti e sui controlli di accesso tramite ruoli di amministratore e contratti autorizzati. L'utente è l'unico responsabile della sicurezza della propria chiave privata."
+        "body": "La sicurezza del Protocollo si basa sull'immutabilità dei contratti intelligenti e sui controlli di accesso attraverso ruoli di amministratore e contratti autorizzati. L'utente è l'unico responsabile della sicurezza della propria chiave privata."
       },
       "s8": {
-        "title": "Diritti dell'utente",
-        "b1": "Accedere liberamente a tutte le informazioni pubbliche del proprio fondo tramite qualsiasi block explorer.",
-        "b2": "Revocare l'accesso dei contratti autorizzati tramite revokeContract in UserPreferences.",
-        "b3": "Selezionare e modificare il protocollo e la strategia di investimento, soggetto alle condizioni di timelock."
+        "title": "Diritti dell'Utente",
+        "b1": "Accedere liberamente a tutte le informazioni pubbliche sul proprio fondo tramite qualsiasi explorer di blocco.",
+        "b2": "Revocare l'autorizzazione dei contratti autorizzati tramite revokeContract in UserPreferences.",
+        "b3": "Selezionare e modificare il proprio protocollo di investimento e strategia, soggetto alle condizioni del timelock."
       },
       "s9": {
-        "title": "Modifiche alla presente Informativa",
-        "body": "La presente Informativa può essere aggiornata per riflettere modifiche al Protocollo o alla normativa applicabile. Le modifiche saranno pubblicate nel repository ufficiale del progetto."
+        "title": "Modifiche a questa Informativa",
+        "body": "Questa Informativa può essere aggiornata per riflettere i cambiamenti del Protocollo o delle normative applicabili. Le modifiche saranno pubblicate nel repository ufficiale del progetto."
       },
       "s10": {
-        "title": "Contatto",
-        "body": "Per domande relative alla presente Informativa, contattarci tramite i canali ufficiali del progetto o all'indirizzo contact@ethernal.fund."
+        "title": "Contatti",
+        "body": "Per domande relative a questa Informativa, contattaci attraverso i canali ufficiali del progetto o all'indirizzo contact@ethernal.fund."
       }
     },
     "terms": {
       "title": "Termini e Condizioni d'Uso",
       "s1": {
         "title": "Accettazione dei Termini",
-        "body": "Interagendo con i contratti intelligenti di FondoRetiro DeFi, inclusi PersonalFundFactory, PersonalFund, Treasury, UserPreferences e ProtocolRegistry, l'utente accetta integralmente e incondizionatamente i presenti Termini e Condizioni d'Uso."
+        "body": "Interagendo con i contratti intelligenti di FondoRetiro DeFi, inclusi PersonalFundFactory, PersonalFund, Treasury, UserPreferences e ProtocolRegistry, l'utente accetta pienamente e incondizionatamente i presenti Termini e Condizioni d'Uso."
       },
       "s2": {
         "title": "Descrizione del Protocollo",
         "b1": "Creazione di fondi pensione personali tramite PersonalFundFactory.",
-        "b2": "Deposito e prelievo di USDC o altri asset stabili configurati dall'amministratore.",
-        "b3": "Instradamento automatico o manuale dei depositi verso protocolli DeFi registrati.",
-        "b4": "Gestione delle preferenze utente e delle strategie di investimento tramite UserPreferences.",
+        "b2": "Deposito e prelievo di USDC o altre attività stabili configurate dall'amministratore.",
+        "b3": "Instradamento automatico o manuale dei depositi ai protocolli DeFi registrati.",
+        "b4": "Gestione delle preferenze dell'utente e delle strategie di investimento tramite UserPreferences.",
         "b5": "Calcolo delle proiezioni finanziarie pensionistiche.",
-        "b6": "Applicazione di periodi di blocco (timelock) configurabili tra 1 e 40 anni."
+        "b6": "Applicazione di periodi di blocco configurabili (timelock) tra 1 e 40 anni."
       },
       "s3": {
-        "title": "Requisiti di Idoneità",
-        "b1": "Avere tra 18 e 70 anni di età dichiarata.",
-        "b2": "Dichiarare un'età pensionistica minima di 60 anni.",
-        "b3": "Fornire un capitale iniziale entro il range minimo e massimo configurato.",
-        "b4": "Impegnarsi con un deposito mensile minimo configurato.",
+        "title": "Requisiti di Ammissibilità",
+        "b1": "Avere tra i 18 e i 70 anni di età dichiarata.",
+        "b2": "Dichiarare un'età pensionabile minima di 60 anni.",
+        "b3": "Fornire un capitale iniziale entro l'intervallo minimo e massimo configurato.",
+        "b4": "Impegnarsi a versare un deposito mensile minimo configurato.",
         "b5": "Selezionare un protocollo di investimento attivo e approvato nel ProtocolRegistry.",
-        "b6": "Non avere un fondo attivo precedente (un utente può possedere un solo fondo attivo contemporaneamente)."
+        "b6": "Non avere un fondo precedentemente attivo (un utente può avere un solo fondo attivo contemporaneamente)."
       },
       "s4": {
         "title": "Natura dei Contratti Intelligenti",
         "b1": "I contratti intelligenti eseguono regole in modo autonomo, deterministico e immutabile una volta distribuiti.",
-        "b2": "Nessun intermediario umano può annullare, cancellare o modificare transazioni già confermate.",
-        "b3": "I contratti possono contenere errori o vulnerabilità. L'utilizzo implica l'assunzione di questo rischio.",
-        "b4": "L'interazione richiede il pagamento di gas fee, il cui costo varia ed è responsabilità esclusiva dell'utente."
+        "b2": "Nessun intermediario umano può invertire, annullare o modificare transazioni già confermate.",
+        "b3": "I contratti possono contenere errori o vulnerabilità. L'uso implica l'assunzione di questo rischio.",
+        "b4": "L'interazione richiede il pagamento di commissioni gas, il cui costo varia ed è di esclusiva responsabilità dell'utente."
       },
       "s5": {
-        "title": "Periodo di Timelock e Prelievo",
-        "b1": "I fondi rimarranno bloccati per il periodo di timelock selezionato al momento della creazione del fondo (da 1 a 40 anni).",
-        "b2": "Durante il timelock, non è possibile prelevare fondi salvo condizioni di emergenza previste nel contratto.",
-        "b3": "Alla scadenza del timelock, l'utente potrà prelevare secondo le regole di distribuzione configurate.",
+        "title": "Periodo di Blocco (Timelock) e Prelievo",
+        "b1": "I fondi saranno bloccati durante il periodo di timelock selezionato al momento della creazione del fondo (da 1 a 40 anni).",
+        "b2": "Durante il timelock, non è possibile prelevare fondi se non in condizioni di emergenza previste dal contratto.",
+        "b3": "Alla scadenza del timelock, l'utente può prelevare secondo le regole di distribuzione configurate.",
         "b4": "Il Protocollo non garantisce alcun rendimento. I tassi sono stime dei protocolli DeFi sottostanti."
       },
       "s6": {
         "title": "Ruolo dell'Amministratore",
-        "b1": "Configurazione dei parametri di sistema (range di capitale, commissioni, protocolli abilitati).",
-        "b2": "Autorizzazione e revoca di contratti in UserPreferences.",
-        "b3": "Aggiornamento di contratti ausiliari (DateTime, UserPreferences).",
+        "b1": "Configurazione dei parametri di sistema (intervalli di capitale, commissioni, protocolli abilitati).",
+        "b2": "Autorizzazione e revoca dei contratti in UserPreferences.",
+        "b3": "Aggiornamento dei contratti ausiliari (DateTime, UserPreferences).",
         "b4": "Recupero di token inviati per errore (funzione recoverTokens)."
       },
       "s7": {
         "title": "Rischi Associati",
-        "b1": "Rischio smart contract: errori, exploit o vulnerabilità nel codice.",
-        "b2": "Rischio protocollo DeFi: i protocolli di terze parti possono subire guasti o hack.",
-        "b3": "Rischio normativo: la normativa applicabile può cambiare e influire sulla legalità dell'uso.",
+        "b1": "Rischio di contratto intelligente: errori, exploit o vulnerabilità nel codice.",
+        "b2": "Rischio di protocollo DeFi: i protocolli di terze parti possono subire guasti o hack.",
+        "b3": "Rischio normativo: le normative applicabili possono cambiare e influenzare la legalità d'uso.",
         "b4": "Rischio di custodia: la perdita della chiave privata implica la perdita permanente dell'accesso.",
         "b5": "Rischio di liquidità: durante il timelock, i fondi non sono liquidi.",
-        "b6": "Rischio di mercato: il valore degli asset stabili può essere influenzato da condizioni estreme.",
-        "b7": "Rischio di rete: congestione, fork o interruzioni possono influire sull'esecuzione delle transazioni."
+        "b6": "Rischio di mercato: il valore delle attività stabili può essere influenzato da condizioni estreme.",
+        "b7": "Rischio di rete: congestione, fork o interruzioni possono influenzare l'esecuzione delle transazioni."
       },
       "s8": {
         "title": "Limitazione di Responsabilità",
-        "body": "Nella massima misura consentita dalla legge, il Protocollo, i suoi sviluppatori, collaboratori e l'amministratore non saranno responsabili per danni diretti, indiretti, incidentali o punitivi derivanti dall'uso o dall'impossibilità di uso del Protocollo."
+        "body": "Nella massima misura consentita dalla legge, il Protocollo, i suoi sviluppatori, collaboratori e amministratore non saranno responsabili per alcun danno diretto, indiretto, incidentale o punitivo derivante dall'uso o dall'impossibilità di utilizzo del Protocollo."
       },
       "s9": {
         "title": "Proprietà Intellettuale",
-        "body": "Il codice sorgente dei contratti intelligenti è disponibile nel repository ufficiale sotto la licenza pubblicata. L'utente può revisionare e studiare il codice conformemente ai termini di tale licenza."
+        "body": "Il codice sorgente dei contratti intelligenti è disponibile nel repository ufficiale sotto la licenza pubblicata. L'utente può verificare e studiare il codice secondo i termini di tale licenza."
       },
       "s10": {
         "title": "Modifiche al Protocollo",
-        "body": "I Termini e il Protocollo possono essere aggiornati. Le nuove versioni entreranno in vigore dalla loro pubblicazione nel repository ufficiale. L'uso continuato implica l'accettazione dei nuovi termini."
+        "body": "I Termini e il Protocollo possono essere aggiornati. Le nuove versioni entreranno in vigore a partire dalla loro pubblicazione nel repository ufficiale. L'uso continuato implica l'accettazione dei nuovi termini."
       },
       "s11": {
         "title": "Legge Applicabile",
-        "body": "I presenti Termini sono regolati dalla legislazione della giurisdizione in cui il Protocollo ha la propria sede di sviluppo. Qualsiasi controversia sarà sottoposta ai tribunali competenti di tale giurisdizione."
+        "body": "Questi Termini sono regolati dalla legge della giurisdizione in cui il Protocollo ha la sua sede di sviluppo. Qualsiasi controversia sarà sottoposta ai tribunali competenti di tale giurisdizione."
       }
     },
     "disclaimer": {
-      "title": "Avviso Legale e Limitazione di Responsabilità",
-      "warning": "AVVISO IMPORTANTE: LEGGERE INTEGRALMENTE QUESTO DOCUMENTO PRIMA DI INTERAGIRE CON IL PROTOCOLLO.",
+      "title": "Avviso Legale e Disclaimer",
+      "warning": "AVVISO IMPORTANTE: LEGGERE COMPLETAMENTE QUESTO DOCUMENTO PRIMA DI INTERAGIRE CON IL PROTOCOLLO.",
       "s1": {
         "title": "Natura del Progetto",
-        "body": "FondoRetiro DeFi è un progetto di infrastruttura finanziaria decentralizzata (DeFi) basato su contratti intelligenti su blockchain pubblica. NON è un'entità finanziaria regolamentata, banca, assicuratore né fondo garantito da alcuno Stato. Le versioni attuali includono contratti simulati (Mock) per ambienti di test che NON generano rendimenti reali."
+        "body": "FondoRetiro DeFi è un progetto di infrastruttura finanziaria decentralizzata (DeFi) basato su contratti intelligenti su una blockchain pubblica. NON è un'entità finanziaria regolamentata, banca, assicurazione o fondo con garanzia statale. Le versioni attuali includono contratti simulati (Mock) per ambienti di test che NON generano rendimenti reali."
       },
       "s2": {
         "title": "Non Costituisce Consulenza Finanziaria",
-        "body": "Nessun contenuto, funzionalità, proiezione o calcolo del Protocollo costituisce consulenza finanziaria, di investimento, legale, fiscale o di qualsiasi altra natura professionale. Consultare consulenti qualificati prima di prendere qualsiasi decisione di investimento basata sul Protocollo."
+        "body": "Nessun contenuto, funzionalità, proiezione o calcolo del Protocollo costituisce consulenza finanziaria, di investimento, legale, fiscale o professionale di alcun tipo. Consultare consulenti qualificati prima di prendere qualsiasi decisione di investimento basata sul Protocollo."
       },
       "s3": {
         "title": "Rischi di Perdita Totale dei Fondi",
-        "b1": "Vulnerabilità, bug o exploit in contratti intelligenti di questo Protocollo o di quelli sottostanti.",
-        "b2": "Attacchi di reentrancy, manipolazione di oracoli, flash loan attack o altri vettori DeFi.",
-        "b3": "Perdita o compromissione della chiave privata associata al wallet dell'utente.",
+        "b1": "Vulnerabilità, bug o exploit nei contratti intelligenti di questo Protocollo o di quelli sottostanti.",
+        "b2": "Attacchi di rientro, manipolazione di oracoli, attacchi flash loan o altri vettori DeFi.",
+        "b3": "Perdita o compromissione della chiave privata associata al portafoglio dell'utente.",
         "b4": "Fork, attacchi del 51% o altre interruzioni della rete blockchain sottostante.",
-        "b5": "Perdita di valore di USDC o altri stablecoin in caso di depeg.",
-        "b6": "Cambiamenti normativi che impediscano l'accesso o l'uso del Protocollo.",
-        "b7": "Guasti o insolvenza dei protocolli DeFi di terze parti integrati."
+        "b5": "Perdita di valore di USDC o altre stablecoin in caso di depegging.",
+        "b6": "Cambiamenti normativi che impediscono l'accesso o l'uso del Protocollo.",
+        "b7": "Guasti o insolvenza di protocolli DeFi di terze parti integrati."
       },
       "s4": {
         "title": "Nessuna Garanzia di Rendimento",
-        "body": "Il Protocollo non garantisce alcun rendimento, tasso di interesse né preservazione del capitale. I rendimenti mostrati sono stime basate su contratti mock e non rappresentano impegni contrattuali. In produzione, i rendimenti dipenderanno esclusivamente dalle prestazioni dei protocolli DeFi selezionati."
+        "body": "Il Protocollo non garantisce alcun rendimento, tasso di interesse o preservazione del capitale. I rendimenti mostrati sono stime basate su contratti simulati e non rappresentano impegni contrattuali. In produzione, i rendimenti dipenderanno esclusivamente dalle prestazioni dei protocolli DeFi selezionati."
       },
       "s5": {
         "title": "Responsabilità dell'Utente",
-        "b1": "La custodia e la sicurezza della propria chiave privata e wallet.",
-        "b2": "La verifica degli indirizzi di contratto con cui interagisce.",
-        "b3": "La comprensione dei parametri configurati e delle loro implicazioni finanziarie.",
-        "b4": "Il rispetto degli obblighi fiscali secondo la legislazione della propria giurisdizione.",
-        "b5": "La verifica dello stato normativo dell'uso di protocolli DeFi nel proprio paese.",
-        "b6": "La corretta approvazione (approve) di USDC prima di effettuare depositi."
+        "b1": "Custodia e sicurezza della propria chiave privata e del portafoglio.",
+        "b2": "Verifica degli indirizzi dei contratti con cui interagisce.",
+        "b3": "Comprensione dei parametri configurati e delle loro implicazioni finanziarie.",
+        "b4": "Adempimento degli obblighi fiscali secondo le leggi della propria giurisdizione.",
+        "b5": "Verifica dello stato normativo dell'uso del protocollo DeFi nel proprio paese.",
+        "b6": "Corretta approvazione (approve) di USDC prima di effettuare depositi."
       },
       "s6": {
-        "title": "Assenza di Assicurazione sui Depositi",
-        "body": "I fondi depositati non sono coperti da alcun sistema di assicurazione sui depositi, garanzia statale o meccanismo equivalente. In caso di perdita di fondi, l'utente non avrà diritto a reclamo presso alcun organismo di tutela."
+        "title": "Nessuna Assicurazione sui Depositi",
+        "body": "I fondi depositati non sono coperti da alcun sistema di assicurazione dei depositi, garanzia statale o meccanismo equivalente. In caso di perdita di fondi, l'utente non avrà alcun diritto di rivendicazione dinanzi a nessun organismo di protezione."
       },
       "s7": {
-        "title": "Uso in Giurisdizioni Ristrette",
-        "body": "Il Protocollo potrebbe non essere disponibile o essere illegale in determinate giurisdizioni. L'utente è l'unico responsabile di verificare se il suo utilizzo è consentito nel proprio paese o regione di residenza."
+        "title": "Uso in Giurisdizioni Limitate",
+        "body": "Il Protocollo potrebbe non essere disponibile o essere illegale in determinate giurisdizioni. L'utente è l'unico responsabile della verifica se il suo utilizzo è consentito nel proprio paese o regione di residenza."
       },
       "s8": {
         "title": "Contratti in Ambiente di Test",
@@ -783,17 +840,17 @@
         "b3": "MockDeFiProtocol: 0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71"
       },
       "s9": {
-        "title": "Limitazione Generale di Responsabilità",
-        "body": "NELLA MASSIMA MISURA CONSENTITA DALLA LEGGE, IL PROTOCOLLO, I SUOI SVILUPPATORI, COLLABORATORI, REVISORI E AMMINISTRATORE DECLINANO OGNI RESPONSABILITÀ PER DANNI, PERDITE O PREGIUDIZI DERIVANTI DALL'USO O DALL'IMPOSSIBILITÀ DI USO DEL PROTOCOLLO. L'UTILIZZO È SOTTO L'ESCLUSIVA RESPONSABILITÀ DELL'UTENTE."
+        "title": "Disclaimer Generale",
+        "body": "NELLA MASSIMA MISURA CONSENTITA DALLA LEGGE, IL PROTOCOLLO, I SUOI SVILUPPATORI, CONTRIBUTORI, REVISORI E AMMINISTRATORE DECLINANO OGNI RESPONSABILITÀ PER DANNI, PERDITE O PREGIUDIZI DERIVANTI DALL'USO O DALL'IMPOSSIBILITÀ DI UTILIZZO DEL PROTOCOLLO. L'USO È A ESCLUSIVO RISCHIO DELL'UTENTE."
       },
       "s10": {
-        "title": "Vigenza",
-        "body": "Il presente Avviso Legale è in vigore dalla data indicata nell'intestazione e viene aggiornato contestualmente ai Termini e Condizioni d'Uso."
+        "title": "Data di Entrata in Vigore",
+        "body": "Il presente Avviso Legale è efficace a partire dalla data indicata nell'intestazione e viene aggiornato insieme ai Termini e Condizioni d'Uso."
       }
     }
   },
   "fund": {
-    "Calculator": "Calcolatore",
+    "Calculator": "Calcolatrice",
     "inputs": "Configura il tuo piano pensionistico",
     "Desired Income": "Reddito Mensile Desiderato",
     "Payment Years": "Anni di Pagamento",
@@ -802,18 +859,18 @@
     "Apy": "APY Atteso (%)",
     "Principal": "Capitale Iniziale (USDC)",
     "result": "Risultato",
-    "corpus": "Corpus Necessario",
-    "Monthly Needed": "Deposito Mensile",
+    "corpus": "Capitale Richiesto",
+    "Monthly Needed": "Necessario Mensile",
     "Total Deposit": "Totale Depositato",
     "Years Left": "Anni alla Pensione",
-    "Fund at Retirement": "Fondo Stimato alla Pensione",
+    "Fund at Retirement": "Fondo Stimato al Pensionamento",
     "Income for": "Reddito per",
-    "Fee Row": "Commissione Piattaforma",
-    "Initial Deposit": "Dettaglio Primo Deposito",
-    "First Monthly": "Prima Rata Mensile",
+    "Fee Row": "Commissione della Piattaforma",
+    "Initial Deposit": "Riepilogo Deposito Iniziale",
+    "First Monthly": "Primo Deposito Mensile",
     "Total Approve": "Totale da Approvare",
     "Select Protocol": "Seleziona Protocollo →",
-    "monthlyTooLow": "Il deposito mensile deve essere almeno ${{min}} USDC"
+    "monthlyTooLow": "Il deposito mensile deve essere di almeno ${min} USDC"
   },
   "wizard": {
     "Select Protocol": "Seleziona Protocollo",
@@ -822,89 +879,90 @@
     "approveUsdc": "Approva USDC",
     "approving": "Approvazione in corso…",
     "approved": "Approvato ✓",
-    "deployFund": "Crea Fondo",
+    "deployFund": "Distribuisci Fondo",
     "deploying": "Distribuzione in corso…",
     "viewOnExplorer": "Visualizza su Explorer",
     "Calcular": "Calcola"
   },
   "beta": {
-    "bannerText": "Versione beta — il tuo feedback ci aiuta a migliorare.",
-    "bannerCta": "Condividi la tua opinione →"
+    "bannerText": "Questa è una versione beta — il tuo feedback ci aiuta a migliorare.",
+    "bannerCta": "Condividi le tue opinioni →"
   },
   "ourStory": {
     "pageTitle": "La Nostra Storia",
-    "metaDescription": "Scopri come una conversazione con un bambino per le strade di Buenos Aires ha ispirato la creazione di Ethernal Fund — una piattaforma pensionistica decentralizzata."
+    "metaDescription": "Scopri come una conversazione con un bambino per le strade di Buenos Aires ha dato origine a Ethernal Fund — una piattaforma pensionistica decentralizzata.",
+    "fullStory": "Tutto è iniziato un pomeriggio mentre il nostro fondatore, Cristian F. Taborda, andava a prendere i suoi figli a scuola. Incontrando una manifestazione di pensionati all'angolo tra Rodríguez Peña e Avenida Rivadavia, un'innocente domanda di suo figlio rivelò una realtà dolorosa: il sistema pensionistico aveva fallito diverse generazioni della sua stessa famiglia. Quel momento risvegliò in lui una profonda determinazione: creare un'alternativa reale e sostenibile. Così nacque l'idea di un'applicazione decentralizzata dove ogni persona può calcolare, creare e gestire il proprio fondo pensione — con dignità e libertà."
   },
   "security": {
     "modalTitle": "Sicurezza e Controllo",
     "card": {
       "privacy": {
         "label": "Privacy",
-        "title": "Accesso senza password",
-        "description": "Nessun nome utente o password. Nessun dato personale. Accesso solo tramite account wallet — nessuna superficie di attacco per gli hacker, nessun dato da vendere."
+        "title": "Accesso a Conoscenza Zero",
+        "description": "Nessun nome utente o password. Nessun dato personale. Accesso solo attraverso un account portafoglio — nessuna superficie di attacco per gli hacker, nessun dato che può essere venduto."
       },
       "sovereignty": {
         "label": "Sovranità",
-        "title": "Fondi non tracciabili",
-        "description": "Account wallet anonimi: non tracciabili e non pignorabili. Nessun politico corrotto può impossessarsi dei tuoi risparmi — i tuoi soldi sono tuoi e solo tuoi."
+        "title": "Fondi non Tracciabili",
+        "description": "Account portafoglio anonimi: non tracciabili e non sequestrabili. Nessun politico corrotto può appropriarsi dei tuoi risparmi — i tuoi soldi sono tuoi e solo tuoi."
       },
       "succession": {
         "label": "Successione",
-        "title": "Smart Contract Automatico",
-        "description": "Nessuna procedura successoria né identificazione del beneficiario. Al raggiungimento dell'età pensionistica, lo Smart Contract rilascia automaticamente i fondi al wallet — hardware wallet o app."
+        "title": "Contratto Intelligente Automatico",
+        "description": "Nessuna procedura di successione o identificazione del beneficiario. Al raggiungimento dell'età pensionabile, il Contratto Intelligente rilascia automaticamente i fondi al portafoglio — portafoglio fisico o app."
       }
     },
     "pill": {
-      "noPassword": "Nessuna password",
+      "noPassword": "Niente password",
       "noPersonalData": "Nessun dato personale",
       "antiHack": "Anti-hack",
       "anonymous": "Anonimo",
-      "nonSeizable": "Non pignorabile",
+      "nonSeizable": "Non sequestrabile",
       "noIntermediaries": "Nessun intermediario",
       "noFormalities": "Nessuna formalità",
-      "autoRetirement": "Pensione automatica",
-      "smartContract": "Smart Contract"
+      "autoRetirement": "Pensionamento automatico",
+      "smartContract": "Contratto Intelligente"
     },
     "stat": {
       "exposed": "Dati esposti",
       "identity": "Identità richiesta",
-      "formalities": "Pratiche successorie",
+      "formalities": "Formalità successorie",
       "zero": "Zero",
-      "none": "Nessuna"
+      "none": "Nessuno"
     },
-    "shieldTitle": "Architettura non custodiale.",
-    "shieldDescription": "Il titolare del wallet è l'unico ad avere accesso ai fondi — né Ethernal Fund né terze parti possono intervenire, pignorare o reindirizzare gli asset.",
-    "disclaimer": "ETHERNAL FUND · CONTRATTO ON-CHAIN · ARBITRUM · NON CUSTODIALE"
+    "shieldTitle": "Architettura non-custodial.",
+    "shieldDescription": "Il titolare del portafoglio è l'unico ad avere accesso ai fondi — né Ethernal Fund né terze parti possono intervenire, sequestrare o reindirizzare le attività.",
+    "disclaimer": "ETHERNAL FUND · CONTRATTO ON-CHAIN · ARBITRUM · NON-CUSTODIAL"
   },
   "notFound": {
     "title": "Pagina non trovata",
     "subtitle": "La pagina che stai cercando non esiste.",
-    "goHome": "Torna alla home"
+    "goHome": "Vai alla home"
   },
   "sale": {
     "page": {
-      "title": "Token Sale",
+      "title": "Vendita di Token",
       "subtitle": "Partecipa al Seed Round di ETRF, il token di utilità del primo fondo pensione personale decentralizzato.",
       "brand": "Ethernal Fund · ETRF",
-      "disclaimer": "ETRF è un token di utilità. La partecipazione al Seed Round comporta il rischio di perdita del capitale.",
+      "disclaimer": "ETRF è un token di utilità. La partecipazione al Seed Round comporta il rischio di perdita di capitale.",
       "links": {
         "whitepaper": "Whitepaper",
-        "audit": "Audit dei contratti",
+        "audit": "Audit del Contratto",
         "docs": "Documentazione"
       }
     },
     "round": {
-      "live": "● Live",
-      "ended": "Terminato",
+      "live": "● Attivo",
+      "ended": "Concluso",
       "price": "prezzo",
       "perToken": "per ETRF",
       "raised": "raccolto",
-      "hardCap": "hard cap",
-      "nextRoundPrice": "prezzo round successivo",
-      "walletCap": "limite wallet",
+      "hardCap": "limite massimo",
+      "nextRoundPrice": "prezzo prossimo round",
+      "walletCap": "limite per portafoglio",
       "tokensRemaining": "token rimanenti",
-      "cliffVesting": "{{cliff}}m cliff · {{vesting}}m vesting",
-      "roundClosed": "Il round corrente è chiuso."
+      "cliffVesting": "{{cliff}} mesi di cliff · {{vesting}} mesi di vesting",
+      "roundClosed": "Il round attuale è chiuso."
     },
     "buy": {
       "title": "Importo in USDC",
@@ -913,14 +971,14 @@
       "pricePerToken": "Prezzo per token",
       "cliff": "Cliff",
       "vesting": "Vesting",
-      "vestingLinear": "{{months}} mesi lineare",
+      "vestingLinear": "{{months}} mesi lineari",
       "cliffMonths": "{{months}} mesi",
-      "walletCapNote": "Limite di {{cap}} USDC per wallet · Solo USDC",
+      "walletCapNote": "Cap di {{cap}} USDC per portafoglio · Solo USDC",
       "needsApproval": "Approva USDC e acquista",
       "buy": "Acquista ETRF",
-      "approving": "Approvazione USDC...",
-      "buying": "Acquisto ETRF...",
-      "confirmWallet": "Conferma nel tuo wallet...",
+      "approving": "Approvazione USDC in corso...",
+      "buying": "Acquisto ETRF in corso...",
+      "confirmWallet": "Conferma nel tuo portafoglio...",
       "invalidAmount": "Importo non valido",
       "enterAmount": "Inserisci un importo",
       "step1": "1. Approva USDC",
@@ -928,8 +986,8 @@
       "success": {
         "title": "Acquisto riuscito",
         "bought": "Hai acquistato {{amount}} ETRF",
-        "vestingNote": "Il tuo vesting inizierà. Controlla \"I miei token\" per il monitoraggio.",
-        "buyMore": "Acquista ancora"
+        "vestingNote": "Il tuo periodo di vesting inizierà. Controlla \"I miei token\" per il monitoraggio.",
+        "buyMore": "Acquista altro"
       },
       "error": {
         "rejected": "Transazione rifiutata"
@@ -939,54 +997,332 @@
       "title": "I miei token ETRF",
       "totalLabel": "ETRF totale",
       "legend": {
-        "claimed": "riscattato",
-        "vestedAvailable": "vested disponibile",
-        "locked": "bloccato"
+        "claimed": "richiesti",
+        "vestedAvailable": "maturati disponibili",
+        "locked": "bloccati"
       },
       "stats": {
-        "vested": "vested",
-        "claimed": "riscattato",
-        "locked": "bloccato",
-        "available": "disponibile"
+        "vested": "maturati",
+        "claimed": "richiesti",
+        "locked": "bloccati",
+        "available": "disponibili"
       },
       "cliff": {
         "inDays": "Cliff tra {{days}} giorni · {{months}} mesi dall'acquisto",
-        "description": "I primi token verranno rilasciati al raggiungimento del cliff"
+        "description": "I primi token saranno rilasciati al raggiungimento del cliff"
       },
-      "claim": "Riscatta {{amount}} ETRF",
+      "claim": "Richiedi {{amount}} ETRF",
       "availableIn": "Disponibile tra {{days}} giorni",
       "noTokens": "Nessun token disponibile",
-      "confirmWallet": "Conferma nel tuo wallet...",
-      "claimed": "✓ Token riscattati con successo",
+      "confirmWallet": "Conferma nel tuo portafoglio...",
+      "claimed": "✓ Token richiesti con successo",
       "myTokens": "I miei token"
     },
     "walletGate": {
-      "title": "Connetti il tuo wallet per partecipare",
+      "title": "Connetti il tuo portafoglio per partecipare",
       "subtitle": "Accedi al Seed Round di ETRF e inizia a costruire il tuo fondo pensione decentralizzato.",
       "supportedWallets": "MetaMask, Coinbase, WalletConnect",
-      "connect": "Connetti wallet",
+      "connect": "Connetti portafoglio",
       "disclaimer": "Solo utenti idonei secondo i termini del whitepaper. Connettendoti accetti i",
       "terms": "termini e condizioni"
     },
     "tokenomics": {
       "title": "Tokenomics",
-      "subtitle": "Distribuzione del supply di ETRF",
-      "supplyTotal": "Supply Totale",
+      "subtitle": "Distribuzione della fornitura di ETRF",
+      "supplyTotal": "Fornitura Totale",
       "viewFull": "VEDI DISTRIBUZIONE COMPLETA",
-      "distributionSubtitle": "Distribuzione del supply",
+      "distributionSubtitle": "Distribuzione",
       "slices": {
         "publicSale": "Vendita Pubblica",
         "team": "Team",
         "ecosystem": "Ecosistema",
-        "treasury": "Tesoreria",
-        "community": "Community",
+        "treasury": "Tesoro",
+        "community": "Comunità",
         "reserve": "Riserva"
       },
       "stats": {
-        "totalSupply": "Supply Totale",
+        "totalSupply": "Fornitura Totale",
         "seedRound": "Seed Round",
         "seedPrice": "Prezzo Seed"
       }
+    },
+    "agreement": {
+      "title": "Accordo di Vendita Token ETRF",
+      "subtitle": "Ethernal Fund · Seed Round v1.0 · In vigore da maggio 2026",
+      "warning": "IMPORTANTE: La partecipazione a questa vendita comporta il rischio di perdita totale del capitale investito. I token ETRF sono token di utilità e NON costituiscono strumenti finanziari o titoli.",
+      "downloadSection": {
+        "title": "Scarica Documento Ufficiale",
+        "english": "Token Sale Agreement v1.0 — English (PDF)",
+        "spanish": "Token Sale Agreement v1.0 — Español (PDF)",
+        "governingNote": "La versione in spagnolo è il documento vincolante. In caso di conflitto tra traduzioni, prevale la versione in spagnolo."
+      },
+      "sections": {
+        "definitions": {
+          "title": "Definizioni",
+          "items": [
+            "\"Ethernal Fund\" o \"l'Emitente\": Il protocollo decentralizzato di risparmio pensionistico personale costruito sulla rete Arbitrum, sviluppato e mantenuto dal team fondatore guidato da Cristian F. Taborda.",
+            "\"ETRF\": Il token di utilità nativo del protocollo Ethernal Fund, implementato come contratto intelligente sulla rete Arbitrum.",
+            "\"Vendita di Token\" o \"Seed Round\": L'evento di vendita primaria di token ETRF descritto in questo documento, corrispondente al primo round di finanziamento del protocollo.",
+            "\"Partecipante\": Qualsiasi persona fisica o giuridica che acquisisce token ETRF attraverso il contratto intelligente ufficiale durante il periodo di Vendita di Token.",
+            "\"Vesting\": Il meccanismo di rilascio graduale e lineare dei token ETRF per un periodo definito, una volta trascorso il periodo di cliff.",
+            "\"Cliff\": Il periodo iniziale di blocco totale dei token, durante il quale il Partecipante non può richiedere alcuna frazione dei token acquistati.",
+            "\"USDC\": La stablecoin USD Coin emessa da Circle Financial, LLC — l'unico mezzo di pagamento accettato in questa Vendita di Token."
+          ]
+        },
+        "nature": {
+          "title": "Natura del Token ETRF",
+          "items": [
+            "ETRF è un token di utilità progettato esclusivamente per l'uso all'interno dell'ecosistema del protocollo Ethernal Fund. La sua funzione principale è quella di concedere l'accesso alle funzionalità del protocollo, inclusa la partecipazione alla governance, l'accesso a funzioni premium e l'uso come unità di conto interna.",
+            "L'ACQUISIZIONE DI TOKEN ETRF NON COSTITUISCE: un investimento in titoli, azioni, obbligazioni o qualsiasi strumento finanziario regolamentato.",
+            "NON è una partecipazione agli utili, ai dividendi o ai flussi di cassa dell'Emitente.",
+            "NON è un diritto di proprietà, voto o controllo su Ethernal Fund.",
+            "NON è una promessa o garanzia di rendimento economico, apprezzamento del valore o liquidità futura.",
+            "La classificazione finale di ETRF come token di utilità o titolo dipenderà dalla giurisdizione del Partecipante e dall'interpretazione normativa applicabile."
+          ]
+        },
+        "conditions": {
+          "title": "Condizioni di Partecipazione",
+          "items": [
+            "Avere almeno 18 anni o l'età della maggiore età legale nella propria giurisdizione di residenza.",
+            "Non risiedere o essere situato in alcuna giurisdizione esclusa (Stati Uniti, Cina, Corea del Nord, Iran, Cuba, Siria, Venezuela e qualsiasi paese soggetto a sanzioni comprehensive OFAC).",
+            "Avere un portafoglio EVM compatibile con il saldo USDC necessario per la transazione.",
+            "Aver letto, compreso e accettato integralmente questo documento, il Whitepaper e l'Informativa sulla Privacy.",
+            "Non essere incluso in alcuna lista di sanzioni internazionali (OFAC, ONU, UE o altre).",
+            "Partecipare utilizzando fondi di origine lecita e verificabile."
+          ]
+        },
+        "seedRound": {
+          "title": "Condizioni della Vendita di Token — Seed Round",
+          "items": [
+            "Token disponibili: 100.000.000 ETRF (cento milioni di token).",
+            "Prezzo per token: USD 0.01 pagabili in USDC sulla rete Arbitrum.",
+            "Hard Cap e limite per portafoglio: importi massimi definiti nel Contratto Intelligente al momento della distribuzione.",
+            "Pagamento accettato: esclusivamente USDC.",
+            "Cliff e vesting: secondo parametri immutabili definiti nel Contratto Intelligente al momento della distribuzione.",
+            "Durante il periodo di cliff, non è possibile richiedere token. Dopo il cliff, i token vengono rilasciati linearmente durante il periodo di vesting. Il programma decorre dal momento dell'acquisto di ogni singolo Partecipante.",
+            "I token non richiesti non scadono e rimangono disponibili nel contratto."
+          ]
+        },
+        "irreversibility": {
+          "title": "Irreversibilità delle Transazioni",
+          "body": "Tutte le transazioni eseguite sulla blockchain di Arbitrum sono irreversibili. Una volta che USDC è stato trasferito al Contratto Intelligente, non esiste alcun meccanismo di rimborso, inversione o annullamento. L'Emitente non ha la capacità tecnica di invertire le transazioni on-chain."
+        },
+        "useOfFunds": {
+          "title": "Utilizzo dei Fondi Raccolti",
+          "items": [
+            "Esecuzione di molteplici audit di sicurezza dei contratti intelligenti da parte di aziende di prim'ordine.",
+            "Commissione di un audit economico e di tokenomics.",
+            "Sviluppo tecnico e crescita del protocollo.",
+            "Riserve di liquidità e operazioni.",
+            "Un rapporto sull'uso dei fondi sarà pubblicato una volta completati gli audit principali."
+          ]
+        },
+        "risks": {
+          "title": "Fattori di Rischio",
+          "items": [
+            "Perdita Totale di Capitale: il valore dei token ETRF può scendere a zero. Il Partecipante deve avere la capacità economica di assorbire la perdita totale dell'importo investito.",
+            "Rischio di Contratto Intelligente: nessun audit garantisce l'assenza di bug. Un exploit potrebbe comportare la perdita parziale o totale dei fondi.",
+            "Rischio Normativo: il quadro normativo per le cripto-attività è incerto e in continua evoluzione.",
+            "Rischio di Liquidità: non vi è garanzia che i token ETRF siano quotati su alcun exchange o che esista un mercato secondario con liquidità sufficiente.",
+            "Rischio Tecnologico: il protocollo dipende dalle reti Arbitrum ed Ethereum. Guasti o attacchi a queste reti potrebbero influenzare la disponibilità del protocollo.",
+            "Rischio di Progetto: il team potrebbe non eseguire la roadmap per motivi tecnici, finanziari, normativi o personali.",
+            "Rischio di Custodia: i token sono mantenuti nel portafoglio del Partecipante. L'Emitente non ha accesso alle chiavi private. La perdita dell'accesso al portafoglio significa la perdita permanente dei token."
+          ]
+        },
+        "kyc": {
+          "title": "KYC e Antiriciclaggio",
+          "body": "L'Emitente si riserva il diritto di implementare processi KYC/AML in qualsiasi momento. Il Partecipante dichiara che i fondi utilizzati provengono da attività lecite, accetta di fornire documentazione di identità quando richiesto e accetta che l'Emitente possa bloccare le richieste di token se viene rilevata attività sospetta."
+        },
+        "ip": {
+          "title": "Proprietà Intellettuale",
+          "body": "Tutto il codice sorgente, i contratti intelligenti, l'interfaccia utente, il whitepaper, il marchio \"Ethernal Fund\" e il logo sono di proprietà intellettuale dell'Emitente. L'acquisizione di token ETRF non concede alcun diritto su tale proprietà intellettuale."
+        },
+        "liability": {
+          "title": "Disclaimer di Responsabilità",
+          "body": "Nella massima misura consentita dalla legge, l'Emitente, il suo team, collaboratori, revisori e consulenti NON saranno responsabili per: perdite derivanti da un calo del valore dei token ETRF; perdite da bug o exploit in contratti intelligenti, anche se verificati; perdite da perdita di accesso al portafoglio; perdite da cambiamenti normativi; o qualsiasi danno indiretto, conseguente, punitivo o speciale. LA PARTECIPAZIONE A QUESTA VENDITA DI TOKEN È A ESCLUSIVO RISCHIO DEL PARTECIPANTE."
+        },
+        "amendments": {
+          "title": "Modifiche a questi Termini",
+          "body": "L'Emitente può modificare questi Termini in qualsiasi momento, notificandolo tramite ethernal.fund e i canali ufficiali del protocollo. Le modifiche entreranno in vigore 48 ore dopo la pubblicazione. Le condizioni di vesting e cliff già eseguite on-chain sono immutabili."
+        },
+        "governingLaw": {
+          "title": "Legge Applicabile e Risoluzione delle Controversie",
+          "items": [
+            "Questo documento sarà regolato dai principi generali del diritto applicabili al commercio internazionale e ai contratti di asset digitali.",
+            "Le parti cercheranno prima una risoluzione amichevole attraverso la comunicazione diretta. Se non si raggiunge un accordo entro 30 giorni lavorativi, qualsiasi controversia sarà sottoposta ad arbitrato internazionale secondo le regole della Camera di Commercio Internazionale (ICC).",
+            "Questo documento è redatto in spagnolo. In caso di conflitto tra le versioni tradotte e la versione in spagnolo, prevarrà la versione in spagnolo."
+          ]
+        },
+        "general": {
+          "title": "Disposizioni Generali",
+          "body": "Questo documento, insieme al Whitepaper e all'Informativa sulla Privacy, costituisce l'intero accordo tra l'Emitente e il Partecipante riguardo alla Vendita di Token. Se qualche clausola viene dichiarata nulla o inapplicabile, le clausole rimanenti continueranno ad avere pieno vigore."
+        }
+      }
     }
+  },
+  "whitepaper": {
+    "title": "Whitepaper",
+    "subtitle": "Ethernal Fund · In vigore da maggio 2026",
+    "downloadSection": {
+      "title": "Scarica Documento Ufficiale",
+      "english": "Whitepaper v1.1 — English (PDF)",
+      "spanish": "Whitepaper v1.1 — Español (PDF)",
+      "governingNote": "La versione in spagnolo è il documento vincolante. In caso di conflitto tra traduzioni, prevale la versione in spagnolo."
+    },
+    "sections": {
+      "executiveSummary": {
+        "title": "Sommario Esecutivo",
+        "body": "Ethernal Fund Protocol è un sistema decentralizzato di fondi pensione personali costruito su blockchain (Arbitrum / Polygon), che consente a chiunque nel mondo di creare e gestire il proprio fondo pensione in modo autonomo, trasparente e senza intermediari finanziari tradizionali. Il protocollo combina contratti intelligenti scritti in Vyper con integrazioni a protocolli DeFi consolidati (Aave v3) e asset del mondo reale tokenizzati (Ondo USDY / Buoni del Tesoro USA) per offrire rendimenti sicuri sui depositi in USDC."
+      },
+      "problemSolution": {
+        "title": "Problema e Soluzione",
+        "items": [
+          "I sistemi pensionistici tradizionali affrontano una crisi strutturale: deficit crescenti, inflazione che erode il potere d'acquisto e crescente informalità del lavoro. In America Latina, meno del 40% dei lavoratori contribuisce attivamente ai sistemi pensionistici formali.",
+          "Gli strumenti di risparmio convenzionali presentano barriere significative: minimi elevati, commissioni opache, dipendenza da intermediari e accesso geograficamente limitato.",
+          "Ethernal Fund Protocol risolve queste limitazioni attraverso contratti intelligenti che consentono a ogni utente di creare il proprio fondo pensione personale su blockchain, con parametri personalizzati e senza cedere il controllo dei propri asset a terzi.",
+          "Il protocollo sfrutta DeFi per offrire strumenti finanziari non custodiali, trasparenti, senza frontiere, programmabili e componibili per il risparmio a lungo termine."
+        ]
+      },
+      "architecture": {
+        "title": "Architettura del Protocollo",
+        "items": [
+          "PersonalFund.vy — Il contratto centrale. Ogni utente ha la propria istanza distribuita (proxy minimo EIP-1167). Gestisce l'intero ciclo di vita del fondo.",
+          "PersonalFundFactory.vy — Distribuisce nuove istanze di PersonalFund utilizzando il pattern di proxy minimo (EIP-1167 / cloni), riducendo significativamente i costi del gas.",
+          "Treasury.vy — Gestisce la riscossione delle commissioni del protocollo (5% di default, massimo 10%) e agisce come arbitro per le richieste di prelievo anticipato.",
+          "ProtocolRegistry.vy — Catalogo curato dei protocolli DeFi disponibili per l'investimento, con metadati: nome, categoria, APY stimato, livello di rischio, TVL e stato di verifica.",
+          "AaveV3Adapter.vy — Ponte verso il mercato di prestito di Aave v3 su Arbitrum One.",
+          "OndoUSDYAdapter.vy — Adattatore per investire in USDY, una cambiale tokenizzata supportata da Buoni del Tesoro USA a breve termine (APY storico: 4.5%–5.5%)."
+        ]
+      },
+      "lifecycle": {
+        "title": "Ciclo di Vita del Fondo Personale",
+        "items": [
+          "Creazione del Fondo: l'utente imposta il capitale (0–100.000 USDC), deposito mensile, età attuale, età pensionabile, reddito mensile desiderato e anni di timelock (15–50).",
+          "Fase di Accumulo: l'utente effettua depositi periodici mensili e accumula rendimenti dai protocolli DeFi durante il periodo di blocco.",
+          "Prelievo Anticipato: richiede l'approvazione del Tesoro del protocollo tramite requestEarlyRetirement(). L'amministratore può approvare o respingere la richiesta.",
+          "Prelievo d'Emergenza: l'amministratore può annunciare un'emergenza con un periodo di attesa obbligatorio di 48 ore prima che l'utente possa eseguire emergencyWithdraw().",
+          "Fase di Pensionamento: al completamento del timelock, il proprietario attiva retirement() e il sistema configura automaticamente i prelievi automatici mensili."
+        ]
+      },
+      "tokenomics": {
+        "title": "Token ETRF — Tokenomics",
+        "items": [
+          "ETRF è esclusivamente un token di utilità. NON rappresenta azioni, debito, dividendi o alcuna aspettativa di profitto. Fornitura totale: 1.000.000.000 ETRF (fisso, non coniabile dopo la distribuzione).",
+          "Modalità Premium: gli utenti che detengono un minimo di ETRF sbloccano funzioni avanzate (report, strategie di investimento, avvisi). Il token viene solo verificato, non consumato.",
+          "Sconto Commissioni: gli utenti possono pagare le commissioni di gestione in ETRF invece che in USDC, ricevendo uno sconto. I token ETRF utilizzati vengono bruciati, riducendo la fornitura circolante.",
+          "Vendita Pubblica: 30% (300.000.000) — distribuita tramite SaleETRF → VestingETRF.",
+          "Team: 20% (200.000.000) — 1 anno di cliff + 25% di sblocco + 75% lineare in 3 anni.",
+          "Ecosistema: 20% (200.000.000) — incentivi, partnership, integrazioni.",
+          "Tesoro: 15% (150.000.000). Comunità: 10% (100.000.000). Riserva: 5% (50.000.000)."
+        ]
+      },
+      "security": {
+        "title": "Sicurezza e Gestione del Rischio",
+        "items": [
+          "Tutti i contratti principali sono scritti in Vyper, che vieta l'ereditarietà multipla, l'overload degli operatori, la ricorsione e i modificatori in linea, riducendo significativamente la superficie di attacco.",
+          "Rischio di contratto intelligente: nessun codice è privo di bug al 100%. I fondi possono essere persi in caso di exploit.",
+          "Rischio di protocollo DeFi: Aave v3 e Ondo USDY sono protocolli esterni. Un exploit in essi potrebbe influenzare i fondi depositati.",
+          "Rischio di depegging della stablecoin: USDC può perdere la sua parità con il dollaro in circostanze estreme.",
+          "Rischio normativo: il quadro giuridico per le risorse digitali è incerto e varia a seconda della giurisdizione.",
+          "Rischio di amministratore: dipendenza dalla Ethernal Foundation per le operazioni amministrative chiave mentre il protocollo non è completamente decentralizzato."
+        ]
+      },
+      "legal": {
+        "title": "Quadro Giuridico e Normativo",
+        "items": [
+          "I contratti principali (PersonalFund, Factory, Treasury, adattatori) sono concessi in licenza BUSL-1.1 fino al 2030-12-31, per poi migrare a GPL-2.0+.",
+          "I contratti di infrastruttura e token (ProtocolRegistry, UserPreferences, ETRF, SaleETRF, VestingETRF) sono concessi in licenza Apache-2.0 o MIT in perpetuo.",
+          "Il protocollo opera in modo non custodiale e non richiede l'identificazione dell'utente a livello di contratto intelligente.",
+          "Il meccanismo di timelock (15–50 anni) incorpora una proprietà di conformità antiriciclaggio per progettazione architettonica (\"frizione per progettazione\")."
+        ]
+      },
+      "roadmap": {
+        "title": "Roadmap",
+        "items": [
+          "Q2 2026 — Testnet: Distribuzione completa su Arbitrum Sepolia. Audit di sicurezza. Programma di bug bounty.",
+          "Q3 2026 — Mainnet v1: Lancio su Arbitrum One. Vendita pubblica di ETRF (Seed Round). Primi fondi utente.",
+          "Q4 2026 — Espansione: Integrazione di nuovi protocolli DeFi. Distribuzione su Polygon. Più adattatori RWA.",
+          "2027 — Decentralizzazione: Governance on-chain per il Registry dei Protocolli. Riduzione dei privilegi di amministratore.",
+          "2030-12-31 — Open Source: Migrazione da licenze BUSL-1.1 a GPL-2.0+. Protocollo completamente open source."
+        ]
+      },
+      "team": {
+        "title": "Team e Contatti",
+        "body": "Architetto Principale: Cristian F. Taborda — Ethernal Foundation. Email: contact@ethernal.fund | Questioni Legali: legal@ethernal.foundation | Sito web: ethernal.fund | Documentazione: docs.ethernal.fund (prossimamente)."
+      },
+      "disclaimer": {
+        "title": "Disclaimer Legale",
+        "body": "Questo whitepaper è stato preparato esclusivamente a scopo informativo sul Protocollo Ethernal Fund e sul token ETRF. Non costituisce un'offerta o una sollecitazione all'acquisto di titoli o strumenti finanziari. L'investimento in criptovalute e protocolli DeFi comporta rischi sostanziali, inclusa la possibilità di perdita totale del capitale investito. La Ethernal Foundation non accetta alcuna responsabilità per perdite dirette, indirette, incidentali o consequenziali."
+      }
+    }
+  },
+  "risk": {
+    "title": "Informativa sui Rischi",
+    "subtitle": "Prima di utilizzare Ethernal Fund, leggi e comprendi questi rischi. Sono scritti in linguaggio semplice in modo che tu possa prendere una decisione informata.",
+    "criticalWarning": "Questo protocollo non è regolamentato o supervisionato da alcuna autorità finanziaria. Non c'è garanzia di recupero dei fondi. Non è una banca, non è un fondo di investimento regolamentato e non è coperto da alcuna assicurazione sui depositi. UTILIZZA SOLO FONDI LA CUI PERDITA TOTALE PUOI PERMETTERTI.",
+    "severityLegend": "Scala di gravità",
+    "severity": {
+      "critical": "Rischio Critico",
+      "high": "Rischio Alto",
+      "medium": "Rischio Medio"
+    },
+    "guaranteed": {
+      "title": "Ciò che È garantito dalla progettazione del protocollo",
+      "items": [
+        "I fondi tornano sempre al proprietario del fondo — mai a terzi.",
+        "L'amministratore non può trasferire i tuoi fondi a nessun altro portafoglio se non il tuo.",
+        "Qualsiasi prelievo d'emergenza ha un periodo di attesa di 48 ore, durante il quale puoi annullarlo.",
+        "La commissione massima è fissata nel contratto e non può superare il 10%, indipendentemente da ciò che decide la Foundation.",
+        "Il codice è pubblico e verificabile sulla blockchain da chiunque."
+      ]
+    },
+    "questions": {
+      "title": "Prima di continuare, chiediti:",
+      "items": [
+        "Capisci che puoi perdere il 100% dei fondi depositati?",
+        "Stai depositando denaro di cui non avrai bisogno per 15 anni o più?",
+        "Capisci che le transazioni blockchain sono irreversibili?",
+        "Sai cos'è un contratto intelligente e quali sono i suoi rischi?",
+        "Hai consultato un consulente finanziario o legale se hai dubbi?"
+      ],
+      "footer": "Se hai risposto \"no\" a una di queste domande, ti consigliamo di prenderti più tempo prima di depositare fondi. Puoi leggere il Whitepaper tecnico o contattarci a contact@ethernal.fund."
+    },
+    "risks": [
+      {
+        "title": "Puoi perdere tutto ciò che depositi",
+        "summary": "I fondi depositati nel protocollo possono essere persi nella loro interezza.",
+        "detail": "Ethernal Fund opera su contratti intelligenti blockchain. Se c'è un bug, una vulnerabilità di sicurezza o un exploit nel codice — anche dopo essere stato verificato — i fondi possono essere persi irreversibilmente. Non c'è assicurazione, garanzia statale o meccanismo di recupero. Prima di depositare, assicurati di comprendere che ti stai assumendo pienamente questo rischio."
+      },
+      {
+        "title": "Le transazioni sono irreversibili",
+        "summary": "Una volta inviato USDC al protocollo, non è possibile alcun rimborso.",
+        "detail": "Le operazioni blockchain sono permanenti. Il protocollo non ha la capacità tecnica di invertire transazioni, restituire fondi per errore o elaborare rimborsi. Se invii fondi all'indirizzo sbagliato, usi la rete sbagliata o commetti qualsiasi errore nella transazione, quei fondi andranno persi permanentemente."
+      },
+      {
+        "title": "I tuoi fondi saranno bloccati per anni",
+        "summary": "Il timelock è di un minimo di 15 anni. Non puoi prelevare anticipatamente senza l'approvazione del protocollo.",
+        "detail": "Quando crei un fondo pensione, scegli un periodo di blocco compreso tra 15 e 50 anni. Durante quel periodo, non puoi prelevare i tuoi fondi in nessuna circostanza senza richiedere e ricevere l'approvazione esplicita della Ethernal Foundation. Il protocollo può respingere la richiesta. Consideralo come un impegno a lunghissimo termine: non è per fondi che potresti aver bisogno nei prossimi anni."
+      },
+      {
+        "title": "Anche i protocolli DeFi integrati hanno rischi",
+        "summary": "Aave v3 e Ondo USDY sono protocolli esterni. Un problema in essi colpisce anche te.",
+        "detail": "Ethernal investe i tuoi fondi in protocolli come Aave v3 (prestiti) e Ondo USDY (buoni del Tesoro tokenizzati). Questi sono protocolli esterni con i propri rischi: exploit, pause di emergenza, cambi di governance o problemi di liquidità. Un incidente in uno di questi protocolli potrebbe ridurre o eliminare il tuo saldo, indipendentemente dal corretto funzionamento di Ethernal."
+      },
+      {
+        "title": "USDC può perdere il suo valore",
+        "summary": "USDC è una stablecoin, ma non è garantita 1:1 con il dollaro in ogni momento.",
+        "detail": "Sebbene USDC sia progettata per mantenere la parità con il dollaro USA, esistono scenari di rischio: problemi di liquidità presso Circle (l'emittente), cambiamenti normativi che influenzano le riserve o eventi di mercato sistemici. Nel marzo 2023, USDC ha temporaneamente perso la sua parità. Il tuo saldo nel protocollo è denominato in USDC, quindi qualsiasi depegging ti colpisce direttamente."
+      },
+      {
+        "title": "Il quadro normativo può cambiare",
+        "summary": "Le regole per le cripto-attività in LATAM e nel mondo sono in continua evoluzione.",
+        "detail": "I regolatori in Argentina, Messico, Brasile e altri paesi stanno sviluppando quadri giuridici per le risorse digitali. I cambiamenti normativi potrebbero influenzare la tua capacità di utilizzare il protocollo, la classificazione fiscale dei tuoi rendimenti o il funzionamento del protocollo nel tuo paese. Il protocollo potrebbe dover modificare o limitare il suo funzionamento a causa di nuovi requisiti legali."
+      },
+      {
+        "title": "L'amministratore del protocollo ha poteri limitati sul tuo fondo",
+        "summary": "La Ethernal Foundation può intervenire in situazioni di emergenza.",
+        "detail": "Sebbene Ethernal Fund sia un protocollo non custodiale, la Foundation mantiene un ruolo di amministratore con capacità specifiche: può approvare o respingere richieste di prelievo anticipato, annunciare emergenze con un periodo di attesa di 48 ore e gestire quali protocolli DeFi sono disponibili. Queste funzioni esistono per ragioni di sicurezza e conformità normativa. Tuttavia, i fondi tornano sempre al proprietario — l'amministratore non può trasferirli a terzi."
+      }
+    ]
   }
 }

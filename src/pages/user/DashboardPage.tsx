@@ -1,1147 +1,1243 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, {
+  useCallback, useEffect, useMemo, useRef, useState,
+} from 'react'
+import { useNavigate, useLocation }                          from 'react-router-dom'
 import {
-  useReadContract,
-  useReadContracts,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-  useConnection,
-  useChainId,
-} from 'wagmi';
-import { format } from 'date-fns';
+  useWriteContract, useWaitForTransactionReceipt,
+  useChainId, useConnection, useReadContract,
+}                                                            from 'wagmi'
+import { format }                                            from 'date-fns'
 import {
   Wallet, Shield, TrendingUp, DollarSign, Clock,
   CheckCircle, AlertCircle, ArrowRight, RefreshCw, Sparkles,
   Target, MessageCircle, ExternalLink, PieChart,
   Settings, Zap, BarChart3, BookOpen, ChevronRight, Activity,
-  AlertTriangle, Info,
-} from 'lucide-react';
-import { USER_PREFERENCES_ABI } from '@/config/abis';
-import { getContractAddress, ZERO_ADDRESS as ZERO_ADDR } from '@/config/addresses';
-import { getExplorerAddressUrl } from '@/config/chains';
+  AlertTriangle, X, Info, ChevronDown,
+} from 'lucide-react'
 
-const FACTORY_ABI = [
-  {
-    name: 'getUserFund',
-    type: 'function',
-    stateMutability: 'view',
-    inputs:  [{ name: '_user',    type: 'address' }],
-    outputs: [{ name: 'fundAddr', type: 'address' }],
-  },
-  {
-    name: 'canUserCreateFund',
-    type: 'function',
-    stateMutability: 'view',
-    inputs:  [{ name: '_user', type: 'address' }],
-    outputs: [{ name: '',      type: 'bool'    }],
-  },
-  {
-    name: 'getFundCount',
-    type: 'function',
-    stateMutability: 'view',
-    inputs:  [],
-    outputs: [{ name: '', type: 'uint256' }],
-  },
-] as const;
+import { useDashboard }                                      from '@/hooks/useDashboard'
+import { useProtocols }                                      from '@/hooks/useProtocols'
+import { useInvalidateFund }                                 from '@/hooks/useMyFund'
+import { useMonthlyDeposit }                                 from '@/hooks/useMonthlyDeposit'
+import { useExtraDeposit }                                   from '@/hooks/useExtraDeposit'
+import { USER_PREFERENCES_ABI, PERSONAL_FUND_ABI }          from '@/config/abis'
+import { getContractAddress, ZERO_ADDRESS as ZERO_ADDR }     from '@/config/addresses'
+import { getExplorerAddressUrl }                             from '@/config/chains'
+import { toUsdcBigInt }                                      from '@/lib/calculator'
 
-const FUND_ABI = [
-  { name: 'totalBalance',           type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { name: 'monthlyDeposit',         type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { name: 'retirementAge',          type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { name: 'timelockEnd',            type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { name: 'selectedProtocol',       type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'address' }] },
-  { name: 'retirementStarted',      type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'bool'    }] },
-  { name: 'monthlyDepositCount',    type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { name: 'lastMonthlyDepositTime', type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-  { name: 'missedMonths',           type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'uint256' }] },
-] as const;
+// Constants 
 
-const REGISTRY_ABI = [
-  {
-    name: 'getActiveProtocolsList',
-    type: 'function',
-    stateMutability: 'view',
-    inputs:  [],
-    outputs: [{ name: '', type: 'address[]' }],
-  },
-  {
-    name: 'getProtocolCount',
-    type: 'function',
-    stateMutability: 'view',
-    inputs:  [],
-    outputs: [{ name: 'total', type: 'uint256' }, { name: 'active', type: 'uint256' }],
-  },
-] as const;
-
-type Protocol = {
-  protocolAddress: `0x${string}`;
-  riskLevel:       number;
-  apy:             bigint;
-  isVerified?:     boolean;
-};
-
-const ZERO_ADDRESS = ZERO_ADDR;
+const ZERO_ADDRESS = ZERO_ADDR
 
 const RISK_LEVELS = [
   {
     value:       0,
     label:       'Conservador',
     description: 'Bajo riesgo, rendimientos estables y protección del capital',
-    color:       'emerald',
+    accent:      '#10b981',
+    badge:       'text-emerald-400 border-emerald-500/40 bg-emerald-500/10',
+    ring:        'border-emerald-500/60 bg-emerald-500/10',
     icon:        Shield,
-    gradient:    'from-emerald-50 to-teal-50',
-    border:      'border-emerald-300',
-    badge:       'bg-emerald-100 text-emerald-800',
-    btnActive:   'bg-emerald-600 text-white shadow-lg shadow-emerald-200',
-    btnInactive: 'bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50',
   },
   {
     value:       1,
     label:       'Moderado',
     description: 'Balance entre crecimiento y estabilidad, ideal para largo plazo',
-    color:       'blue',
+    accent:      '#3b82f6',
+    badge:       'text-blue-400 border-blue-500/40 bg-blue-500/10',
+    ring:        'border-blue-500/60 bg-blue-500/10',
     icon:        BarChart3,
-    gradient:    'from-blue-50 to-indigo-50',
-    border:      'border-blue-300',
-    badge:       'bg-blue-100 text-blue-800',
-    btnActive:   'bg-blue-600 text-white shadow-lg shadow-blue-200',
-    btnInactive: 'bg-white text-blue-700 border border-blue-200 hover:bg-blue-50',
   },
   {
     value:       2,
     label:       'Agresivo',
     description: 'Máximo potencial de rendimiento con mayor exposición al riesgo',
-    color:       'violet',
+    accent:      '#a78bfa',
+    badge:       'text-violet-400 border-violet-500/40 bg-violet-500/10',
+    ring:        'border-violet-500/60 bg-violet-500/10',
     icon:        Zap,
-    gradient:    'from-violet-50 to-purple-50',
-    border:      'border-violet-300',
-    badge:       'bg-violet-100 text-violet-800',
-    btnActive:   'bg-violet-600 text-white shadow-lg shadow-violet-200',
-    btnInactive: 'bg-white text-violet-700 border border-violet-200 hover:bg-violet-50',
   },
-] as const;
+] as const
 
 const STRATEGY_TYPES = [
-  { value: 0, label: 'Concentrado',   description: 'Todo en el mejor protocolo disponible según tu perfil',        icon: Target   },
-  { value: 1, label: 'Diversificado', description: 'Distribución entre múltiples protocolos para reducir riesgo',  icon: PieChart },
-  { value: 2, label: 'Híbrido',       description: 'Combinación dinámica ajustada al rendimiento del mercado',     icon: Activity },
-] as const;
+  { value: 0, label: 'Concentrado',   description: 'Todo en el mejor protocolo según tu perfil',               icon: Target    },
+  { value: 1, label: 'Diversificado', description: 'Distribución entre múltiples protocolos',                  icon: PieChart  },
+  { value: 2, label: 'Híbrido',       description: 'Combinación dinámica ajustada al rendimiento del mercado', icon: Activity  },
+] as const
 
+// Placeholder — swap for API call when backend endpoint is ready
 const ADMIN_CONTENT = [
   {
     id: 1, type: 'recommendation' as const,
     title:   'Estrategia recomendada para Q1 2025',
-    summary: 'Dados los indicadores macroeconómicos actuales, el equipo de análisis recomienda aumentar exposición a Aave v3 en Arbitrum.',
-    date: 'Feb 15, 2025', icon: TrendingUp, color: 'indigo',
+    summary: 'Dados los indicadores macroeconómicos actuales, el equipo recomienda aumentar exposición a Aave v3 en Arbitrum.',
+    date: 'Feb 15, 2026', icon: TrendingUp, accent: '#6366f1',
   },
   {
     id: 2, type: 'course' as const,
     title:   'Módulo 3: Fundamentos de DeFi',
-    summary: 'Aprende cómo funcionan los protocolos de lending descentralizado y cómo evaluar su seguridad antes de invertir.',
-    date: 'Feb 10, 2025', icon: BookOpen, color: 'pink',
+    summary: 'Aprende cómo funcionan los protocolos de lending descentralizado y cómo evaluar su seguridad.',
+    date: 'Feb 10, 2026', icon: BookOpen, accent: '#ec4899',
   },
   {
     id: 3, type: 'recommendation' as const,
     title:   'Alerta: Actualización de riesgo',
     summary: 'Compound Finance actualizó sus parámetros de colateral. Usuarios con estrategia Agresiva deben revisar su exposición.',
-    date: 'Feb 8, 2025', icon: AlertTriangle, color: 'amber',
+    date: 'Feb 8, 2026', icon: AlertTriangle, accent: '#f59e0b',
   },
-] as const;
+] as const
 
-function formatTimestamp(ts: bigint | undefined): string {
-  if (!ts || ts === 0n) return 'Nunca';
-  return format(new Date(Number(ts) * 1000), 'MMM dd, yyyy – HH:mm');
+// Helpers 
+
+function formatUSDC(amount: bigint | number | undefined | null): string {
+  if (amount == null) return '$0.00'
+  const n = typeof amount === 'bigint' ? Number(amount) / 1e6 : amount
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
 }
 
-function formatUSDCDisplay(amount: bigint | undefined): string {
-  if (!amount) return '$0.00';
-  return `$${(Number(amount) / 1e6).toFixed(2)}`;
+function shortAddr(addr: string | undefined | null): string {
+  if (!addr || addr.length < 10) return addr ?? '—'
+  return `${addr.slice(0, 8)}…${addr.slice(-6)}`
 }
 
-function shortAddr(addr: string | undefined): string {
-  if (!addr || addr.length < 10) return addr ?? '—';
-  return `${addr.slice(0, 8)}…${addr.slice(-6)}`;
+function riskLabel(level: number): string {
+  return RISK_LEVELS[level as 0 | 1 | 2]?.label ?? 'Desconocido'
 }
 
-function riskLevelColor(level: number): string {
-  if (level === 0) return 'text-emerald-600';
-  if (level === 1) return 'text-blue-600';
-  return 'text-violet-600';
-}
-
-function riskLevelLabel(level: number): string {
-  return RISK_LEVELS[level]?.label ?? 'Desconocido';
-}
+// CountdownTimer 
 
 function CountdownTimer({ targetDate }: { targetDate: Date | null }) {
-  const [display, setDisplay] = useState('—');
-
+  const [display, setDisplay] = useState('—')
   useEffect(() => {
-    if (!targetDate) { setDisplay('—'); return; }
+    if (!targetDate) { setDisplay('—'); return }
     const update = () => {
-      const diff = targetDate.getTime() - Date.now();
-      if (diff <= 0) { setDisplay('Ahora'); return; }
-      const d = Math.floor(diff / 86_400_000);
-      const h = Math.floor((diff % 86_400_000) / 3_600_000);
-      const m = Math.floor((diff % 3_600_000) / 60_000);
-      setDisplay(`${d}d ${h}h ${m}m`);
-    };
-    update();
-    const id = setInterval(update, 60_000);
-    return () => clearInterval(id);
-  }, [targetDate]);
-
-  return <span>{display}</span>;
+      const diff = targetDate.getTime() - Date.now()
+      if (diff <= 0) { setDisplay('disponible'); return }
+      const d = Math.floor(diff / 86_400_000)
+      const h = Math.floor((diff % 86_400_000) / 3_600_000)
+      const m = Math.floor((diff % 3_600_000) / 60_000)
+      setDisplay(d > 0 ? `${d}d ${h}h` : `${h}h ${m}m`)
+    }
+    update()
+    const id = setInterval(update, 60_000)
+    return () => clearInterval(id)
+  }, [targetDate])
+  return <span>{display}</span>
 }
 
+// StatCard
+
+function StatCard({ label, value, sub }: { label: string; value: React.ReactNode; sub?: string }) {
+  return (
+    <div style={{ background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(255,255,255,0.08)' }}
+      className="rounded-xl p-4 flex flex-col gap-1">
+      <p className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>{label}</p>
+      <p className="text-lg font-bold" style={{ color: '#e8e4dc', fontFamily: "'DM Mono', monospace" }}>{value}</p>
+      {sub && <p className="text-[10px]" style={{ color: '#444' }}>{sub}</p>}
+    </div>
+  )
+}
+
+// SectionCard 
+
+function SectionCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div
+      className={`rounded-2xl p-6 sm:p-8 ${className}`}
+      style={{ background: 'rgba(255,255,255,0.025)', border: '0.5px solid rgba(255,255,255,0.07)' }}
+    >
+      {children}
+    </div>
+  )
+}
+
+// TxStatusBadge
+
+function TxStatusBadge({ isPending, isConfirming, isConfirmed, error }: {
+  isPending: boolean; isConfirming: boolean; isConfirmed: boolean; error?: Error | null
+}) {
+  if (error)       return <p className="text-xs text-red-400 mt-2 flex items-center gap-1"><AlertCircle size={12} />{error.message.split('\n')[0]}</p>
+  if (isConfirmed) return <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1"><CheckCircle size={12} />Guardado on-chain</p>
+  if (isConfirming) return <p className="text-xs mt-2 flex items-center gap-1" style={{ color: '#897148' }}><RefreshCw size={12} className="animate-spin" />Confirmando...</p>
+  if (isPending)   return <p className="text-xs mt-2 flex items-center gap-1" style={{ color: '#897148' }}><RefreshCw size={12} className="animate-spin" />Esperando firma...</p>
+  return null
+}
+
+// DepositModal 
+
+interface DepositModalProps {
+  mode:           'monthly' | 'extra'
+  fundAddress:    `0x${string}`
+  monthlyAmount:  bigint
+  onClose:        () => void
+}
+
+function DepositModal({ mode, fundAddress, monthlyAmount, onClose }: DepositModalProps) {
+  const [tab,    setTab]    = useState<'monthly' | 'extra'>(mode)
+  const [amount, setAmount] = useState('')
+  const [amtErr, setAmtErr] = useState<string | null>(null)
+
+  const monthly = useMonthlyDeposit({ fundAddress, monthlyAmount })
+  const extra   = useExtraDeposit({ fundAddress })
+
+  const handleMonthlyDeposit = async () => {
+    await monthly.deposit()
+  }
+
+  const handleExtraDeposit = async () => {
+    const parsed = parseFloat(amount)
+    if (isNaN(parsed) || parsed <= 0) { setAmtErr('Ingresá un monto válido mayor a 0'); return }
+    setAmtErr(null)
+    await extra.deposit(parsed)
+  }
+
+  const handleReclaim = async () => {
+    await extra.reclaim()
+  }
+
+  const isDone = monthly.status === 'success' || extra.status === 'success'
+
+  useEffect(() => {
+    if (isDone) {
+      const t = setTimeout(onClose, 2000)
+      return () => clearTimeout(t)
+    }
+    return undefined
+  }, [isDone, onClose])
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)' }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+    >
+      <div
+        className="w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-6 sm:p-8 relative"
+        style={{ background: '#141210', border: '0.5px solid rgba(255,255,255,0.1)' }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-bold text-base" style={{ color: '#e8e4dc', fontFamily: "'Cormorant Garamond', serif", fontSize: '1.3rem' }}>
+            Realizar Depósito
+          </h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg transition-opacity hover:opacity-60" style={{ color: '#555' }}>
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 mb-6 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+          {(['monthly', 'extra'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold tracking-wider uppercase transition-all"
+              style={tab === t
+                ? { background: 'rgba(137,113,72,0.3)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.4)' }
+                : { color: '#555' }
+              }
+            >
+              {t === 'monthly' ? 'Mensual' : 'Extra'}
+            </button>
+          ))}
+        </div>
+
+        {/* Monthly tab */}
+        {tab === 'monthly' && (
+          <div className="space-y-4">
+            <div className="rounded-xl p-5 text-center" style={{ background: 'rgba(137,113,72,0.08)', border: '0.5px solid rgba(137,113,72,0.2)' }}>
+              <p className="text-[10px] tracking-widest uppercase mb-2" style={{ color: '#555' }}>Depósito mensual configurado</p>
+              <p className="text-3xl font-bold" style={{ color: '#c9a96e', fontFamily: "'DM Mono', monospace" }}>
+                {formatUSDC(monthlyAmount)}
+              </p>
+            </div>
+
+            {!monthly.canDeposit && monthly.secondsLeft > 0 && (
+              <div className="flex items-start gap-2 rounded-xl p-3" style={{ background: 'rgba(245,158,11,0.08)', border: '0.5px solid rgba(245,158,11,0.2)' }}>
+                <Clock size={14} className="shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
+                <p className="text-xs" style={{ color: '#f59e0b' }}>
+                  Próximo depósito disponible en{' '}
+                  <span className="font-bold">
+                    {Math.floor(monthly.secondsLeft / 86400)}d {Math.floor((monthly.secondsLeft % 86400) / 3600)}h
+                  </span>
+                </p>
+              </div>
+            )}
+
+            {monthly.missedMonths > 0 && (
+              <div className="flex items-start gap-2 rounded-xl p-3" style={{ background: 'rgba(239,68,68,0.08)', border: '0.5px solid rgba(239,68,68,0.2)' }}>
+                <AlertTriangle size={14} className="shrink-0 mt-0.5 text-red-400" />
+                <p className="text-xs text-red-400">
+                  Tenés <strong>{monthly.missedMonths}</strong> {monthly.missedMonths === 1 ? 'mes perdido' : 'meses perdidos'}.
+                  Los depósitos atrasados aplican penalidades.
+                </p>
+              </div>
+            )}
+
+            <TxStatusBadge
+              isPending={monthly.status === 'approving'}
+              isConfirming={monthly.status === 'depositing'}
+              isConfirmed={monthly.status === 'success'}
+              error={monthly.errorMsg ? new Error(monthly.errorMsg) : null}
+            />
+
+            <button
+              onClick={() => void handleMonthlyDeposit()}
+              disabled={!monthly.canDeposit || monthly.isLoading}
+              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              style={{ background: 'rgba(137,113,72,0.25)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.4)' }}
+            >
+              {monthly.isLoading
+                ? <><RefreshCw size={14} className="animate-spin" />{monthly.status === 'approving' ? 'Aprobando...' : 'Depositando...'}</>
+                : <><DollarSign size={14} />Depositar {formatUSDC(monthlyAmount)}</>
+              }
+            </button>
+
+            {monthly.txHash && (
+              <a
+                href={monthly.explorerUrl ?? '#'} target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1 text-xs hover:opacity-80 transition-opacity"
+                style={{ color: '#555' }}
+              >
+                <ExternalLink size={11} />Ver en explorer
+              </a>
+            )}
+          </div>
+        )}
+
+        {/* Extra tab */}
+        {tab === 'extra' && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-[10px] tracking-widest uppercase mb-2" style={{ color: '#555' }}>
+                Monto en USDC
+              </label>
+              <input
+                type="number" min="1" step="0.01"
+                value={amount}
+                onChange={(e) => {
+                  setAmount(e.target.value)
+                  setAmtErr(null)
+                }}
+                placeholder="0.00"
+                className="w-full px-4 py-3 rounded-xl text-sm font-mono outline-none transition-colors"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: amtErr ? '0.5px solid rgba(239,68,68,0.6)' : '0.5px solid rgba(255,255,255,0.1)',
+                  color: '#e8e4dc',
+                }}
+              />
+              {amtErr && <p className="text-xs text-red-400 mt-1">{amtErr}</p>}
+            </div>
+
+            <div className="flex items-start gap-2 rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(255,255,255,0.06)' }}>
+              <Info size={12} className="shrink-0 mt-0.5" style={{ color: '#555' }} />
+              <p className="text-[11px] leading-relaxed" style={{ color: '#444' }}>
+                Tenés 24 horas para reclamar un depósito extra con 1% de penalidad.
+              </p>
+            </div>
+
+            {extra.inGrace && extra.lastExtraNet > 0n && (
+              <div className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(245,158,11,0.08)', border: '0.5px solid rgba(245,158,11,0.2)' }}>
+                <p className="text-xs font-semibold" style={{ color: '#f59e0b' }}>
+                  Período de gracia activo — {Math.floor(extra.graceSecondsLeft / 3600)}h {Math.floor((extra.graceSecondsLeft % 3600) / 60)}m restantes
+                </p>
+                <p className="text-[11px]" style={{ color: '#888' }}>
+                  Último depósito: {formatUSDC(extra.lastExtraNet)} neto
+                </p>
+                <button
+                  onClick={() => void handleReclaim()}
+                  disabled={extra.status === 'reclaiming'}
+                  className="w-full py-2.5 rounded-lg text-xs font-semibold transition-opacity disabled:opacity-40 flex items-center justify-center gap-2"
+                  style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '0.5px solid rgba(245,158,11,0.3)' }}
+                >
+                  {extra.status === 'reclaiming'
+                    ? <><RefreshCw size={12} className="animate-spin" />Reclamando...</>
+                    : 'Reclamar depósito (−1%)'
+                  }
+                </button>
+              </div>
+            )}
+
+            <TxStatusBadge
+              isPending={extra.status === 'approving'}
+              isConfirming={extra.status === 'depositing'}
+              isConfirmed={extra.status === 'success'}
+              error={extra.errorMsg ? new Error(extra.errorMsg) : null}
+            />
+
+            <button
+              onClick={() => void handleExtraDeposit()}
+              disabled={extra.isLoading || !amount}
+              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              style={{ background: 'rgba(137,113,72,0.25)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.4)' }}
+            >
+              {extra.isLoading
+                ? <><RefreshCw size={14} className="animate-spin" />{extra.status === 'approving' ? 'Aprobando...' : 'Depositando...'}</>
+                : <><DollarSign size={14} />Depositar Extra</>
+              }
+            </button>
+
+            {extra.txHash && (
+              <a
+                href={extra.explorerUrl ?? '#'} target="_blank" rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1 text-xs hover:opacity-80 transition-opacity"
+                style={{ color: '#555' }}
+              >
+                <ExternalLink size={11} />Ver en explorer
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// DashboardPage 
+
 const DashboardPage: React.FC = () => {
-  const navigate    = useNavigate();
-  const location    = useLocation();
-  const { address } = useConnection();
-  const chainId     = useChainId();
+  const navigate  = useNavigate()
+  const location  = useLocation()
+  const chainId   = useChainId()
+  const { address } = useConnection()
 
-  const factoryAddress     = getContractAddress(chainId, 'personalFundFactory') ?? ZERO_ADDRESS;
-  const registryAddress    = getContractAddress(chainId, 'protocolRegistry')    ?? ZERO_ADDRESS;
-  const userPrefAddress    = getContractAddress(chainId, 'userPreferences')     ?? ZERO_ADDRESS;
+  // Data 
 
   const {
-    data:      userFundAddress,
-    isLoading: isLoadingFund,
-    refetch:   refetchFund,
-  } = useReadContract({
-    address:      factoryAddress,
-    abi:          FACTORY_ABI,
-    functionName: 'getUserFund',
-    args:         address ? [address] : undefined,
-    query: {
-      enabled:              !!address,
-      staleTime:            0,
-      gcTime:               0,
-      refetchOnMount:       true,
-      refetchOnWindowFocus: true,
-    },
-  });
+    hasFund,
+    fundAddress,
+    fundFromChain,
+    monthlyDeposit,
+    desiredMonthly,
+    retirementAge,
+    paymentYears,
+    apyPercent,
+    protocolAddress,
+    lastSyncedAt,
+    chain,
+    isLoading,
+    isLoadingChain,
+    refetchChain,
+    refetchDb,
+  } = useDashboard()
 
-  const fundAddress = userFundAddress as `0x${string}` | undefined;
-  const hasFund     = !!fundAddress && fundAddress !== ZERO_ADDRESS;
+  const invalidateFund = useInvalidateFund()
+  const { protocols }  = useProtocols()
 
-  const fundContracts = hasFund && fundAddress
-    ? ([
-        { address: fundAddress, abi: FUND_ABI, functionName: 'totalBalance'           },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'monthlyDeposit'         },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'retirementAge'          },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'timelockEnd'            },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'selectedProtocol'       },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'retirementStarted'      },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'monthlyDepositCount'    },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'lastMonthlyDepositTime' },
-        { address: fundAddress, abi: FUND_ABI, functionName: 'missedMonths'           },
-      ] as const)
-    : ([] as const);
+  const userPrefAddress = (getContractAddress(chainId, 'userPreferences') ?? ZERO_ADDRESS) as `0x${string}`
+  const hasFundRef = useRef(hasFund)
+  useEffect(() => { hasFundRef.current = hasFund }, [hasFund])
 
-  const {
-    data:      fundData,
-    isLoading: isLoadingFundData,
-    refetch:   refetchFundData,
-  } = useReadContracts({
-    contracts: fundContracts as any,
-    query: {
-      enabled:              hasFund,
-      staleTime:            0,
-      gcTime:               0,
-      refetchOnMount:       true,
-      refetchOnWindowFocus: true,
-    },
-  });
-
-  const balance             = fundData?.[0]?.result as bigint          | undefined;
-  const monthlyDeposit      = fundData?.[1]?.result as bigint          | undefined;
-  const retirementAge       = fundData?.[2]?.result as bigint          | undefined;
-  const timelockEnd         = fundData?.[3]?.result as bigint          | undefined;
-  const selectedProtocol    = fundData?.[4]?.result as `0x${string}`   | undefined;
-  const retirementStarted   = fundData?.[5]?.result as boolean         | undefined;
-  const monthlyDepositCount = fundData?.[6]?.result as bigint          | undefined;
-  const lastMonthlyTime     = fundData?.[7]?.result as bigint          | undefined;
-
-  const {
-    data:    protocolListRaw,
-    refetch: refetchProtocols,
-  } = useReadContract({
-    address:      registryAddress,
-    abi:          REGISTRY_ABI,
-    functionName: 'getActiveProtocolsList',
-    query:        { enabled: true },
-  });
-
-  const activeProtocols: Protocol[] = useMemo(() => {
-    if (!protocolListRaw) return [];
-    return (protocolListRaw as `0x${string}`[]).map((addr) => ({
-      protocolAddress: addr,
-      riskLevel:       1,    // placeholder – reemplazar con multicall a getProtocol
-      apy:             500n, // placeholder – 5.00 %
-      isVerified:      true,
-    }));
-  }, [protocolListRaw]);
-
-  const { data: userPreferencesRaw } = useReadContract({
+  //  Read on-chain preferences 
+  const { data: onChainPrefs } = useReadContract({
     address:      userPrefAddress,
     abi:          USER_PREFERENCES_ABI,
     functionName: 'getUserConfig',
     args:         address ? [address] : undefined,
-    query: {
-      enabled:              !!address,
-      staleTime:            30_000,
-      refetchOnMount:       true,
-      refetchOnWindowFocus: true,
-    },
-  });
+    query:        { enabled: !!address && userPrefAddress !== ZERO_ADDRESS },
+  })
 
-  const { data: routingStrategyRaw } = useReadContract({
-    address:      userPrefAddress,
-    abi:          USER_PREFERENCES_ABI,
-    functionName: 'getUserStrategy',
-    args:         address ? [address] : undefined,
-    query: {
-      enabled:              !!address,
-      staleTime:            30_000,
-      refetchOnMount:       true,
-      refetchOnWindowFocus: true,
-    },
-  });
+  // getUserConfig returns { selectedProtocol, autoCompound, riskTolerance, lastUpdate, totalDeposited, totalWithdrawn }
+  const onChainRisk     = onChainPrefs ? Number((onChainPrefs as { riskTolerance: number }).riskTolerance ?? 0) : 0
+  const onChainProtocol = onChainPrefs ? (onChainPrefs as { selectedProtocol: `0x${string}` }).selectedProtocol : undefined
 
-  const userPreferences = useMemo(() => {
-    const config   = userPreferencesRaw  as { riskTolerance?: number; selectedProtocol?: `0x${string}`; autoCompound?: boolean } | undefined;
-    const strategy = routingStrategyRaw  as { strategyType?: number } | undefined;
-    return { userConfig: config, routingStrategy: strategy };
-  }, [userPreferencesRaw, routingStrategyRaw]);
+  // getRoutingStrategy is not in the ABI; derive strategy value from onChainPrefs if available
+  const onChainStrategyValue = 0
 
-  const currentRisk     = userPreferences.userConfig?.riskTolerance    ?? 0;
-  const currentStrategy = userPreferences.routingStrategy?.strategyType ?? 0;
-  const currentProtocol = userPreferences.userConfig?.selectedProtocol  ?? ZERO_ADDRESS;
+  // Preferences state 
+  const [pendingRisk,     setPendingRisk]     = useState<number | null>(null)
+  const [pendingStrategy, setPendingStrategy] = useState<number | null>(null)
+  const [pendingProtocol, setPendingProtocol] = useState<`0x${string}` | null>(null)
 
-  const [pendingRisk,     setPendingRisk]     = useState<number | null>(null);
-  const [pendingStrategy, setPendingStrategy] = useState<number | null>(null);
-  const [pendingProtocol, setPendingProtocol] = useState<`0x${string}` | null>(null);
-  const [prefSaveError,   setPrefSaveError]   = useState<string | null>(null);
-  const [prefSaveOk,      setPrefSaveOk]      = useState(false);
-  const [stratSaveOk,     setStratSaveOk]     = useState(false);
+  const effectiveRisk     = pendingRisk     ?? onChainRisk
+  const effectiveStrategy = pendingStrategy ?? onChainStrategyValue
+  const effectiveProtocol = pendingProtocol ?? onChainProtocol ?? (protocolAddress as `0x${string}` | null)
 
-  const effectiveRisk     = pendingRisk     ?? currentRisk;
-  const effectiveStrategy = pendingStrategy ?? currentStrategy;
-  const effectiveProtocol = pendingProtocol ?? (currentProtocol !== ZERO_ADDRESS ? currentProtocol : null);
+  // Deposit modal
+  const [depositModal, setDepositModal] = useState<{ open: boolean; mode: 'monthly' | 'extra' }>({
+    open: false, mode: 'monthly',
+  })
 
-  const [depositAmount,      setDepositAmount]      = useState('');
-  const [depositAmountError, setDepositAmountError] = useState<string | null>(null);
-  const [depositMode,        setDepositMode]        = useState<'monthly' | 'custom'>('monthly');
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const monthlyAmountWei = useMemo(
+    () => monthlyDeposit != null ? toUsdcBigInt(monthlyDeposit) : 0n,
+    [monthlyDeposit],
+  )
 
-  const monthlyDepositAmount = monthlyDeposit
-    ? (Number(monthlyDeposit) / 1e6).toFixed(2)
-    : '0';
+  // Post-deploy polling 
+  const [isPollingFund, setIsPollingFund] = useState(false)
 
-  const activeDepositAmount = depositMode === 'monthly' ? monthlyDepositAmount : depositAmount;
+  useEffect(() => {
+    const state = location.state as { newFundAddr?: string } | null
+    if (!state?.newFundAddr) return
+
+    window.history.replaceState({}, '')
+    setIsPollingFund(true)
+
+    let attempts = 0
+    const MAX_ATTEMPTS = 15
+    const poll = setInterval(async () => {
+      attempts++
+      await refetchDb()
+      await invalidateFund()
+      if (hasFundRef.current || attempts >= MAX_ATTEMPTS) {
+        clearInterval(poll)
+        setIsPollingFund(false)
+        if (hasFundRef.current) refetchChain()
+      }
+    }, 2_000)
+
+    return () => { clearInterval(poll); setIsPollingFund(false) }
+  }, [location.state]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const nextDepositDate = useMemo<Date | null>(() => {
-    if (!lastMonthlyTime || lastMonthlyTime === 0n) return null;
-    const next = new Date(Number(lastMonthlyTime) * 1000);
-    next.setMonth(next.getMonth() + 1);
-    return next;
-  }, [lastMonthlyTime]);
-
-  const nowSec = BigInt(Math.floor(Date.now() / 1000));
+    if (!chain?.lastMonthlyDepositTime || chain.lastMonthlyDepositTime === 0n) return null
+    const next = new Date(Number(chain.lastMonthlyDepositTime) * 1000)
+    next.setMonth(next.getMonth() + 1)
+    return next
+  }, [chain?.lastMonthlyDepositTime])
 
   const progress = useMemo(() => {
-    if (!balance || !monthlyDeposit) return null;
-    const currentBalance  = Number(balance) / 1e6;
-    const monthly         = Number(monthlyDeposit) / 1e6;
-    const remainingSec    = timelockEnd && timelockEnd > nowSec ? timelockEnd - nowSec : 0n;
-    const remainingMonths = Number(remainingSec) / (30 * 24 * 3600);
-    const neededBalance   = monthly * 12 * 25; // fallback: 25 años
-    const projectedBalance    = currentBalance + monthly * remainingMonths;
-    const progressPercentage  = neededBalance > 0
+    if (!chain?.totalBalance || !monthlyDeposit) return null
+    const nowSec          = BigInt(Math.floor(Date.now() / 1000))
+    const currentBalance  = Number(chain.totalBalance) / 1e6
+    const monthly         = monthlyDeposit
+    const remainingSec    = chain.timelockEnd > nowSec ? chain.timelockEnd - nowSec : 0n
+    const remainingMonths = Number(remainingSec) / (30 * 24 * 3600)
+    const targetYears     = paymentYears ?? 25
+    const neededBalance   = desiredMonthly != null
+      ? desiredMonthly * 12 * targetYears
+      : monthly * 12 * targetYears
+    const projectedBalance   = currentBalance + monthly * remainingMonths
+    const progressPercentage = neededBalance > 0
       ? Math.min((currentBalance / neededBalance) * 100, 100)
-      : 0;
+      : 0
     return {
       currentBalance,
-      projectedBalance:    Math.max(projectedBalance, currentBalance),
+      projectedBalance:   Math.max(projectedBalance, currentBalance),
       neededBalance,
       progressPercentage,
-      onTrack:             projectedBalance >= neededBalance,
-      monthsRemaining:     Math.floor(remainingMonths),
-    };
-  }, [balance, monthlyDeposit, timelockEnd]);
-
-  const isLoading = isLoadingFund || isLoadingFundData;
-  const refetchAll = useCallback(async () => {
-    await Promise.all([
-      refetchFund(),
-      refetchFundData(),
-      refetchProtocols(),
-    ]);
-  }, [refetchFund, refetchFundData, refetchProtocols]);
-
-  const [isPollingFund, setIsPollingFund] = useState(false);
-
-  useEffect(() => {
-    const state = location.state as { newFundAddr?: string } | null;
-    if (!state?.newFundAddr) return;
-
-    window.history.replaceState({}, '');
-    setIsPollingFund(true);
-
-    let attempts = 0;
-    const MAX_ATTEMPTS = 10;
-
-    const poll = setInterval(async () => {
-      attempts++;
-      const result   = await refetchFund();
-      const newAddr  = result.data as string | undefined;
-      const resolved = !!newAddr && newAddr !== ZERO_ADDRESS;
-
-      if (resolved || attempts >= MAX_ATTEMPTS) {
-        clearInterval(poll);
-        setIsPollingFund(false);
-        if (resolved) void refetchFundData();
-      }
-    }, 2000);
-
-    return () => { clearInterval(poll); setIsPollingFund(false); };
-  }, [location.state]);
-
-  useEffect(() => {
-    if (address) void refetchFund();
-  }, [address, refetchFund]);
-
-  // ── Write contracts ────────────────────────────────────────────────────────
-  const { writeContract: writeConfig,   isPending: isWritingConfig,   data: configTxHash   } = useWriteContract();
-  const { writeContract: writeStrategy, isPending: isWritingStrategy, data: stratTxHash    } = useWriteContract();
-  const { isPending: isConfirmingConfig, isSuccess: isConfigConfirmed } = useWaitForTransactionReceipt({
-    hash:  configTxHash,
-    query: { enabled: Boolean(configTxHash) },
-  });
-
-  const { isPending: isConfirmingStrategy, isSuccess: isStrategyConfirmed } = useWaitForTransactionReceipt({
-    hash:  stratTxHash,
-    query: { enabled: Boolean(stratTxHash) },
-  });
-
-  useEffect(() => {
-    if (!isConfigConfirmed) return;
-    setPrefSaveOk(true);
-    const t = setTimeout(() => setPrefSaveOk(false), 3000);
-    return () => clearTimeout(t);
-  }, [isConfigConfirmed]);
-
-  useEffect(() => {
-    if (!isStrategyConfirmed) return;
-    setStratSaveOk(true);
-    const t = setTimeout(() => setStratSaveOk(false), 3000);
-    return () => clearTimeout(t);
-  }, [isStrategyConfirmed]);
-
-  const isSavingPrefs    = isWritingConfig    || isConfirmingConfig;
-  const isSavingStrategy = isWritingStrategy  || isConfirmingStrategy;
-  const handleOpenDepositModal = useCallback(() => {
-    setDepositMode('monthly');
-    setDepositAmount('');
-    setDepositAmountError(null);
-    setIsDepositModalOpen(true);
-  }, []);
-
-  const handleOpenExtraDepositModal = useCallback(() => {
-    setDepositMode('custom');
-    setDepositAmount('');
-    setDepositAmountError(null);
-    setIsDepositModalOpen(true);
-  }, []);
-
-  const handleCloseDepositModal = useCallback(() => {
-    setIsDepositModalOpen(false);
-    setDepositAmount('');
-    setDepositAmountError(null);
-  }, []);
-
-  const handleDepositAmountChange = useCallback((value: string) => {
-    setDepositAmount(value);
-    const parsed = parseFloat(value);
-    setDepositAmountError(
-      value && (isNaN(parsed) || parsed <= 0) ? 'Ingresa un monto válido mayor a 0' : null,
-    );
-  }, []);
-
-  const handleStartRetirement = useCallback(() => {
-    console.log('[DashboardPage] Start retirement – pending implementation');
-  }, []);
-
-  // ── Preference save handlers ───────────────────────────────────────────────
-  const handleSaveUserConfig = useCallback(() => {
-    if (!address) return;
-    setPrefSaveError(null);
-    try {
-      writeConfig({
-        address:      userPrefAddress,
-        abi:          USER_PREFERENCES_ABI,
-        functionName: 'setUserConfig',
-        args: [
-          address,
-          effectiveProtocol ?? ZERO_ADDRESS,
-          userPreferences.userConfig?.autoCompound ?? false,
-          effectiveRisk as 0 | 1 | 2,
-        ],
-      });
-      setPendingRisk(null);
-      setPendingProtocol(null);
-    } catch (e) {
-      setPrefSaveError((e as Error).message);
+      onTrack:            projectedBalance >= neededBalance,
+      monthsRemaining:    Math.floor(remainingMonths),
     }
-  }, [address, effectiveRisk, effectiveProtocol, userPreferences.userConfig, writeConfig]);
+  }, [chain, monthlyDeposit, desiredMonthly, paymentYears])
+
+  // Write contracts 
+  const {
+    writeContract: writeConfig,
+    isPending:     isWritingConfig,
+    data:          configTxHash,
+    error:         configError,
+    reset:         resetConfig,
+  } = useWriteContract()
+
+  const {
+    writeContract: writeStrategy,
+    isPending:     isWritingStrategy,
+    data:          stratTxHash,
+    error:         stratError,
+    reset:         resetStrategy,
+  } = useWriteContract()
+
+  const {
+    writeContract: writeRetirement,
+    isPending:     isWritingRetirement,
+    data:          retirementTxHash,
+    error:         retirementError,
+  } = useWriteContract()
+
+  const { isPending: isConfirmingConfig,   isSuccess: isConfigConfirmed   } =
+    useWaitForTransactionReceipt({ hash: configTxHash,     query: { enabled: Boolean(configTxHash)     } })
+  const { isPending: isConfirmingStrategy, isSuccess: isStrategyConfirmed } =
+    useWaitForTransactionReceipt({ hash: stratTxHash,      query: { enabled: Boolean(stratTxHash)      } })
+  const { isPending: isConfirmingRetire,   isSuccess: isRetireConfirmed   } =
+    useWaitForTransactionReceipt({ hash: retirementTxHash, query: { enabled: Boolean(retirementTxHash) } })
+  const [prefSaveError, setPrefSaveError] = useState<string | null>(null)
+  useEffect(() => {
+    if (configError)  setPrefSaveError(configError.message.split('\n')[0] ?? null)
+    if (stratError)   setPrefSaveError(stratError.message.split('\n')[0]  ?? null)
+  }, [configError, stratError])
+
+  // Clear error on new attempt
+  const isSavingPrefs    = isWritingConfig    || isConfirmingConfig
+  const isSavingStrategy = isWritingStrategy  || isConfirmingStrategy
+  const isRetiringFund   = isWritingRetirement || isConfirmingRetire
+
+  const nowSec = BigInt(Math.floor(Date.now() / 1000))
+  const timelockExpired = chain?.timelockEnd && chain.timelockEnd > 0n && chain.timelockEnd <= nowSec
+
+  // Handlers
+
+  const handleSaveUserConfig = useCallback(() => {
+    if (!address) return
+    setPrefSaveError(null)
+    resetConfig()
+    writeConfig({
+      address:      userPrefAddress,
+      abi:          USER_PREFERENCES_ABI,
+      functionName: 'setUserConfig',
+      args:         [address, effectiveProtocol ?? ZERO_ADDRESS, false, effectiveRisk as 0 | 1 | 2],
+    })
+    setPendingRisk(null)
+    setPendingProtocol(null)
+  }, [address, effectiveRisk, effectiveProtocol, writeConfig, resetConfig, userPrefAddress])
 
   const handleSaveStrategy = useCallback(() => {
-    if (!address) return;
-    try {
-      writeStrategy({
-        address:      userPrefAddress,
-        abi:          USER_PREFERENCES_ABI,
-        functionName: 'setRoutingStrategy',
-        args:         [effectiveStrategy as 0 | 1 | 2, 50n, 10n],
-      });
-      // Reset pending selection immediately after submitting
-      setPendingStrategy(null);
-    } catch (e) {
-      console.error('[DashboardPage] handleSaveStrategy:', e);
-    }
-  }, [address, effectiveStrategy, writeStrategy]);
+    if (!address) return
+    setPrefSaveError(null)
+    resetStrategy()
+    writeStrategy({
+      address:      userPrefAddress,
+      abi:          USER_PREFERENCES_ABI,
+      functionName: 'setRoutingStrategy',
+      args:         [effectiveStrategy as 0 | 1 | 2, 50n, 10n],
+    })
+    setPendingStrategy(null)
+  }, [address, effectiveStrategy, writeStrategy, resetStrategy, userPrefAddress])
 
-  if (isLoading) {
+  const handleStartRetirement = useCallback(() => {
+    if (!fundAddress) return
+    writeRetirement({
+      address:      fundAddress,
+      abi:          PERSONAL_FUND_ABI,
+      functionName: 'startRetirement',
+    })
+  }, [fundAddress, writeRetirement])
+
+  const refetchAll = useCallback(async () => {
+    await Promise.all([refetchDb(), refetchChain()])
+  }, [refetchDb, refetchChain])
+
+  // Loading
+
+  if (isLoading && !hasFund) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <RefreshCw className="animate-spin mx-auto mb-6 text-indigo-600" size={64} />
-          <p className="text-2xl font-bold text-gray-700">Cargando tu Dashboard...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0c0b0a' }}>
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 rounded-full mx-auto animate-spin"
+            style={{ border: '1.5px solid rgba(137,113,72,0.15)', borderTopColor: '#897148' }} />
+          <p className="text-sm tracking-widest uppercase" style={{ color: '#444', fontFamily: "'DM Mono', monospace" }}>
+            Cargando dashboard
+          </p>
         </div>
       </div>
-    );
+    )
   }
 
-  return (
-    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 py-8 sm:py-12 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto">
+  // Render
 
-        {/* ── Banner: verificando fondo recién deployado ── */}
+  return (
+    <div className="min-h-screen" style={{ background: '#0c0b0a', fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+
+      {/* Google Fonts */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap');
+      `}</style>
+
+      {/* Grain overlay — consistent with SalePage */}
+      <div className="fixed inset-0 pointer-events-none" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
+        opacity: 0.4, zIndex: 0,
+      }} />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-6">
+
+        {/* Banners */}
+
         {isPollingFund && (
-          <div className="mb-6 flex items-center gap-3 bg-indigo-50 border-2 border-indigo-200 rounded-2xl px-5 py-4">
-            <RefreshCw size={20} className="animate-spin text-indigo-600 shrink-0" />
+          <div className="flex items-center gap-3 rounded-xl px-5 py-3.5"
+            style={{ background: 'rgba(137,113,72,0.08)', border: '0.5px solid rgba(137,113,72,0.25)' }}>
+            <RefreshCw size={14} className="animate-spin shrink-0" style={{ color: '#897148' }} />
+            <p className="text-xs tracking-wide" style={{ color: '#897148' }}>
+              Verificando tu fondo en la blockchain — esto puede tomar unos segundos.
+            </p>
+          </div>
+        )}
+
+        {fundFromChain && !isPollingFund && (
+          <div className="flex items-start gap-3 rounded-xl px-5 py-3.5"
+            style={{ background: 'rgba(245,158,11,0.06)', border: '0.5px solid rgba(245,158,11,0.2)' }}>
+            <AlertTriangle size={14} className="shrink-0 mt-0.5" style={{ color: '#f59e0b' }} />
             <div>
-              <p className="font-bold text-indigo-800 text-sm">Verificando tu fondo en la blockchain...</p>
-              <p className="text-indigo-600 text-xs mt-0.5">Esto puede tomar unos segundos mientras se confirma la transacción.</p>
+              <p className="text-xs font-semibold" style={{ color: '#f59e0b' }}>Sincronización pendiente</p>
+              <p className="text-[11px] mt-0.5" style={{ color: '#6b5f3f' }}>
+                Tu fondo existe on-chain pero aún no está en la base de datos. Los metadatos del calculador no estarán disponibles hasta sincronizar. Se resolverá automáticamente.
+              </p>
             </div>
           </div>
         )}
 
-        {/* ── Header ── */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-800 mb-4 flex items-center justify-center gap-4">
-            <Sparkles className="text-purple-600" size={48} />
-            Tu Dashboard Ethernal
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Bienvenido,{' '}
-            <strong className="text-indigo-600 font-mono">
-              {address?.slice(0, 8)}...{address?.slice(-6)}
-            </strong>
-            <span className="hidden sm:inline"> – </span>
-            <span className="block sm:inline">Administra tu futuro financiero en blockchain</span>
-          </p>
+        {/* Header */}
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: '#897148' }}>
+                <Sparkles size={10} style={{ color: '#f7f8f6' }} />
+              </div>
+              <span className="text-[10px] tracking-[0.3em] uppercase" style={{ color: '#555' }}>Ethernal Fund</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-light" style={{ color: '#e8e4dc', fontFamily: "'Cormorant Garamond', serif" }}>
+              Tu Dashboard
+            </h1>
+            <p className="text-xs mt-1 font-mono" style={{ color: '#444' }}>
+              {address?.slice(0, 10)}...{address?.slice(-8)}
+            </p>
+          </div>
+
           <button
-            onClick={() => { void refetchAll(); }}
+            onClick={() => void refetchAll()}
             disabled={isLoading}
-            className="mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-wait text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2 mx-auto"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium transition-opacity disabled:opacity-40"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.1)', color: '#666' }}
           >
-            <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
-            {isLoading ? 'Actualizando...' : 'Actualizar Datos'}
+            <RefreshCw size={12} className={isLoading ? 'animate-spin' : ''} />
+            {isLoading ? 'Actualizando' : 'Actualizar'}
           </button>
         </div>
 
-        <div className="space-y-6 sm:space-y-8">
+        {/* Main layout */}
+        <div className="grid lg:grid-cols-3 gap-6">
 
-          {/* ══ MI FONDO PERSONAL ══ */}
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-10">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-              <h2 className="text-3xl sm:text-4xl font-black text-gray-800 flex items-center gap-3">
-                <Shield className="text-emerald-600" size={40} />
-                Mi Fondo Personal
-              </h2>
-              <span className={`font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base whitespace-nowrap flex items-center gap-2 ${
-                hasFund ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
-              }`}>
-                {hasFund
-                  ? <><CheckCircle size={18} />Activo</>
-                  : <><AlertCircle size={18} />Sin Fondo</>
-                }
-              </span>
-            </div>
+          {/* ── Left column: Fund ── */}
+          <div className="lg:col-span-2 space-y-6">
 
-            {hasFund ? (
-              <div className="space-y-6 sm:space-y-8">
-
-                {/* Balance + Estado */}
-                <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
-                  <div>
-                    <p className="text-gray-500 text-base sm:text-lg mb-2">Balance Actual</p>
-                    <p className="text-4xl sm:text-5xl font-black text-emerald-600">
-                      {formatUSDCDisplay(balance)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-base sm:text-lg mb-2">Estado del Fondo</p>
-                    <p className="text-2xl sm:text-3xl font-bold text-indigo-700">
-                      {retirementStarted ? 'Jubilado' : 'Ahorrando'}
-                    </p>
-                  </div>
+            {/* My Fund card */}
+            <SectionCard>
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2.5">
+                  <Shield size={18} style={{ color: '#897148' }} />
+                  <span className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>
+                    Mi Fondo Personal
+                  </span>
                 </div>
+                <span
+                  className="text-[10px] tracking-widest uppercase px-3 py-1 rounded-full font-semibold"
+                  style={hasFund
+                    ? { background: 'rgba(16,185,129,0.1)', color: '#10b981', border: '0.5px solid rgba(16,185,129,0.3)' }
+                    : { background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '0.5px solid rgba(245,158,11,0.3)' }
+                  }
+                >
+                  {hasFund ? 'Activo' : 'Sin fondo'}
+                </span>
+              </div>
 
-                {/* Barra de progreso */}
-                {progress && (
-                  <div className="bg-linear-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <Target size={20} className="text-blue-600" />
-                        Progreso hacia la meta
-                      </h3>
-                      <span className={`font-black text-lg ${progress.onTrack ? 'text-green-600' : 'text-orange-600'}`}>
-                        {progress.progressPercentage.toFixed(1)}%
+              {hasFund ? (
+                <div className="space-y-6">
+
+                  {/* Balance hero */}
+                  <div>
+                    <p className="text-[10px] tracking-[0.25em] uppercase mb-2" style={{ color: '#555' }}>Balance Actual</p>
+                    <div className="flex items-end gap-3">
+                      {isLoadingChain
+                        ? <div className="h-10 w-40 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.05)' }} />
+                        : <p className="text-4xl sm:text-5xl font-light" style={{ color: '#c9a96e', fontFamily: "'Cormorant Garamond', serif" }}>
+                            {formatUSDC(chain?.totalBalance)}
+                          </p>
+                      }
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full mb-1 font-medium"
+                        style={chain?.retirementStarted
+                          ? { background: 'rgba(16,185,129,0.1)', color: '#10b981' }
+                          : { background: 'rgba(99,102,241,0.1)',  color: '#818cf8' }
+                        }
+                      >
+                        {chain?.retirementStarted ? 'Jubilado' : 'Ahorrando'}
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-                      <div
-                        className={`h-4 rounded-full transition-all duration-700 ${progress.onTrack ? 'bg-green-500' : 'bg-orange-500'}`}
-                        style={{ width: `${Math.min(progress.progressPercentage, 100)}%` }}
-                      />
-                    </div>
-                    <div className="grid grid-cols-3 text-xs sm:text-sm text-gray-600 gap-2">
-                      <div>
-                        <p className="text-gray-400 mb-0.5">Actual</p>
-                        <p className="font-bold">{formatUSDCDisplay(BigInt(Math.floor(progress.currentBalance * 1e6)))}</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-gray-400 mb-0.5">Proyectado</p>
-                        <p className="font-bold">{formatUSDCDisplay(BigInt(Math.floor(progress.projectedBalance * 1e6)))}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-gray-400 mb-0.5">Meta</p>
-                        <p className="font-bold">{formatUSDCDisplay(BigInt(Math.floor(progress.neededBalance * 1e6)))}</p>
-                      </div>
-                    </div>
-                    {progress.monthsRemaining > 0 && (
-                      <p className="text-xs text-gray-400 mt-3 text-center">
-                        {progress.monthsRemaining} meses restantes hasta el timelock
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* Stats grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { label: 'Depósito Mensual', value: formatUSDCDisplay(monthlyDeposit)                       },
-                    { label: 'Total Depósitos',  value: monthlyDepositCount?.toString() ?? '0'                  },
-                    { label: 'Edad de Retiro',   value: `${retirementAge?.toString() ?? '0'} años`              },
-                    { label: 'Protocolo',        value: selectedProtocol ? shortAddr(selectedProtocol) : '—'   },
-                  ].map((stat) => (
-                    <div key={stat.label} className="bg-gray-50 rounded-xl p-4">
-                      <p className="text-gray-500 text-sm mb-1">{stat.label}</p>
-                      <p className="text-xl font-bold text-gray-800">{stat.value}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Deposit cards */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-5 flex flex-col gap-4">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="font-black text-emerald-900 text-base">Depósito Mensual</p>
-                      <span className="flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">
-                        🔒 Next in <CountdownTimer targetDate={nextDepositDate} />
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-3xl sm:text-4xl font-black text-emerald-700">
-                        {formatUSDCDisplay(monthlyDeposit)}
-                      </p>
-                      <p className="text-xs text-emerald-600 mt-1">
-                        USDC · 5% de comisión deducida on-chain
-                      </p>
-                    </div>
-                    <button
-                      onClick={handleOpenDepositModal}
-                      className="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-sm"
-                    >
-                      <DollarSign size={16} />
-                      Depositar Mensual
-                    </button>
                   </div>
 
-                  <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-5 flex flex-col gap-4">
-                    <p className="font-black text-gray-800 text-base">Depósito Extra</p>
-                    <p className="text-sm text-gray-500 leading-relaxed flex-1">
-                      Aportá cualquier monto adicional en cualquier momento
-                    </p>
-                    <button
-                      onClick={handleOpenExtraDepositModal}
-                      className="w-full bg-white hover:bg-gray-100 active:scale-95 text-gray-800 font-bold py-3 rounded-xl border-2 border-gray-300 transition flex items-center justify-center gap-2 text-sm"
-                    >
-                      <DollarSign size={16} />
-                      Depositar Extra
-                    </button>
-                  </div>
-                </div>
+                  {/* Progress toward goal */}
+                  {progress && (
+                    <div className="rounded-xl p-5 space-y-4" style={{ background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(255,255,255,0.06)' }}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Target size={13} style={{ color: '#555' }} />
+                          <span className="text-[10px] tracking-[0.2em] uppercase" style={{ color: '#555' }}>Progreso a la meta</span>
+                        </div>
+                        <span className="text-sm font-bold font-mono" style={{ color: progress.onTrack ? '#10b981' : '#f59e0b' }}>
+                          {progress.progressPercentage.toFixed(1)}%
+                        </span>
+                      </div>
 
-                {/* Dirección del contrato */}
-                <div className="bg-linear-to-r from-indigo-50 to-purple-50 rounded-2xl p-4 sm:p-6 border-2 border-indigo-200">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-gray-700 font-medium mb-1">Dirección del Contrato</p>
-                      <p className="font-mono text-xs sm:text-sm break-all text-indigo-800">{fundAddress}</p>
+                      {/* Progress bar */}
+                      <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{
+                            width: `${Math.min(progress.progressPercentage, 100)}%`,
+                            background: progress.onTrack
+                              ? 'linear-gradient(90deg, #10b981, #34d399)'
+                              : 'linear-gradient(90deg, #f59e0b, #fcd34d)',
+                          }}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        {[
+                          { label: 'Actual',     value: formatUSDC(chain?.totalBalance) },
+                          { label: 'Proyectado', value: formatUSDC(BigInt(Math.floor(progress.projectedBalance * 1e6))) },
+                          { label: 'Meta',       value: formatUSDC(BigInt(Math.floor(progress.neededBalance * 1e6))) },
+                        ].map(({ label, value }) => (
+                          <div key={label}>
+                            <p className="text-[9px] tracking-widest uppercase mb-0.5" style={{ color: '#444' }}>{label}</p>
+                            <p className="text-xs font-mono font-semibold" style={{ color: '#888' }}>{value}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      {progress.monthsRemaining > 0 && (
+                        <p className="text-[10px] text-center" style={{ color: '#444' }}>
+                          {progress.monthsRemaining} meses restantes hasta el timelock
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Stats grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <StatCard label="Depósito Mensual"  value={formatUSDC(monthlyDeposit ?? 0)} />
+                    <StatCard label="Total Depósitos"   value={chain?.monthlyDepositCount?.toString() ?? '—'} />
+                    <StatCard label="Edad de Retiro"    value={retirementAge != null ? `${retirementAge} años` : '—'} />
+                    <StatCard label="APY Configurado"   value={apyPercent    != null ? `${apyPercent.toFixed(2)}%` : '—'} />
+                    <StatCard label="Ingreso Deseado"   value={desiredMonthly != null ? formatUSDC(desiredMonthly) : '—'} />
+                    <StatCard
+                      label="Protocolo"
+                      value={protocolAddress ? shortAddr(protocolAddress) : '—'}
+                    />
+                  </div>
+
+                  {/* Missed months warning */}
+                  {chain?.missedMonths && chain.missedMonths > 0n && (
+                    <div className="flex items-start gap-2 rounded-xl px-4 py-3" style={{ background: 'rgba(239,68,68,0.06)', border: '0.5px solid rgba(239,68,68,0.2)' }}>
+                      <AlertTriangle size={13} className="shrink-0 mt-0.5 text-red-400" />
+                      <p className="text-xs text-red-400">
+                        Tenés <strong>{chain.missedMonths.toString()}</strong> {chain.missedMonths === 1n ? 'mes perdido' : 'meses perdidos'} sin depositar.
+                        Los depósitos atrasados aplican penalidades.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Deposit actions */}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {/* Monthly */}
+                    <div className="rounded-xl p-4 flex flex-col gap-3" style={{ background: 'rgba(137,113,72,0.06)', border: '0.5px solid rgba(137,113,72,0.2)' }}>
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-semibold" style={{ color: '#c9a96e' }}>Depósito Mensual</p>
+                        {nextDepositDate && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(137,113,72,0.1)', color: '#897148' }}>
+                            <CountdownTimer targetDate={nextDepositDate} />
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-2xl font-light" style={{ color: '#c9a96e', fontFamily: "'Cormorant Garamond', serif" }}>
+                        {formatUSDC(monthlyDeposit ?? 0)}
+                      </p>
+                      <button
+                        onClick={() => setDepositModal({ open: true, mode: 'monthly' })}
+                        className="w-full py-2.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80 flex items-center justify-center gap-1.5"
+                        style={{ background: 'rgba(137,113,72,0.2)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.35)' }}
+                      >
+                        <DollarSign size={12} />Depositar
+                      </button>
+                    </div>
+
+                    {/* Extra */}
+                    <div className="rounded-xl p-4 flex flex-col gap-3" style={{ background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(255,255,255,0.07)' }}>
+                      <p className="text-xs font-semibold" style={{ color: '#888' }}>Depósito Extra</p>
+                      <p className="text-sm leading-relaxed" style={{ color: '#444' }}>
+                        Aportá cualquier monto adicional en cualquier momento. 24h para reclamar.
+                      </p>
+                      <button
+                        onClick={() => setDepositModal({ open: true, mode: 'extra' })}
+                        className="w-full py-2.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80 flex items-center justify-center gap-1.5 mt-auto"
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#888', border: '0.5px solid rgba(255,255,255,0.1)' }}
+                      >
+                        <DollarSign size={12} />Depositar Extra
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Timelock */}
+                  {chain?.timelockEnd && chain.timelockEnd > 0n && (
+                    <div className="flex items-center justify-between rounded-xl px-5 py-4"
+                      style={{ background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(255,255,255,0.07)' }}>
+                      <div className="flex items-center gap-2.5">
+                        <Clock size={14} style={{ color: '#555' }} />
+                        <div>
+                          <p className="text-[10px] tracking-widest uppercase" style={{ color: '#444' }}>Timelock</p>
+                          <p className="text-sm font-mono mt-0.5" style={{ color: '#888' }}>
+                            {format(new Date(Number(chain.timelockEnd) * 1000), 'dd MMM yyyy')}
+                          </p>
+                        </div>
+                      </div>
+                      {!timelockExpired && (
+                        <span className="text-xs font-mono" style={{ color: '#555' }}>
+                          {Math.floor(Number(chain.timelockEnd - BigInt(Math.floor(Date.now() / 1000))) / 86400)}d restantes
+                        </span>
+                      )}
+                      {timelockExpired && (
+                        <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(16,185,129,0.1)', color: '#10b981' }}>
+                          Desbloqueado
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Contract address */}
+                  <div className="flex items-center justify-between gap-3 rounded-xl px-5 py-4"
+                    style={{ background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(255,255,255,0.06)' }}>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <p className="text-[10px] tracking-widest uppercase" style={{ color: '#444' }}>Contrato</p>
+                        {fundFromChain && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '0.5px solid rgba(245,158,11,0.2)' }}>
+                            sin DB
+                          </span>
+                        )}
+                      </div>
+                      <p className="font-mono text-xs truncate" style={{ color: '#666' }}>{fundAddress}</p>
+                      {lastSyncedAt && (
+                        <p className="text-[10px] mt-0.5" style={{ color: '#333' }}>
+                          Sync: {format(new Date(lastSyncedAt), 'dd MMM HH:mm')}
+                        </p>
+                      )}
                     </div>
                     <a
                       href={getExplorerAddressUrl(chainId, fundAddress!)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg transition shrink-0"
-                      title="Ver en Arbiscan"
+                      target="_blank" rel="noopener noreferrer"
+                      className="p-2 rounded-lg transition-opacity hover:opacity-70 shrink-0"
+                      style={{ background: 'rgba(255,255,255,0.05)', color: '#555' }}
                     >
-                      <ExternalLink size={20} />
+                      <ExternalLink size={14} />
                     </a>
                   </div>
+
+                  {/* Start retirement CTA */}
+                  {chain && !chain.retirementStarted && timelockExpired && (
+                    <div>
+                      <button
+                        onClick={handleStartRetirement}
+                        disabled={isRetiringFund}
+                        className="w-full py-4 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(52,211,153,0.1))', color: '#10b981', border: '0.5px solid rgba(16,185,129,0.35)' }}
+                      >
+                        {isRetiringFund
+                          ? <><RefreshCw size={14} className="animate-spin" />Iniciando retiro...</>
+                          : <><CheckCircle size={14} />Iniciar Retiro</>
+                        }
+                      </button>
+                      <TxStatusBadge
+                        isPending={isWritingRetirement}
+                        isConfirming={isConfirmingRetire}
+                        isConfirmed={isRetireConfirmed}
+                        error={retirementError}
+                      />
+                    </div>
+                  )}
+
                 </div>
-
-                {/* Timelock */}
-                {timelockEnd && timelockEnd > 0n && (
-                  <div className="bg-linear-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-300">
-                    <p className="text-gray-700 font-medium mb-2 flex items-center gap-2">
-                      <Clock size={24} className="text-amber-600" />
-                      Timelock termina:
-                    </p>
-                    <p className="text-xl sm:text-2xl font-black text-amber-700">
-                      {formatTimestamp(timelockEnd)}
-                    </p>
-                    {timelockEnd > nowSec && (
-                      <p className="text-sm text-amber-600 mt-2">
-                        {Math.floor(Number(timelockEnd - nowSec) / 86400)} días restantes
-                      </p>
-                    )}
+              ) : (
+                /* No fund */
+                <div className="text-center py-12 space-y-4">
+                  <Wallet size={40} className="mx-auto opacity-20" style={{ color: '#e8e4dc' }} />
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: '#888' }}>No tenés un fondo aún</p>
+                    <p className="text-xs mt-1" style={{ color: '#444' }}>Creá tu fondo de retiro personal on-chain.</p>
                   </div>
-                )}
-
-                {/* Botón iniciar retiro */}
-                {!retirementStarted && timelockEnd && timelockEnd <= nowSec && (
                   <button
-                    onClick={handleStartRetirement}
-                    className="w-full bg-linear-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition transform hover:scale-105 flex items-center justify-center gap-3"
+                    onClick={() => navigate('/calculator')}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80"
+                    style={{ background: 'rgba(137,113,72,0.2)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.35)' }}
                   >
-                    <TrendingUp size={24} />
-                    Iniciar Retiro
+                    <ArrowRight size={13} />Crear mi Fondo
                   </button>
-                )}
-
-              </div>
-            ) : (
-              /* Sin fondo */
-              <div className="text-center py-12 sm:py-16">
-                <Wallet className="w-24 h-24 sm:w-32 sm:h-32 text-gray-200 mx-auto mb-6" />
-                <p className="text-xl sm:text-2xl text-gray-600 mb-8">
-                  Todavía no tienes un fondo de retiro
-                </p>
-                <button
-                  onClick={() => { void navigate('/calculator'); }}
-                  className="bg-linear-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white font-black text-lg sm:text-xl py-5 px-10 rounded-2xl shadow-2xl transition transform hover:scale-105 inline-flex items-center gap-3"
-                >
-                  <Sparkles size={28} />
-                  Crear Mi Fondo
-                  <ArrowRight size={28} />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* ══ GRILLA INFERIOR ══ */}
-          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
-
-            {/* LEFT / MAIN COLUMN */}
-            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-              {hasFund && (
-                <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-10">
-                  <h3 className="text-2xl sm:text-3xl font-black text-gray-800 mb-6 flex items-center gap-3">
-                    <PieChart className="text-blue-600" size={32} />
-                    Inversiones DeFi
-                  </h3>
-                  <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 text-center">
-                    <p className="text-gray-600 mb-4">
-                      Tus fondos pueden invertirse en protocolos DeFi aprobados para generar rendimientos
-                    </p>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition">
-                      Ver Oportunidades
-                    </button>
-                  </div>
                 </div>
               )}
-            </div>
+            </SectionCard>
 
-            {/* RIGHT SIDEBAR */}
-            <div className="space-y-6 sm:space-y-8">
-
-              {/* ── Preferencias ── */}
-              <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-8">
-                <h3 className="text-2xl sm:text-3xl font-black text-gray-800 mb-2 flex items-center gap-3">
-                  <Settings className="text-indigo-600" size={32} />
-                  Mis Preferencias
-                </h3>
-                <p className="text-gray-500 text-sm mb-6">
-                  Configurá tu perfil de inversión on-chain.
-                </p>
-
-                {userPreferences.userConfig && (
-                  <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 mb-6 flex items-start gap-3">
-                    <Info size={18} className="text-indigo-500 shrink-0 mt-0.5" />
-                    <div className="text-sm text-indigo-800">
-                      <span className="font-semibold">Config actual: </span>
-                      <span className={`font-bold ${riskLevelColor(currentRisk)}`}>{riskLevelLabel(currentRisk)}</span>
-                      {currentProtocol !== ZERO_ADDRESS && (
-                        <span className="text-indigo-600"> · Protocolo: {shortAddr(currentProtocol)}</span>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Nivel de riesgo */}
-                <div className="mb-6">
-                  <p className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">Nivel de Riesgo</p>
-                  <div className="space-y-2">
-                    {RISK_LEVELS.map((r) => {
-                      const Icon       = r.icon;
-                      const isSelected = effectiveRisk === r.value;
-                      return (
-                        <button
-                          key={r.value}
-                          onClick={() => setPendingRisk(r.value)}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left ${
-                            isSelected
-                              ? `bg-linear-to-r ${r.gradient} border-2 ${r.border} shadow`
-                              : 'border border-gray-200 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${isSelected ? r.badge : 'bg-gray-100'}`}>
-                            <Icon size={18} className={isSelected ? '' : 'text-gray-400'} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className={`font-bold text-sm ${isSelected ? '' : 'text-gray-600'}`}>{r.label}</p>
-                            <p className={`text-xs truncate ${isSelected ? 'text-gray-600' : 'text-gray-400'}`}>{r.description}</p>
-                          </div>
-                          {isSelected && <CheckCircle size={16} className="text-current shrink-0 opacity-70" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Protocolo preferido */}
-                <div className="mb-6">
-                  <p className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">Protocolo Preferido</p>
-                  {activeProtocols.length > 0 ? (
-                    <div className="space-y-2 max-h-44 overflow-y-auto pr-1">
-                      {activeProtocols.filter((p) => !!p?.protocolAddress).map((p) => {
-                        const isSelected = effectiveProtocol === p.protocolAddress;
-                        return (
-                          <button
-                            key={p.protocolAddress}
-                            onClick={() => setPendingProtocol(p.protocolAddress)}
-                            className={`w-full flex items-center justify-between gap-2 p-3 rounded-xl border transition-all text-left ${
-                              isSelected ? 'border-indigo-400 bg-indigo-50 shadow' : 'border-gray-200 hover:bg-gray-50'
-                            }`}
-                          >
-                            <div className="min-w-0">
-                              <p className="font-mono text-xs text-gray-700 truncate">{shortAddr(p.protocolAddress)}</p>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${RISK_LEVELS[p.riskLevel]?.badge ?? 'bg-gray-100 text-gray-700'}`}>
-                                  {riskLevelLabel(p.riskLevel)}
-                                </span>
-                                <span className="text-xs text-emerald-600 font-semibold">
-                                  APY {(Number(p.apy) / 100).toFixed(2)}%
-                                </span>
-                              </div>
-                            </div>
-                            {isSelected && <CheckCircle size={16} className="text-indigo-500 shrink-0" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className="text-gray-400 text-sm text-center py-4 border border-dashed border-gray-200 rounded-xl">
-                      No hay protocolos activos registrados
-                    </p>
-                  )}
-                </div>
-
-                {prefSaveError && (
-                  <p className="text-red-600 text-xs mb-3 flex items-start gap-1">
-                    <AlertCircle size={14} className="shrink-0 mt-0.5" />{prefSaveError}
-                  </p>
-                )}
-                {prefSaveOk && (
-                  <p className="text-emerald-600 text-xs mb-3 flex items-center gap-1">
-                    <CheckCircle size={14} />Preferencias guardadas on-chain
-                  </p>
-                )}
-
-                <button
-                  onClick={handleSaveUserConfig}
-                  disabled={isSavingPrefs || (pendingRisk === null && pendingProtocol === null)}
-                  className="w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-300 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
-                >
-                  {isSavingPrefs
-                    ? <><RefreshCw className="animate-spin" size={16} />Guardando...</>
-                    : <><CheckCircle size={16} />Guardar Configuración</>
-                  }
-                </button>
-              </div>
-
-              {/* ── Protocol Registry ── */}
-              <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-8">
-                <h3 className="text-2xl sm:text-3xl font-black text-gray-800 mb-2 flex items-center gap-3">
-                  <Activity className="text-violet-600" size={32} />
-                  Protocol Registry
-                </h3>
-                <p className="text-gray-500 text-sm mb-6">
-                  Estrategia de ruteo de depósitos y métricas de los protocolos verificados.
-                </p>
-
-                <div className="mb-6">
-                  <p className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">Estrategia de Inversión</p>
-                  <div className="space-y-2">
-                    {STRATEGY_TYPES.map((s) => {
-                      const Icon       = s.icon;
-                      const isSelected = effectiveStrategy === s.value;
-                      return (
-                        <button
-                          key={s.value}
-                          onClick={() => setPendingStrategy(s.value)}
-                          className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
-                            isSelected ? 'border-violet-400 bg-violet-50 shadow' : 'border-gray-200 hover:bg-gray-50'
-                          }`}
-                        >
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isSelected ? 'bg-violet-100 text-violet-700' : 'bg-gray-100 text-gray-400'}`}>
-                            <Icon size={16} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className={`font-bold text-sm ${isSelected ? 'text-violet-800' : 'text-gray-600'}`}>{s.label}</p>
-                            <p className="text-xs text-gray-400 truncate">{s.description}</p>
-                          </div>
-                          {isSelected && <CheckCircle size={16} className="text-violet-500 shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {stratSaveOk && (
-                    <p className="text-emerald-600 text-xs mt-2 flex items-center gap-1">
-                      <CheckCircle size={14} />Estrategia guardada on-chain
-                    </p>
-                  )}
-
-                  <button
-                    onClick={handleSaveStrategy}
-                    disabled={isSavingStrategy || pendingStrategy === null}
-                    className="w-full mt-3 bg-linear-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-300 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
-                  >
-                    {isSavingStrategy
-                      ? <><RefreshCw className="animate-spin" size={16} />Guardando...</>
-                      : <><CheckCircle size={16} />Guardar Estrategia</>
-                    }
-                  </button>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-bold text-gray-700 uppercase tracking-wide">Protocolos Activos</p>
-                    <span className="bg-violet-100 text-violet-700 text-xs font-bold px-2 py-1 rounded-full">
-                      {activeProtocols.length} verificados
-                    </span>
-                  </div>
-
-                  {activeProtocols.length > 0 ? (
-                    <div className="space-y-2">
-                      {activeProtocols.filter((p) => !!p?.protocolAddress).slice(0, 3).map((p) => (
-                        <div key={p.protocolAddress} className="bg-gray-50 rounded-xl p-3 flex items-center justify-between gap-3">
-                          <div className="min-w-0">
-                            <p className="font-mono text-xs text-gray-600 truncate">{shortAddr(p.protocolAddress)}</p>
-                            <div className="flex items-center gap-1.5 mt-0.5">
-                              <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${RISK_LEVELS[p.riskLevel]?.badge ?? 'bg-gray-100 text-gray-700'}`}>
-                                {riskLevelLabel(p.riskLevel)}
-                              </span>
-                              {p.isVerified && (
-                                <span className="text-xs text-blue-500 font-semibold flex items-center gap-0.5">
-                                  <CheckCircle size={10} />Verificado
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <p className="text-emerald-600 font-black text-sm">{(Number(p.apy) / 100).toFixed(2)}%</p>
-                            <p className="text-gray-400 text-xs">APY</p>
-                          </div>
-                        </div>
-                      ))}
-                      {activeProtocols.length > 3 && (
-                        <button className="w-full text-center text-sm text-violet-600 hover:text-violet-700 font-medium py-2 flex items-center justify-center gap-1">
-                          Ver {activeProtocols.length - 3} más
-                          <ChevronRight size={14} />
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <p className="text-gray-400 text-sm text-center py-4 border border-dashed border-gray-200 rounded-xl">
-                      Sin protocolos registrados aún
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* ── Del equipo Ethernal ── */}
-              <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-100 p-6 sm:p-8">
-                <h3 className="text-xl sm:text-2xl font-black text-gray-800 mb-2 flex items-center gap-3">
-                  <BookOpen className="text-pink-600" size={26} />
+            {/* Admin content */}
+            <SectionCard>
+              <div className="flex items-center gap-2.5 mb-5">
+                <BookOpen size={15} style={{ color: '#555' }} />
+                <span className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>
                   Del Equipo Ethernal
-                </h3>
-                <p className="text-gray-500 text-sm mb-5">
-                  Recomendaciones financieras y cursos de educación publicados por el Admin.
-                </p>
-                <div className="space-y-3">
-                  {ADMIN_CONTENT.map((item) => {
-                    const Icon = item.icon;
-                    const colorMap: Record<string, string>     = { indigo: 'bg-indigo-50 border-indigo-200', pink: 'bg-pink-50 border-pink-200', amber: 'bg-amber-50 border-amber-200' };
-                    const iconColorMap: Record<string, string> = { indigo: 'text-indigo-600 bg-indigo-100', pink: 'text-pink-600 bg-pink-100',   amber: 'text-amber-600 bg-amber-100'  };
-                    return (
-                      <div key={item.id} className={`border rounded-2xl p-4 ${colorMap[item.color]} transition hover:shadow-md cursor-pointer`}>
-                        <div className="flex items-start gap-3">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${iconColorMap[item.color]}`}>
-                            <Icon size={16} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-1 mb-1">
-                              <p className="font-bold text-sm text-gray-800 leading-tight">{item.title}</p>
-                              <ChevronRight size={14} className="text-gray-400 shrink-0 mt-0.5" />
-                            </div>
-                            <p className="text-xs text-gray-500 leading-relaxed mb-2">{item.summary}</p>
-                            <p className="text-xs text-gray-400">{item.date}</p>
-                          </div>
-                        </div>
+                </span>
+              </div>
+              <div className="space-y-3">
+                {ADMIN_CONTENT.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <div
+                      key={item.id}
+                      className="flex items-start gap-3 rounded-xl p-4 cursor-pointer transition-all hover:opacity-80"
+                      style={{ background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(255,255,255,0.06)' }}
+                    >
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${item.accent}18`, border: `0.5px solid ${item.accent}30` }}>
+                        <Icon size={13} style={{ color: item.accent }} />
                       </div>
-                    );
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <p className="text-xs font-medium leading-snug" style={{ color: '#c8c4bb' }}>{item.title}</p>
+                          <ChevronRight size={12} className="shrink-0 mt-0.5" style={{ color: '#444' }} />
+                        </div>
+                        <p className="text-[11px] leading-relaxed mb-1.5" style={{ color: '#555' }}>{item.summary}</p>
+                        <p className="text-[10px]" style={{ color: '#333' }}>{item.date}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </SectionCard>
+
+          </div>
+
+          {/* Right column: Preferences + Protocols */}
+          <div className="space-y-6">
+
+            {/* Preferences */}
+            <SectionCard>
+              <div className="flex items-center gap-2.5 mb-6">
+                <Settings size={15} style={{ color: '#555' }} />
+                <span className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>
+                  Preferencias
+                </span>
+              </div>
+
+              {/* Risk tolerance */}
+              <div className="mb-5">
+                <p className="text-[10px] tracking-widest uppercase mb-3" style={{ color: '#444' }}>Tolerancia al Riesgo</p>
+                <div className="space-y-1.5">
+                  {RISK_LEVELS.map((r) => {
+                    const Icon = r.icon
+                    const isSelected = effectiveRisk === r.value
+                    return (
+                      <button
+                        key={r.value}
+                        onClick={() => setPendingRisk(r.value)}
+                        className="w-full flex items-center gap-2.5 p-3 rounded-xl border transition-all text-left"
+                        style={isSelected
+                          ? { border: `0.5px solid ${r.accent}50`, background: `${r.accent}0d` }
+                          : { border: '0.5px solid rgba(255,255,255,0.06)', background: 'transparent' }
+                        }
+                      >
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                          style={{ background: isSelected ? `${r.accent}18` : 'rgba(255,255,255,0.04)' }}>
+                          <Icon size={13} style={{ color: isSelected ? r.accent : '#444' }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold" style={{ color: isSelected ? '#e8e4dc' : '#666' }}>{r.label}</p>
+                          <p className="text-[10px] truncate" style={{ color: '#444' }}>{r.description}</p>
+                        </div>
+                        {isSelected && <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: r.accent }} />}
+                      </button>
+                    )
                   })}
                 </div>
               </div>
 
-              {/* ── Contacto ── */}
-              <div className="bg-linear-to-r from-pink-50 to-purple-50 rounded-3xl shadow-2xl border-2 border-pink-200 p-6 sm:p-8">
-                <h3 className="text-xl sm:text-2xl font-black text-gray-800 mb-4 flex items-center gap-3">
-                  <MessageCircle className="text-pink-600" size={28} />
-                  ¿Necesitas ayuda?
-                </h3>
-                <p className="text-gray-700 text-sm sm:text-base mb-6">
-                  Contacta al equipo de Ethernal para preguntas sobre tu plan de retiro o estrategias de inversión
-                </p>
-                <div className="space-y-3">
-                  <button className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl transition">
-                    Contactar Ethernal
-                  </button>
-                  <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl transition">
-                    Ver Documentación
-                  </button>
-                </div>
+              {/* Protocol preference */}
+              <div className="mb-5">
+                <p className="text-[10px] tracking-widest uppercase mb-3" style={{ color: '#444' }}>Protocolo Preferido</p>
+                {protocols.length > 0 ? (
+                  <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                    {protocols.map((p) => {
+                      const isSelected = effectiveProtocol === p.address
+                      return (
+                        <button
+                          key={p.address}
+                          onClick={() => setPendingProtocol(p.address as `0x${string}`)}
+                          className="w-full flex items-center justify-between gap-2 p-3 rounded-xl border transition-all text-left"
+                          style={isSelected
+                            ? { border: '0.5px solid rgba(137,113,72,0.4)', background: 'rgba(137,113,72,0.08)' }
+                            : { border: '0.5px solid rgba(255,255,255,0.06)', background: 'transparent' }
+                          }
+                        >
+                          <div className="min-w-0">
+                            <p className="font-mono text-[11px] truncate" style={{ color: isSelected ? '#c9a96e' : '#666' }}>{shortAddr(p.address)}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-[10px]" style={{ color: '#444' }}>{riskLabel(p.risk ?? 0)}</span>
+                              <span className="text-[10px] font-semibold" style={{ color: '#10b981' }}>{(p.apyBps / 100).toFixed(2)}% APY</span>
+                            </div>
+                          </div>
+                          {isSelected && <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#897148' }} />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-center py-4 rounded-xl" style={{ color: '#444', border: '0.5px dashed rgba(255,255,255,0.08)' }}>
+                    No hay protocolos activos
+                  </p>
+                )}
               </div>
 
-            </div>{/* end RIGHT SIDEBAR */}
-          </div>{/* end GRILLA */}
-        </div>{/* end space-y */}
-      </div>{/* end max-w */}
-
-      {/* ── Modal de depósito ── */}
-      {isDepositModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-          onClick={(e) => e.target === e.currentTarget && handleCloseDepositModal()}
-        >
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-black text-gray-800">Realizar Depósito</h3>
-              <button
-                onClick={handleCloseDepositModal}
-                className="text-gray-400 hover:text-gray-600 transition text-2xl leading-none"
-                aria-label="Cerrar"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 mb-6 bg-gray-100 p-1 rounded-xl">
-              {(['monthly', 'custom'] as const).map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setDepositMode(m)}
-                  className={`py-2 px-4 rounded-lg font-bold text-sm transition ${
-                    depositMode === m ? 'bg-white text-indigo-700 shadow' : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  {m === 'monthly' ? 'Mensual' : 'Personalizado'}
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-4">
-              {depositMode === 'monthly' ? (
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 text-center">
-                  <p className="text-gray-600 text-sm mb-1">Depósito mensual configurado</p>
-                  <p className="text-4xl font-black text-emerald-700">{formatUSDCDisplay(monthlyDeposit)}</p>
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Monto en USDC</label>
-                  <input
-                    type="number"
-                    min="0.01"
-                    step="0.01"
-                    value={depositAmount}
-                    onChange={(e) => handleDepositAmountChange(e.target.value)}
-                    placeholder="Ej: 500.00"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-300 focus:border-blue-500 text-lg"
-                  />
-                  {depositAmountError && (
-                    <p className="text-red-500 text-sm mt-1">{depositAmountError}</p>
-                  )}
-                </div>
+              {prefSaveError && (
+                <p className="text-[11px] text-red-400 mb-3 flex items-start gap-1">
+                  <AlertCircle size={12} className="shrink-0 mt-0.5" />{prefSaveError}
+                </p>
+              )}
+              {isConfigConfirmed && (
+                <p className="text-[11px] mb-3 flex items-center gap-1" style={{ color: '#10b981' }}>
+                  <CheckCircle size={12} />Preferencias guardadas on-chain
+                </p>
               )}
 
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
-                <p className="text-amber-800 text-sm">La funcionalidad de depósito estará disponible próximamente.</p>
+              <button
+                onClick={handleSaveUserConfig}
+                disabled={isSavingPrefs || (pendingRisk === null && pendingProtocol === null)}
+                className="w-full py-2.5 rounded-xl text-xs font-semibold transition-opacity disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2 mb-4"
+                style={{ background: 'rgba(137,113,72,0.2)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.35)' }}
+              >
+                {isSavingPrefs
+                  ? <><RefreshCw size={12} className="animate-spin" />Guardando...</>
+                  : <><CheckCircle size={12} />Guardar Configuración</>
+                }
+              </button>
+
+              {/* Strategy */}
+              <div style={{ borderTop: '0.5px solid rgba(255,255,255,0.06)', paddingTop: '1.25rem' }}>
+                <p className="text-[10px] tracking-widest uppercase mb-3" style={{ color: '#444' }}>Estrategia de Inversión</p>
+                <div className="space-y-1.5 mb-3">
+                  {STRATEGY_TYPES.map((s) => {
+                    const Icon = s.icon
+                    const isSelected = effectiveStrategy === s.value
+                    return (
+                      <button
+                        key={s.value}
+                        onClick={() => setPendingStrategy(s.value)}
+                        className="w-full flex items-center gap-2.5 p-3 rounded-xl border transition-all text-left"
+                        style={isSelected
+                          ? { border: '0.5px solid rgba(139,92,246,0.4)', background: 'rgba(139,92,246,0.08)' }
+                          : { border: '0.5px solid rgba(255,255,255,0.06)', background: 'transparent' }
+                        }
+                      >
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                          style={{ background: isSelected ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.04)' }}>
+                          <Icon size={13} style={{ color: isSelected ? '#a78bfa' : '#444' }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold" style={{ color: isSelected ? '#e8e4dc' : '#666' }}>{s.label}</p>
+                          <p className="text-[10px] truncate" style={{ color: '#444' }}>{s.description}</p>
+                        </div>
+                        {isSelected && <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#a78bfa' }} />}
+                      </button>
+                    )
+                  })}
+                </div>
+                {isStrategyConfirmed && (
+                  <p className="text-[11px] mb-2 flex items-center gap-1" style={{ color: '#10b981' }}>
+                    <CheckCircle size={12} />Estrategia guardada on-chain
+                  </p>
+                )}
+                <button
+                  onClick={handleSaveStrategy}
+                  disabled={isSavingStrategy || pendingStrategy === null}
+                  className="w-full py-2.5 rounded-xl text-xs font-semibold transition-opacity disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ background: 'rgba(139,92,246,0.15)', color: '#a78bfa', border: '0.5px solid rgba(139,92,246,0.3)' }}
+                >
+                  {isSavingStrategy
+                    ? <><RefreshCw size={12} className="animate-spin" />Guardando...</>
+                    : <><CheckCircle size={12} />Guardar Estrategia</>
+                  }
+                </button>
+              </div>
+            </SectionCard>
+
+            {/* Active protocols */}
+            <SectionCard>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2.5">
+                  <Activity size={14} style={{ color: '#555' }} />
+                  <span className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>
+                    Protocol Registry
+                  </span>
+                </div>
+                {protocols.length > 0 && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(139,92,246,0.1)', color: '#a78bfa', border: '0.5px solid rgba(139,92,246,0.2)' }}>
+                    {protocols.length}
+                  </span>
+                )}
               </div>
 
-              <p className="text-xs text-gray-400 text-center">
-                Monto seleccionado: <strong>{activeDepositAmount} USDC</strong>
-              </p>
+              {protocols.length > 0 ? (
+                <div className="space-y-2">
+                  {protocols.slice(0, 4).map((p) => (
+                    <div key={p.address} className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5"
+                      style={{ background: 'rgba(255,255,255,0.02)', border: '0.5px solid rgba(255,255,255,0.05)' }}>
+                      <div className="min-w-0">
+                        <p className="font-mono text-[11px] truncate" style={{ color: '#777' }}>{shortAddr(p.address)}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px]" style={{ color: '#444' }}>{riskLabel(p.risk ?? 0)}</span>
+                          {p.verified && <CheckCircle size={9} style={{ color: '#3b82f6' }} />}
+                        </div>
+                      </div>
+                      <p className="text-sm font-bold font-mono shrink-0" style={{ color: '#10b981' }}>
+                        {(p.apyBps / 100).toFixed(2)}%
+                      </p>
+                    </div>
+                  ))}
+                  {protocols.length > 4 && (
+                    <button className="w-full text-center text-[11px] py-2 flex items-center justify-center gap-1 transition-opacity hover:opacity-70"
+                      style={{ color: '#444' }}>
+                      {protocols.length - 4} más <ChevronDown size={11} />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-center py-4 rounded-xl" style={{ color: '#444', border: '0.5px dashed rgba(255,255,255,0.06)' }}>
+                  Sin protocolos registrados
+                </p>
+              )}
+            </SectionCard>
 
-              <button
-                onClick={handleCloseDepositModal}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-4 rounded-xl transition"
-              >
-                Cerrar
-              </button>
-            </div>
+            {/* Contact */}
+            <SectionCard>
+              <div className="flex items-center gap-2.5 mb-4">
+                <MessageCircle size={14} style={{ color: '#555' }} />
+                <span className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>
+                  Soporte
+                </span>
+              </div>
+              <p className="text-xs leading-relaxed mb-4" style={{ color: '#444' }}>
+                Contactá al equipo de Ethernal para preguntas sobre tu plan de retiro o estrategias de inversión.
+              </p>
+              <div className="space-y-2">
+                <a
+                  href="mailto:contact@ethernal.fund"
+                  className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-medium transition-opacity hover:opacity-80 group"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)', color: '#888' }}
+                >
+                  Contactar Ethernal
+                  <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
+                </a>
+                <a
+                  href="https://ethernal.fund/docs" target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-medium transition-opacity hover:opacity-80 group"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(255,255,255,0.06)', color: '#666' }}
+                >
+                  Ver Documentación
+                  <ExternalLink size={11} />
+                </a>
+              </div>
+            </SectionCard>
+
           </div>
         </div>
+      </div>
+
+      {/* Deposit Modal */}
+      {depositModal.open && hasFund && fundAddress && (
+        <DepositModal
+          mode={depositModal.mode}
+          fundAddress={fundAddress}
+          monthlyAmount={monthlyAmountWei}
+          onClose={() => setDepositModal((s) => ({ ...s, open: false }))}
+        />
       )}
 
     </div>
-  );
-};
+  )
+}
 
-export default DashboardPage;
+export default DashboardPage

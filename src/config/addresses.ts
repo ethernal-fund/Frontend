@@ -69,7 +69,7 @@ export const CONTRACT_ADDRESSES: Record<number, ContractAddresses> = {
     userPreferences:     '0x9fa77C672781429f88aD4b8795AC6aa022732f20',
     dateTime:            '0x05c5B4914CF6840f0830feC6D0e1ef828624fB89',
   },
-
+ 
   // 🔴 BASE SEPOLIA — pending
   84532: {
     personalFundFactory: ZERO_ADDRESS,

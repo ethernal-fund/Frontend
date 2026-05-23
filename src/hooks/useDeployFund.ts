@@ -1,6 +1,27 @@
+/**
+ * useDeployFund.ts
+ *
+ * Drives the two on-chain transactions required to create a PersonalFund:
+ *   1. approveUsdc  — ERC-20 approve to the Factory for the initial deposit
+ *                     (principal + first monthly, inclusive of protocol fee).
+ *   2. deployFund   — Factory.createPersonalFund(...)
+ *
+ * Changes vs previous version:
+ *  - approveUsdc no longer has a silent fallback when calculateInitialDeposit
+ *    fails. If the Factory read reverts, we surface the error immediately
+ *    instead of approving an insufficient amount that would cause deployFund
+ *    to revert later with a harder-to-diagnose error.
+ *  - The approve amount is now sourced from Factory.calculateInitialDeposit,
+ *    which already includes the Treasury fee. useProtocolFee is no longer
+ *    needed here because the Factory exposes the exact gross amount via that
+ *    view function.
+ *  - _maxFeeBP is NOT a parameter of Factory.createPersonalFund — it is
+ *    passed by the Factory internally to PersonalFund.initialize. The frontend
+ *    does not need to send it.
+ */
+
 import { useState, useCallback }                        from 'react'
 import { usePublicClient, useWalletClient, useChainId } from 'wagmi'
-import { useQueryClient }                               from '@tanstack/react-query'
 import { parseAbiItem, decodeEventLog }                 from 'viem'
 import type { PublicClient }                            from 'viem'
 import { getContractAddresses }                         from '@/config/addresses'
@@ -8,44 +29,96 @@ import { FACTORY_ABI, ERC20_ABI }                       from '@/config/abis'
 import { useWizardStore }                               from '@/stores/wizardStore'
 import { useToast }                                     from '@/stores/uiStore'
 import { toUsdcBigInt }                                 from '@/lib/calculator'
-import { fundsService }                                 from '@/services/fundsService'
-import { FUND_QUERY_KEY }                               from '@/hooks/useMyFund'
+
+// Types
 
 export type DeployStatus =
-  | 'idle' | 'approving' | 'approved' | 'deploying' | 'registering' | 'success' | 'error'
+  | 'idle'
+  | 'approving'
+  | 'approved'
+  | 'deploying'
+  | 'success'
+  | 'error'
+
+// Constants
 
 const FUND_CREATED_EVENT = parseAbiItem(
   'event FundCreated(address indexed fundAddress, address indexed owner, uint256 initialDeposit, uint256 principal, uint256 monthlyDeposit, address selectedProtocol, uint256 retirementAge, uint256 timelockEnd, uint256 timestamp)'
 )
 
 const TESTNET_CHAIN_IDS = new Set([421614, 11155111, 80002, 84532])
-function isTestnet(chainId: number): boolean { return TESTNET_CHAIN_IDS.has(chainId) }
 
-interface GasConfig { minPriorityFee: bigint; minMaxFee: bigint; bumpPct: bigint }
+// Gas helpers 
+
+interface GasConfig {
+  minPriorityFee: bigint
+  minMaxFee:      bigint
+  bumpPct:        bigint
+}
 
 const GAS_CONFIG: Record<'testnet' | 'mainnet', GasConfig> = {
   testnet: { minPriorityFee: 100_000_000_000n, minMaxFee: 100_000_000_000n, bumpPct: 160n },
   mainnet: { minPriorityFee: 10_000_000n,      minMaxFee: 100_000_000n,     bumpPct: 130n },
 }
-const GAS_FLOOR:          Record<'testnet' | 'mainnet', bigint> = { testnet: 3_000_000n, mainnet: 1_000_000n }
-const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = { testnet: 160n,       mainnet: 130n }
-const bigintMax = (a: bigint, b: bigint) => a > b ? a : b
+
+const GAS_FLOOR: Record<'testnet' | 'mainnet', bigint> = {
+  testnet: 3_000_000n,
+  mainnet: 1_000_000n,
+}
+
+const GAS_LIMIT_BUMP_PCT: Record<'testnet' | 'mainnet', bigint> = {
+  testnet: 160n,
+  mainnet: 130n,
+}
+
+function isTestnet(chainId: number): boolean {
+  return TESTNET_CHAIN_IDS.has(chainId)
+}
+
+const bigintMax = (a: bigint, b: bigint) => (a > b ? a : b)
+
+async function getGasOverrides(publicClient: PublicClient, chainId: number) {
+  const cfg = GAS_CONFIG[isTestnet(chainId) ? 'testnet' : 'mainnet']
+  try {
+    const block = await publicClient.getBlock({ blockTag: 'latest' })
+    if (block.baseFeePerGas != null) {
+      const maxPriorityFeePerGas = bigintMax(cfg.minPriorityFee, 1n)
+      const maxFeePerGas         = bigintMax(
+        block.baseFeePerGas * cfg.bumpPct / 100n + maxPriorityFeePerGas,
+        cfg.minMaxFee,
+      )
+      return { maxFeePerGas, maxPriorityFeePerGas }
+    }
+    return {
+      gasPrice: bigintMax(
+        await publicClient.getGasPrice() * cfg.bumpPct / 100n,
+        cfg.minMaxFee,
+      ),
+    }
+  } catch {
+    return isTestnet(chainId)
+      ? { maxFeePerGas: cfg.minMaxFee, maxPriorityFeePerGas: cfg.minPriorityFee }
+      : {}
+  }
+}
+
+// Factory config helper 
 
 interface FactoryConfig {
-  minTimelockYears: bigint
-  maxTimelockYears: bigint
+  minTimelockYears:  bigint
+  maxTimelockYears:  bigint
   minMonthlyDeposit: bigint
-  minPrincipal: bigint
-  maxPrincipal: bigint
-  minAge: bigint
-  maxAge: bigint
-  minRetirementAge: bigint
+  minPrincipal:      bigint
+  maxPrincipal:      bigint
+  minAge:            bigint
+  maxAge:            bigint
+  minRetirementAge:  bigint
 }
 
 function resolveTimelockYears(
-  currentAge: number,
+  currentAge:    number,
   retirementAge: number,
-  config: FactoryConfig,
+  config:        FactoryConfig,
 ): bigint {
   const years = BigInt(retirementAge - currentAge)
   if (years < config.minTimelockYears) return config.minTimelockYears
@@ -54,60 +127,42 @@ function resolveTimelockYears(
 }
 
 async function fetchFactoryConfig(
-  publicClient: PublicClient,
+  publicClient:   PublicClient,
   factoryAddress: `0x${string}`,
 ): Promise<FactoryConfig> {
-  const raw = await publicClient.readContract({
+  return publicClient.readContract({
     address:      factoryAddress,
     abi:          FACTORY_ABI,
     functionName: 'getConfiguration',
-  }) as {
-    minPrincipal:     bigint; maxPrincipal:     bigint
-    minMonthlyDeposit: bigint
-    minAge:           bigint; maxAge:           bigint
-    minRetirementAge: bigint
-    minTimelockYears: bigint; maxTimelockYears: bigint
-  }
-  return raw
+  }) as Promise<FactoryConfig>
 }
 
-async function getGasOverrides(publicClient: PublicClient, chainId: number) {
-  const cfg = GAS_CONFIG[isTestnet(chainId) ? 'testnet' : 'mainnet']
-  try {
-    const block = await publicClient.getBlock({ blockTag: 'latest' })
-    if (block.baseFeePerGas != null) {
-      const maxPriorityFeePerGas = bigintMax(cfg.minPriorityFee, 1n)
-      const maxFeePerGas = bigintMax(block.baseFeePerGas * cfg.bumpPct / 100n + maxPriorityFeePerGas, cfg.minMaxFee)
-      return { maxFeePerGas, maxPriorityFeePerGas }
-    }
-    return { gasPrice: bigintMax(await publicClient.getGasPrice() * cfg.bumpPct / 100n, cfg.minMaxFee) }
-  } catch {
-    return isTestnet(chainId)
-      ? { maxFeePerGas: cfg.minMaxFee, maxPriorityFeePerGas: cfg.minPriorityFee }
-      : {}
-  }
-}
+// Error extraction
 
 function extractErrorMsg(err: unknown): string {
   if (err instanceof Error) {
-    return err.message
-      .replace(/^.*ContractFunctionExecutionError:\s*/s, '')
-      .split('\n')[0] ?? 'Error desconocido'
+    return (
+      err.message
+        .replace(/^.*ContractFunctionExecutionError:\s*/s, '')
+        .split('\n')[0] ?? 'Unknown error'
+    )
   }
-  return 'Error desconocido'
+  return 'Unknown error'
 }
 
+// Hook 
+
 export function useDeployFund() {
-  const approvedFromStore        = useWizardStore((s) => s.approved)
-  const [status,    setStatus]   = useState<DeployStatus>(approvedFromStore ? 'approved' : 'idle')
-  const [txHash,    setTxHash]   = useState<`0x${string}` | null>(null)
-  const [fundAddr,  setFundAddr] = useState<`0x${string}` | null>(null)
-  const [errorMsg,  setErrorMsg] = useState<string | null>(null)
+  const approvedFromStore       = useWizardStore((s) => s.approved)
+  const [status,   setStatus]   = useState<DeployStatus>(approvedFromStore ? 'approved' : 'idle')
+  const [txHash,   setTxHash]   = useState<`0x${string}` | null>(null)
+  const [fundAddr, setFundAddr] = useState<`0x${string}` | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const chainId                = useChainId()
   const publicClient           = usePublicClient()
   const { data: walletClient } = useWalletClient()
-  const queryClient            = useQueryClient()
+  const chainType              = isTestnet(chainId) ? 'testnet' : 'mainnet'
 
   const {
     result,
@@ -118,25 +173,45 @@ export function useDeployFund() {
     setFundAddr: storeSetFundAddr,
   } = useWizardStore()
 
-  const toast     = useToast()
-  const chainType = isTestnet(chainId) ? 'testnet' : 'mainnet'
+  const toast = useToast()
 
   const getAddresses = useCallback(() => {
     const addrs = getContractAddresses(chainId)
-    if (!addrs) { toast.error(`No contracts deployed on chain ${chainId}`); return null }
+    if (!addrs) {
+      toast.error(`No contracts deployed on chain ${chainId}`)
+      return null
+    }
     return addrs
   }, [chainId, toast])
+
+  // Step 1: Approve USDC 
+  //
+  // Amount is sourced from Factory.calculateInitialDeposit, which returns the
+  // gross amount already inclusive of the Treasury fee. This is the only
+  // correct way to compute it — doing it client-side would require mirroring
+  // the fee arithmetic from the Solidity contract.
+  //
+  // No silent fallback: if the Factory read fails, we abort and surface the
+  // error. Approving a guessed amount that turns out to be insufficient would
+  // cause deployFund to revert with a confusing ERC-20 error instead of this
+  // clear one.
 
   const approveUsdc = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected');     return }
     if (!result)                        { toast.error('Run the calculator first'); return }
-    const addrs = getAddresses(); if (!addrs) return
+    const addrs = getAddresses()
+    if (!addrs) return
 
-    setStatus('approving'); setErrorMsg(null)
+    setStatus('approving')
+    setErrorMsg(null)
+
     try {
       const principalRaw = toUsdcBigInt(calculator.principal)
       const monthlyRaw   = toUsdcBigInt(result.monthlyGross)
 
+      // Factory.calculateInitialDeposit returns gross (net + fee).
+      // No fallback — a failure here means the ABI or address is wrong and
+      // we must not proceed with an incorrect allowance.
       let initialDeposit: bigint
       try {
         initialDeposit = await publicClient.readContract({
@@ -145,15 +220,20 @@ export function useDeployFund() {
           functionName: 'calculateInitialDeposit',
           args:         [principalRaw, monthlyRaw],
         }) as bigint
-      } catch {
-        // Fallback: principal + first monthly (previous behaviour)
-        initialDeposit = principalRaw + monthlyRaw
+      } catch (calcErr) {
+        const msg = extractErrorMsg(calcErr)
+        console.error('[useDeployFund] calculateInitialDeposit failed:', calcErr)
+        setStatus('error')
+        setErrorMsg(`Cannot read deposit amount from factory: ${msg}`)
+        toast.error('Factory read failed — please refresh the page and try again')
+        return
       }
 
-      // Add 1 USDC buffer to absorb any rounding in the contract
+      // +1 USDC buffer absorbs any integer-division rounding dust in the
+      // contract's fee calculation so the allowance is always sufficient.
       const approveAmount = initialDeposit + 1_000_000n
+      const gasOverrides  = await getGasOverrides(publicClient, chainId)
 
-      const gasOverrides = await getGasOverrides(publicClient, chainId)
       const hash = await walletClient.writeContract({
         address:      addrs.usdc,
         abi:          ERC20_ABI,
@@ -161,27 +241,42 @@ export function useDeployFund() {
         args:         [addrs.personalFundFactory, approveAmount],
         ...gasOverrides,
       })
+
       toast.info('Approval sent — waiting for confirmation…')
       await publicClient.waitForTransactionReceipt({ hash })
-      setApproved(true); setStatus('approved'); toast.success('USDC approved ✓')
+
+      setApproved(true)
+      setStatus('approved')
+      toast.success('USDC approved ✓')
     } catch (err) {
       const msg = extractErrorMsg(err)
-      setStatus('error'); setErrorMsg(msg); toast.error(msg)
+      setStatus('error')
+      setErrorMsg(msg)
+      toast.error(msg)
     }
   }, [walletClient, publicClient, result, calculator, chainId, getAddresses, setApproved, toast])
+
+  // Step 2: Deploy fund on-chain 
+  //
+  // Note: Factory.createPersonalFund does NOT take _maxFeeBP as a parameter.
+  // The Factory passes it internally to PersonalFund.initialize using its own
+  // configured value. The frontend has no role in setting it.
 
   const deployFund = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected');      return }
     if (!result || !selectedProtocol)   { toast.error('Complete the wizard first'); return }
-    const addrs = getAddresses(); if (!addrs) return
-    void fundsService.wakeUp()
+    const addrs = getAddresses()
+    if (!addrs) return
 
+    // Read factory config — validates connectivity and surfaces misconfiguration
+    // before we attempt to send a tx that would revert on-chain.
     let factoryConfig: FactoryConfig
     try {
       factoryConfig = await fetchFactoryConfig(publicClient, addrs.personalFundFactory)
     } catch (cfgErr) {
       const msg = extractErrorMsg(cfgErr)
-      setStatus('error'); setErrorMsg(msg)
+      setStatus('error')
+      setErrorMsg(msg)
       toast.error(`Could not read factory config: ${msg}`)
       return
     }
@@ -192,6 +287,9 @@ export function useDeployFund() {
       factoryConfig,
     )
 
+    // Arguments must match Factory.createPersonalFund signature exactly:
+    // (principal, monthlyDeposit, currentAge, retirementAge, desiredMonthly,
+    //  yearsPayments, interestRate, timelockYears, selectedProtocol)
     const txArgs = [
       toUsdcBigInt(calculator.principal),
       toUsdcBigInt(result.monthlyGross),
@@ -199,14 +297,16 @@ export function useDeployFund() {
       BigInt(calculator.retirementAge),
       toUsdcBigInt(calculator.desiredMonthlyIncome),
       BigInt(calculator.paymentYears),
-      BigInt(Math.round(calculator.apyPercent * 100)),   // bps: 5% → 500
+      BigInt(Math.round(calculator.apyPercent * 100)), // bps: 5% → 500
       timelockYears,
       selectedProtocol.address,
     ] as const
 
-    setStatus('deploying'); setErrorMsg(null)
+    setStatus('deploying')
+    setErrorMsg(null)
 
-    // ── Gas estimate (acts as a simulation — reverts surface here) 
+    // Simulate before sending — surfaces revert reasons (insufficient allowance,
+    // validation failures, etc.) without spending gas.
     let gasEstimate: bigint
     try {
       gasEstimate = await publicClient.estimateContractGas({
@@ -220,12 +320,13 @@ export function useDeployFund() {
       if (gasEstimate < GAS_FLOOR[chainType]) gasEstimate = GAS_FLOOR[chainType]
     } catch (simErr) {
       const clean = extractErrorMsg(simErr)
-      setStatus('error'); setErrorMsg(clean)
+      setStatus('error')
+      setErrorMsg(clean)
       toast.error(`Simulation failed: ${clean}`)
       return
     }
 
-    // Submit tx 
+    // Submit
     let hash: `0x${string}`
     try {
       hash = await walletClient.writeContract({
@@ -238,12 +339,17 @@ export function useDeployFund() {
       })
     } catch (err) {
       const msg = extractErrorMsg(err)
-      setStatus('error'); setErrorMsg(msg); toast.error(msg)
+      setStatus('error')
+      setErrorMsg(msg)
+      toast.error(msg)
       return
     }
 
-    setTxHash(hash); storeSetTxHash(hash)
+    setTxHash(hash)
+    storeSetTxHash(hash)
     toast.info('Transaction sent — waiting for confirmation…')
+
+    // Extract deployed fund address from FundCreated event in receipt logs.
     let deployedFundAddr: `0x${string}` | null = null
     try {
       const receipt = await publicClient.waitForTransactionReceipt({ hash })
@@ -258,60 +364,57 @@ export function useDeployFund() {
             deployedFundAddr = decoded.args.fundAddress
             break
           }
-        } catch { /* log from another contract — skip */ }
+        } catch {
+          // Log from a different contract — skip silently.
+        }
       }
     } catch (err) {
       console.warn('[useDeployFund] waitForTransactionReceipt failed:', err)
     }
 
     if (!deployedFundAddr) {
-      console.warn('[useDeployFund] Could not extract fund address from receipt')
-      toast.success('Fund deployed! Address extraction failed — check the explorer.')
+      // Tx confirmed but FundCreated event not found in logs.
+      // Mark success anyway — Step3Deploy will handle the missing address.
+      console.warn('[useDeployFund] Could not extract fund address from receipt logs')
+      toast.warning('Fund deployed! Could not extract address — check the explorer.')
       setStatus('success')
       return
     }
 
-    // Fund address extracted 
+    // Commit address to local state AND Zustand store atomically before
+    // setting status=success. This ensures Step3Deploy's useEffect (which
+    // watches [isSuccess, fundAddr]) sees both truthy in the same render cycle.
     setFundAddr(deployedFundAddr)
     storeSetFundAddr(deployedFundAddr)
-    toast.success('Fund deployed on-chain! Registering… 🎉')
 
-    // Register in DB 
-    setStatus('registering')
-    try {
-      await fundsService.registerAndSync({
-        contract_address:       deployedFundAddr,
-        principal:              calculator.principal,
-        monthly_deposit:        result.monthlyGross,
-        desired_monthly_income: calculator.desiredMonthlyIncome,
-        current_age:            calculator.currentAge,
-        retirement_age:         calculator.retirementAge,
-        payment_years:          calculator.paymentYears,
-        apy_percent:            calculator.apyPercent,
-        protocol_address:       selectedProtocol.address,
-      })
-      toast.success('Fund registered in database ✓')
-      await queryClient.invalidateQueries({ queryKey: FUND_QUERY_KEY })
-    } catch (err) {
-      console.error('[useDeployFund] DB registration failed after all retries:', err)
-      toast.warning(
-        'Fund created on-chain. Database registration will retry automatically on next login.',
-      )
-    }
-
+    // ⚠️  DB registration is handled exclusively by Step3Deploy.runPostDeployFlow
+    //     to prevent double-registration and race conditions.
     setStatus('success')
+    toast.success('Fund deployed on-chain! 🎉')
   }, [
-    walletClient, publicClient, result, calculator,
-    selectedProtocol, chainId, chainType,
-    getAddresses, storeSetTxHash, storeSetFundAddr, queryClient, toast,
+    walletClient, publicClient,
+    result, calculator, selectedProtocol,
+    chainId, chainType,
+    getAddresses,
+    storeSetTxHash, storeSetFundAddr,
+    toast,
   ])
+
+  // Derived state 
 
   const approved =
     approvedFromStore      ||
     status === 'approved'  ||
     status === 'deploying' ||
-    status === 'registering' ||
     status === 'success'
 
-  return { status, txHash, fundAddr, errorMsg, approveUsdc, deployFund, approved }
+  return {
+    status,
+    txHash,
+    fundAddr,  
+    errorMsg,
+    approveUsdc,
+    deployFund,
+    approved,
+  }
 }

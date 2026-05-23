@@ -1,32 +1,3 @@
-/**
- * config/abis.ts
- *
- * ABIs derivados de los artefactos Vyper compilados (compiledAt: 2026-04-04).
- * Fuente de verdad: los JSON en /artifacts — NO editar manualmente.
- *
- * Addresses del deploy actual:
- *  - DateTime:            0xe4A76Bc0CbEC3F4B1297C754985Aed9Fb9b2AaE9
- *  - Treasury:            0x0a743430067AFC5B69B0F8fF542fdbdAD206A748
- *  - ProtocolRegistry:    0xa76322A970EA80B0ebbB9c5213a2F3A1ee53118f  ← nuevo
- *  - UserPreferences:     0x1c3d7f6C47C7d8EA4bc29864fFB966F2B5896704
- *  - PersonalFund (impl): 0xb9357c7c7938f2336eA2A01063cb1C6EDB697F9E
- *  - PersonalFundFactory: 0x467CFb98Ce2429EB5dEBF6960B48a3C87A2D5a5A
- *  - MockDeFiProtocol:    0xc02998E722173eC07c7697Dd0EBe66dEd527Fd71
- *  - MockAaveAdapter:     0x3833088891bEcE92e2c492Fd459Cd025dc7b849D
- *  - MockOndoAdapter:     0x9177D9BCbE0e6c3aD4ad9361c7CAe69FAd439198
- *
- * Cambios vs versión anterior (2026-03-20):
- *  - USER_PREFERENCES_ABI: NUEVO. Cubre setAdmin, configure, authorizeContract,
- *    revokeContract, setDefaultProtocol, setUserConfig, setRoutingStrategy,
- *    routeDeposit, getUserConfig, getUserStrategy, getRecommendedProtocol,
- *    getProtocolDeposits, getUserProtocolDeposits, isContractAuthorized,
- *    getUserTotalDeposited, compareProtocols y todos los storage getters.
- *  - REGISTRY_ABI: address actualizado a 0xa76322A97…
- *  - FACTORY_ABI / PERSONAL_FUND_ABI / TREASURY_ABI: sin cambios funcionales.
- */
-
-// ─── ERC-20 (USDC) ────────────────────────────────────────────────────────────
-
 export const ERC20_ABI = [
   {
     name: 'approve', type: 'function', stateMutability: 'nonpayable',
@@ -50,10 +21,10 @@ export const ERC20_ABI = [
   },
 ] as const;
 
-// ─── PersonalFundFactory ──────────────────────────────────────────────────────
+// PersonalFundFactory
 
 export const FACTORY_ABI = [
-  // ── Events ──────────────────────────────────────────────────────────────────
+  // Events 
   {
     name: 'FundCreated', type: 'event', anonymous: false,
     inputs: [
@@ -77,7 +48,7 @@ export const FACTORY_ABI = [
     ],
   },
 
-  // ── Write functions ──────────────────────────────────────────────────────────
+  // Write functions 
   {
     name: 'createPersonalFund', type: 'function', stateMutability: 'nonpayable',
     inputs: [
@@ -150,7 +121,7 @@ export const FACTORY_ABI = [
     outputs: [],
   },
 
-  // ── View functions ────────────────────────────────────────────────────────────
+  // View functions 
   {
     name: 'getUserFund', type: 'function', stateMutability: 'view',
     inputs:  [{ name: '_user', type: 'address' }],
@@ -198,7 +169,7 @@ export const FACTORY_ABI = [
       ],
     }],
   },
-  // ── Storage getters ───────────────────────────────────────────────────────────
+  // Storage getters
   { name: 'admin',                    type: 'function', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'address' }] },
   { name: 'treasury',                 type: 'function', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'address' }] },
   { name: 'configured',               type: 'function', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'bool'    }] },
@@ -216,10 +187,10 @@ export const FACTORY_ABI = [
   { name: 'userFundCount',            type: 'function', stateMutability: 'view', inputs: [{ name: 'arg0', type: 'address' }], outputs: [{ name: '', type: 'uint256' }] },
 ] as const;
 
-// ─── PersonalFund ─────────────────────────────────────────────────────────────
+// PersonalFund 
 
 export const PERSONAL_FUND_ABI = [
-  // ── Events ──────────────────────────────────────────────────────────────────
+  // Events 
   {
     name: 'Initialized', type: 'event', anonymous: false,
     inputs: [
@@ -280,14 +251,15 @@ export const PERSONAL_FUND_ABI = [
     ],
   },
 
-  // ── Write functions ──────────────────────────────────────────────────────────
+  // Write functions 
   {
     name: 'depositMonthly', type: 'function', stateMutability: 'nonpayable',
-    inputs: [], outputs: [],
+    inputs: [ { name: '_maxFeeBP', type: 'uint256' }], 
+    outputs: [],
   },
   {
     name: 'depositExtra', type: 'function', stateMutability: 'nonpayable',
-    inputs:  [{ name: '_amount', type: 'uint256' }],
+    inputs:  [{ name: '_amount', type: 'uint256' }, { name: '_maxFeeBP', type: 'uint256'}],
     outputs: [],
   },
   {
@@ -345,7 +317,7 @@ export const PERSONAL_FUND_ABI = [
     outputs: [],
   },
 
-  // ── View functions ────────────────────────────────────────────────────────────
+  // View functions 
   {
     name: 'getFundInfo', type: 'function', stateMutability: 'view',
     inputs:  [],
@@ -487,10 +459,10 @@ export const PERSONAL_FUND_ABI = [
   { name: 'monthlyDepositCount',         type: 'function', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'uint256' }] },
 ] as const;
 
-// ─── ProtocolRegistry ─────────────────────────────────────────────────────────
+// ProtocolRegistry 
 
 export const REGISTRY_ABI = [
-  // ── Events ──────────────────────────────────────────────────────────────────
+  // Events
   {
     name: 'ProtocolAdded', type: 'event', anonymous: false,
     inputs: [
@@ -512,7 +484,7 @@ export const REGISTRY_ABI = [
     ],
   },
 
-  // ── Write functions ──────────────────────────────────────────────────────────
+  // Write functions
   {
     name: 'addDeFiProtocol', type: 'function', stateMutability: 'nonpayable',
     inputs: [
@@ -565,7 +537,7 @@ export const REGISTRY_ABI = [
     outputs: [],
   },
 
-  // ── View functions ────────────────────────────────────────────────────────────
+  // View functions 
   {
     name: 'getActiveProtocolsList', type: 'function', stateMutability: 'view',
     inputs:  [],
@@ -668,10 +640,10 @@ export const REGISTRY_ABI = [
   { name: 'totalValueLocked',    type: 'function', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'uint256' }] },
 ] as const;
 
-// ─── Treasury ─────────────────────────────────────────────────────────────────
+// Treasury
 
 export const TREASURY_ABI = [
-  // ── Events ──────────────────────────────────────────────────────────────────
+  // Events 
   {
     name: 'FeeReceived', type: 'event', anonymous: false,
     inputs: [
@@ -699,7 +671,7 @@ export const TREASURY_ABI = [
     ],
   },
 
-  // ── Write functions ──────────────────────────────────────────────────────────
+  // Write functions 
   {
     name: 'configure', type: 'function', stateMutability: 'nonpayable',
     inputs:  [{ name: '_factory', type: 'address' }],
@@ -761,7 +733,7 @@ export const TREASURY_ABI = [
     outputs: [],
   },
 
-  // ── View functions ────────────────────────────────────────────────────────────
+  // View functions 
   {
     name: 'calculateFee', type: 'function', stateMutability: 'view',
     inputs:  [{ name: '_amount', type: 'uint256' }],
@@ -825,10 +797,10 @@ export const TREASURY_ABI = [
   { name: 'requestCount',   type: 'function', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'uint256' }] },
 ] as const;
 
-// ─── UserPreferences ──────────────────────────────────────────────────────────
+// UserPreferences
 
 export const USER_PREFERENCES_ABI = [
-  // ── Events ──────────────────────────────────────────────────────────────────
+  // Events
   {
     name: 'UserConfigUpdated', type: 'event', anonymous: false,
     inputs: [
@@ -886,7 +858,7 @@ export const USER_PREFERENCES_ABI = [
     ],
   },
 
-  // ── Write functions ──────────────────────────────────────────────────────────
+  // Write functions 
   {
     name: 'setAdmin', type: 'function', stateMutability: 'nonpayable',
     inputs:  [{ name: '_newAdmin', type: 'address' }],
@@ -941,7 +913,7 @@ export const USER_PREFERENCES_ABI = [
     outputs: [{ name: '', type: 'address' }],
   },
 
-  // ── View functions ────────────────────────────────────────────────────────────
+  // View functions 
   {
     name: 'getUserConfig', type: 'function', stateMutability: 'view',
     inputs:  [{ name: '_user', type: 'address' }],
@@ -1060,7 +1032,7 @@ export const USER_PREFERENCES_ABI = [
   },
 ] as const;
 
-// ─── DeFi Protocol adapter (interfaz compartida) ──────────────────────────────
+// DeFi Protocol adapter (interfaz compartida)
 
 export const DEFI_PROTOCOL_ABI = [
   {
@@ -1096,7 +1068,7 @@ export const DEFI_PROTOCOL_ABI = [
   },
 ] as const;
 
-// ─── Type helpers ─────────────────────────────────────────────────────────────
+// Type helpers 
 
 /**
  * Tuple devuelta por getFundInfo() — 11 elementos.
