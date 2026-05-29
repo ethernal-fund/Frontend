@@ -5,6 +5,7 @@ import type { Hash } from 'viem'
 import type { RoundInfo, UserPurchase } from '@/sale/types'
 
 export type TxStatus = 'idle' | 'pending' | 'confirming' | 'confirmed' | 'error' | 'awaiting_signatures'
+
 export interface TxState {
   status: TxStatus
   hash:   Hash | undefined
@@ -12,25 +13,40 @@ export interface TxState {
 }
 
 export interface SaleState {
+  // ── On-chain data ──
   round:         RoundInfo | null
   purchase:      UserPurchase | null
-  usdcBalance:   string                                 // formateado: "1234.56"
-  usdcAllowance: string                                 // formateado: "1234.56"
-  etrfBalance:   string                                 // formateado: "50000.00"
+  usdcBalance:   string                  // formateado: "1234.56"
+  usdcAllowance: string                  // formateado: "1234.56"
+  etrfBalance:   string                  // formateado: "50000.00"
 
+  // ── Auth (SIWE) ──
+  jwt: string | null
+
+  // ── Tx state ──
   tx: TxState
-  setRound:        (round: RoundInfo | null)      => void
-  setPurchase:     (purchase: UserPurchase | null) => void
-  setBalances:     (usdc: string, allowance: string, etrf: string) => void
 
-  setTxPending:             (hash?: Hash)   => void
-  setTxConfirming:          (hash: Hash)    => void
-  setTxConfirmed:           (hash: Hash)    => void
-  setTxAwaitingSignatures:  (hash?: Hash)   => void
-  setTxError:               (error: string) => void
-  resetTx:                  ()              => void
-  resetUser: () => void
+  // ── Setters on-chain ──
+  setRound:    (round: RoundInfo | null)       => void
+  setPurchase: (purchase: UserPurchase | null) => void
+  setBalances: (usdc: string, allowance: string, etrf: string) => void
+
+  // ── Setters auth ──
+  setJwt: (token: string) => void
+
+  // ── Setters tx ──
+  setTxPending:            (hash?: Hash)   => void
+  setTxConfirming:         (hash: Hash)    => void
+  setTxConfirmed:          (hash: Hash)    => void
+  setTxAwaitingSignatures: (hash?: Hash)   => void
+  setTxError:              (error: string) => void
+  resetTx:                 ()              => void
+
+  // ── Reset ──
+  resetUser: () => void   // limpia jwt + estado de usuario al desconectar wallet
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 const INITIAL_TX: TxState = {
   status: 'idle',
@@ -47,8 +63,10 @@ export const useSaleStore = create<SaleState>()(
       usdcBalance:   '0',
       usdcAllowance: '0',
       etrfBalance:   '0',
+      jwt:           null,
       tx:            INITIAL_TX,
 
+      // ── On-chain ──
       setRound: (round) =>
         set((s) => {
           s.round = round
@@ -66,6 +84,13 @@ export const useSaleStore = create<SaleState>()(
           s.etrfBalance   = etrf
         }),
 
+      // ── Auth ──
+      setJwt: (token) =>
+        set((s) => {
+          s.jwt = token
+        }),
+
+      // ── Tx ──
       setTxPending: (hash) =>
         set((s) => {
           s.tx = { status: 'pending', hash, error: null }
@@ -99,8 +124,12 @@ export const useSaleStore = create<SaleState>()(
           s.tx = INITIAL_TX
         }),
 
+      // ── Reset completo al desconectar wallet ──
+      // Limpia jwt + todo el estado de usuario. El estado de la ronda (round)
+      // se conserva ya que es público y no depende del usuario conectado.
       resetUser: () =>
         set((s) => {
+          s.jwt           = null
           s.purchase      = null
           s.usdcBalance   = '0'
           s.usdcAllowance = '0'
@@ -112,14 +141,17 @@ export const useSaleStore = create<SaleState>()(
   ),
 )
 
+// ─── Selectors ───────────────────────────────────────────────────────────────
+
 export const selectRound        = (s: SaleState) => s.round
 export const selectPurchase     = (s: SaleState) => s.purchase
 export const selectTx           = (s: SaleState) => s.tx
 export const selectUsdcBalance  = (s: SaleState) => s.usdcBalance
 export const selectEtrfBalance  = (s: SaleState) => s.etrfBalance
+export const selectJwt          = (s: SaleState) => s.jwt
 
-// "Busy" = wallet modal open or tx in flight. awaiting_signatures is NOT busy:
-// the user can navigate away while co-signers approve.
+// "Busy" = wallet modal open or tx in flight.
+// awaiting_signatures is NOT busy: the user can navigate away while co-signers approve.
 export const selectIsBusy = (s: SaleState) =>
   s.tx.status === 'pending' || s.tx.status === 'confirming'
 

@@ -31,7 +31,7 @@ const ZERO_ADDRESS = ZERO_ADDR
 
 const RISK_LEVELS = [
   {
-    value:       0,
+    value:       1,
     label:       'Conservador',
     description: 'Bajo riesgo, rendimientos estables y protección del capital',
     accent:      '#10b981',
@@ -40,7 +40,7 @@ const RISK_LEVELS = [
     icon:        Shield,
   },
   {
-    value:       1,
+    value:       2,
     label:       'Moderado',
     description: 'Balance entre crecimiento y estabilidad, ideal para largo plazo',
     accent:      '#3b82f6',
@@ -49,7 +49,7 @@ const RISK_LEVELS = [
     icon:        BarChart3,
   },
   {
-    value:       2,
+    value:       3,
     label:       'Agresivo',
     description: 'Máximo potencial de rendimiento con mayor exposición al riesgo',
     accent:      '#a78bfa',

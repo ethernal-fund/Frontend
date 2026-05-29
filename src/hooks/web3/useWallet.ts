@@ -21,7 +21,7 @@ export function useWallet(): WalletState {
     isConnected,
     chainId,
   } = useConnection()
-  const { disconnect } = useDisconnect()
+  const { mutate: disconnect } = useDisconnect()
 
   const safeAddress = address && address.startsWith('0x') && address.length === 42
     ? (address as Address)

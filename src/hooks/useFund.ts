@@ -1,6 +1,6 @@
 import { useReadContract, useReadContracts } from 'wagmi';
 import { useChainId }                        from 'wagmi';
-import { useMemo }                           from 'react';
+import { useCallback, useMemo }              from 'react';
 import { getContractAddresses }              from '@/config/addresses';
 import { FACTORY_ABI, PERSONAL_FUND_ABI, ERC20_ABI } from '@/config/abis';
 import type { FundInfoTuple }                from '@/config/abis';
@@ -24,14 +24,14 @@ export function useFundAddress() {
 }
 
 export function useFund() {
-  const { data: fundAddress, isLoading: loadingAddr, refetch } = useFundAddress();
+  const { data: fundAddress, isLoading: loadingAddr, refetch: refetchAddr } = useFundAddress();
   const owner     = useWalletStore((s) => s.address);
   const chainId   = useChainId();
   const contracts = getContractAddresses(chainId);
 
   const hasFund = !!fundAddress && fundAddress !== ZERO_ADDR;
 
-  const { data: results, isLoading: loadingDetails } = useReadContracts({
+  const { data: results, isLoading: loadingDetails, isError: errorDetails, refetch: refetchDetails } = useReadContracts({
     contracts: hasFund && owner && contracts
       ? [
           { address: fundAddress,             abi: PERSONAL_FUND_ABI, functionName: 'getFundInfo'     },
@@ -82,6 +82,12 @@ export function useFund() {
     ? (results[3].result as bigint)
     : 0n;
 
+  // Refetch both the fund address and all detail calls so consumers get
+  // a full refresh — not just the address — when they call refetch().
+  const refetch = useCallback(async () => {
+    await Promise.all([refetchAddr(), refetchDetails()]);
+  }, [refetchAddr, refetchDetails]);
+
   return {
     fundAddress:      hasFund ? fundAddress : null,
     hasFund,
@@ -93,6 +99,7 @@ export function useFund() {
     canRetire:        timelock?.[2] ?? false,
     usdcBalance,
     isLoading:        loadingAddr || loadingDetails,
+    isError:          errorDetails,
     refetch,
   };
 }

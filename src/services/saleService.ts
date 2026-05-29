@@ -1,6 +1,4 @@
 /**
- * saleService.ts
- *
  * Única fuente de verdad para:
  *  - Direcciones de contratos (con fallback a env)
  *  - ABIs completos y tipados (as const para inferencia de tipos wagmi/viem)
@@ -12,13 +10,11 @@
  * ⚠️  Este módulo NO importa nada de React, wagmi, Zustand ni otros módulos del proyecto.
  *     Es puro TypeScript/viem. Cualquier cosa que dependa de hooks o estado React vive en useSale.ts.
  *
- * Convención de nombres on-chain → dominio:
- *   hard_cap      → hardCap
- *   wallet_cap    → walletCap
- *   is_active     → status ('active' | 'ended')
- *   cliff_months  → cliffMonths
- *   usdc_spent    → usdcSpent
- *   etc.
+ * MULTICHAIN
+ * ──────────
+ *  La chain del token sale se controla con VITE_SALE_CHAIN_ID (default: 1 = Ethereum mainnet).
+ *  Para el seed round en Base Sepolia (testnet): VITE_SALE_CHAIN_ID=11155111
+ *  TARGET_CHAIN es la única fuente de verdad — no hay chain hardcodeada.
  */
 
 import {
@@ -30,26 +26,65 @@ import {
   type PublicClient,
   type Chain,
 } from 'viem'
-import { base } from 'viem/chains'
+import {
+  mainnet,
+  sepolia,
+  base,
+  baseSepolia,
+  optimism,
+  optimismSepolia,
+  arbitrum,
+  arbitrumSepolia,
+  polygon,
+  polygonAmoy,
+} from 'viem/chains'
 import type { RoundInfo, UserPurchase } from '@/sale/types'
 
-// ─── Direcciones ──────────────────────────────────────────────────────────────
+// Chain resolution 
+// Resolved once at module load from VITE_SALE_CHAIN_ID.
+// Default: Base mainnet (8453) — change to 84532 for testnet.
 
-export const SALE_ADDRESS = (import.meta.env.VITE_SALE_CONTRACT_ADDRESS    ?? '') as Address
-export const ETRF_ADDRESS = (import.meta.env.VITE_ETRF_CONTRACT_ADDRESS    ?? '') as Address
-export const USDC_ADDRESS = (import.meta.env.VITE_USDC_CONTRACT_ADDRESS    ?? '') as Address
+const VIEM_CHAINS: Record<number, Chain> = {
+  1:        mainnet,
+  11155111: sepolia,
+  8453:     base,
+  84532:    baseSepolia,
+  10:       optimism,
+  11155420: optimismSepolia,
+  42161:    arbitrum,
+  421614:   arbitrumSepolia,
+  137:      polygon,
+  80002:    polygonAmoy,
+}
+
+export const SALE_CHAIN_ID: number = Number(
+  import.meta.env.VITE_SALE_CHAIN_ID ?? 11155111
+)
+
+export const TARGET_CHAIN: Chain = VIEM_CHAINS[SALE_CHAIN_ID] ?? sepolia
+
+if (import.meta.env.DEV && !VIEM_CHAINS[SALE_CHAIN_ID]) {
+  console.warn(
+    `[saleService] VITE_SALE_CHAIN_ID=${SALE_CHAIN_ID} is not in VIEM_CHAINS. ` +
+    `Falling back to Sepolia (11155111). Add the chain to VIEM_CHAINS if needed.`,
+  )
+}
+
+if (import.meta.env.DEV) {
+  console.log(`[saleService] Sale chain: ${TARGET_CHAIN.name} (${TARGET_CHAIN.id})`)
+}
+
+// Direcciones
+
+export const SALE_ADDRESS    = (import.meta.env.VITE_SALE_CONTRACT_ADDRESS    ?? '') as Address
+export const ETRF_ADDRESS    = (import.meta.env.VITE_ETRF_CONTRACT_ADDRESS    ?? '') as Address
+export const USDC_ADDRESS    = (import.meta.env.VITE_USDC_CONTRACT_ADDRESS    ?? '') as Address
 export const VESTING_ADDRESS = (import.meta.env.VITE_VESTING_CONTRACT_ADDRESS ?? '') as Address
 
-export const TARGET_CHAIN: Chain = base
-
-// ─── ABIs ─────────────────────────────────────────────────────────────────────
-// Todos los ABIs viven ÚNICAMENTE aquí. useSale.ts los importa.
-// Tipados con "as const" para que wagmi/viem infieran los tipos de args y retorno.
+// ABIs 
 
 /**
  * ABI del contrato SaleETRF.vy
- * Expone: getCurrentRound, getUserPurchase, totalRaised, buy, claim
- * Eventos: TokensPurchased, TokensClaimed
  */
 export const SALE_ABI = [
   {
@@ -126,7 +161,6 @@ export const SALE_ABI = [
 
 /**
  * ABI del contrato ETRF.vy (ERC-20 + burn + pause)
- * Solo las funciones que la UI necesita leer/llamar.
  */
 export const ETRF_ABI = [
   { name: 'name',        type: 'function', stateMutability: 'view', inputs: [], outputs: [{ type: 'string' }] },
@@ -168,8 +202,6 @@ export const ETRF_ABI = [
 
 /**
  * ABI del contrato VestingETRF.vy
- * Solo para el equipo — vesting 1 año cliff + 4 años lineal.
- * La UI lo usa para leer schedules y permitir claim del equipo.
  */
 export const VESTING_ABI = [
   {
@@ -211,7 +243,6 @@ export const VESTING_ABI = [
 
 /**
  * ABI ERC-20 mínimo para USDC (balanceOf, allowance, approve).
- * USDC en Base es un ERC-20 estándar; no necesitamos más funciones.
  */
 export const USDC_ABI = [
   {
@@ -234,7 +265,7 @@ export const USDC_ABI = [
   },
 ] as const
 
-// ─── Cliente viem standalone ──────────────────────────────────────────────────
+// Cliente viem standalone
 // Para uso fuera de React: scripts, tests, SSR.
 // En componentes React usá usePublicClient() de wagmi en su lugar.
 
@@ -243,17 +274,18 @@ let _publicClient: PublicClient | null = null
 export function getPublicClient(): PublicClient {
   if (!_publicClient) {
     _publicClient = createPublicClient({
-      chain:     TARGET_CHAIN,
-      transport: http(import.meta.env.VITE_RPC_URL ?? undefined),
+      chain:     TARGET_CHAIN,              
+      transport: http(
+        import.meta.env.VITE_SALE_RPC_URL ?? undefined,  // dedicated RPC for sale chain
+      ),
     })
   }
   return _publicClient
 }
 
-// ─── Parsers on-chain → dominio ───────────────────────────────────────────────
-// Usan `any` solo en el boundary de entrada del contrato (output crudo de viem).
-// El resultado siempre está tipado con RoundInfo / UserPurchase.
+// Parsers on-chain → dominio
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parseRound(raw: any): RoundInfo {
   return {
     id:            Number(raw.id),
@@ -270,6 +302,7 @@ export function parseRound(raw: any): RoundInfo {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parsePurchase(raw: any): UserPurchase {
   return {
     usdcSpent:     raw.usdc_spent     as bigint,
@@ -282,13 +315,8 @@ export function parsePurchase(raw: any): UserPurchase {
   }
 }
 
-// ─── Cálculos puros ───────────────────────────────────────────────────────────
+// Cálculos puros 
 
-/**
- * Calcula ETRF a recibir dado un monto en USDC (string) y el precio de la ronda.
- * price está en USDC con 6 decimales (mismo formato que el contrato).
- * Retorna '0' si el input es inválido o el precio es cero.
- */
 export function calcTokensOut(usdcAmount: string, price: bigint): string {
   if (!usdcAmount || Number(usdcAmount) <= 0 || price === 0n) return '0'
   try {
@@ -300,10 +328,6 @@ export function calcTokensOut(usdcAmount: string, price: bigint): string {
   }
 }
 
-/**
- * Devuelve true si el contrato de sale todavía no tiene suficiente allowance
- * para gastar `usdcAmount` USDC en nombre del usuario.
- */
 export function needsApproval(usdcAmount: string, currentAllowance: bigint): boolean {
   if (!usdcAmount || Number(usdcAmount) <= 0) return false
   try {
@@ -313,7 +337,6 @@ export function needsApproval(usdcAmount: string, currentAllowance: bigint): boo
   }
 }
 
-/** Porcentaje de la hard cap recaudado. Siempre entre 0 y 100. */
 export function calcRoundProgress(raised: bigint, hardCap: bigint): number {
   if (hardCap === 0n) return 0
   return Math.min(
@@ -322,20 +345,14 @@ export function calcRoundProgress(raised: bigint, hardCap: bigint): number {
   )
 }
 
-/**
- * Segundos hasta el fin del cliff para un usuario.
- * Usa 30 días/mes como aproximación (mismo criterio que el contrato de sale).
- * Para VestingETRF (equipo) el cliff es exactamente 365 días — no usar esta función.
- */
 export function secondsToCliff(startTime: bigint, cliffMonths: number): number {
   const cliffSec = cliffMonths * 30 * 24 * 3600
   const cliffEnd = Number(startTime) + cliffSec
   return Math.max(0, cliffEnd - Date.now() / 1000)
 }
 
-// ─── Formatters ───────────────────────────────────────────────────────────────
+// Formatters 
 
-/** bigint USDC (6 decimales) → "$1,234.56" */
 export function formatUSDC(value: bigint): string {
   return new Intl.NumberFormat('en-US', {
     style:                 'currency',
@@ -344,19 +361,17 @@ export function formatUSDC(value: bigint): string {
   }).format(Number(formatUnits(value, 6)))
 }
 
-/** bigint ETRF (18 decimales) → "50,000.00" */
 export function formatETRF(value: bigint): string {
   return new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
   }).format(Number(formatUnits(value, 18)))
 }
 
-/** bigint precio USDC → "$0.0100" */
 export function formatTokenPrice(price: bigint): string {
   return `$${Number(formatUnits(price, 6)).toFixed(4)}`
 }
 
-// ─── Helpers de UI ────────────────────────────────────────────────────────────
+// Helpers de UI 
 
 export function getRoundName(id: number): string {
   const names: Record<number, string> = {
@@ -367,7 +382,7 @@ export function getRoundName(id: number): string {
   return names[id] ?? `Round ${id}`
 }
 
-// ─── Reads standalone (fuera de React) ───────────────────────────────────────
+// Reads standalone (fuera de React) 
 
 export async function fetchCurrentRound(): Promise<RoundInfo | null> {
   try {
