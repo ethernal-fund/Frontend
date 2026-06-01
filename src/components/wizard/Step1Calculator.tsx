@@ -32,13 +32,12 @@ interface Step1Props {
 export function Step1Calculator({ onNext }: Step1Props) {
   const { t }  = useTranslation('fund');
   const { calculator, result, setCalculatorField, runCalculator, nextStep } = useWizardStore();
-
   useEffect(() => { runCalculator(); }, [runCalculator]);
 
   function handleNext() {
     if (!result) return;
-    const monthly = result.monthlyGross;
-    if (monthly < 50) { alert(t('monthlyTooLow', { min: 50 })); return; }
+    const monthlyNet = result.monthlyNet ?? result.monthlyGross;
+    if (monthlyNet < 50) { alert(t('monthlyTooLow', { min: 50 })); return; }
     if (calculator.currentAge < 18 || calculator.currentAge > 80) { alert('Age must be 18–80'); return; }
     if (calculator.retirementAge < 55)                             { alert('Retirement age must be ≥ 55'); return; }
     if (calculator.retirementAge <= calculator.currentAge)         { alert('Retirement age must be > current age'); return; }
@@ -134,7 +133,6 @@ export function Step1Calculator({ onNext }: Step1Props) {
         )}
       </div>
 
-      {/* Deposit preview */}
       {result && (
         <div>
           <div className="font-mono text-[0.65rem] text-(--muted) uppercase tracking-widest mb-3">
@@ -142,9 +140,22 @@ export function Step1Calculator({ onNext }: Step1Props) {
           </div>
           <div className="bg-(--surface2) border border-(--border2) rounded-xl p-4 grid grid-cols-3 gap-4">
             {[
-              { label: t('Principal'), value: fmtUsdc(calculator.principal) },
-              { label: t('First Monthly'),   value: fmtUsdc(result.monthlyGross)  },
-              { label: t('Total Approve'),   value: fmtUsdc(calculator.principal + result.monthlyGross) },
+              {
+                label: t('Principal'),
+                value: fmtUsdc(calculator.principal),
+              },
+              {
+                // monthlyNet = lo que va al contrato (sin fee).
+                // El fee (feePerMonth) se muestra por separado en la sección de resultado.
+                label: t('First Monthly'),
+                value: fmtUsdc(result.monthlyNet ?? result.monthlyGross),
+              },
+              {
+                // Total que el usuario aprueba al Factory = principal + monthlyNet.
+                // Es exactamente lo que factory.transferFrom(user → fund) va a mover.
+                label: t('Total Approve'),
+                value: fmtUsdc(calculator.principal + (result.monthlyNet ?? result.monthlyGross)),
+              },
             ].map(({ label, value }) => (
               <div key={label}>
                 <div className="font-mono text-[0.6rem] text-(--muted) uppercase tracking-wider mb-1">{label}</div>
@@ -152,6 +163,10 @@ export function Step1Calculator({ onNext }: Step1Props) {
               </div>
             ))}
           </div>
+          {/* Aclaración del fee para el usuario */}
+          <p className="font-mono text-[0.6rem] text-(--muted) mt-2">
+            * El 5% de fee ({fmtUsdc(result.feePerMonth)}) es descontado por el contrato del depósito y enviado al Treasury.
+          </p>
         </div>
       )}
 

@@ -1,25 +1,3 @@
-/**
- * useDeployFund.ts
- *
- * Drives the two on-chain transactions required to create a PersonalFund:
- *   1. approveUsdc  — ERC-20 approve to the Factory for the initial deposit
- *                     (principal + first monthly, inclusive of protocol fee).
- *   2. deployFund   — Factory.createPersonalFund(...)
- *
- * Changes vs previous version:
- *  - approveUsdc no longer has a silent fallback when calculateInitialDeposit
- *    fails. If the Factory read reverts, we surface the error immediately
- *    instead of approving an insufficient amount that would cause deployFund
- *    to revert later with a harder-to-diagnose error.
- *  - The approve amount is now sourced from Factory.calculateInitialDeposit,
- *    which already includes the Treasury fee. useProtocolFee is no longer
- *    needed here because the Factory exposes the exact gross amount via that
- *    view function.
- *  - _maxFeeBP is NOT a parameter of Factory.createPersonalFund — it is
- *    passed by the Factory internally to PersonalFund.initialize. The frontend
- *    does not need to send it.
- */
-
 import { useState, useCallback }                        from 'react'
 import { usePublicClient, useWalletClient, useChainId } from 'wagmi'
 import { parseAbiItem, decodeEventLog }                 from 'viem'
@@ -30,7 +8,7 @@ import { useWizardStore }                               from '@/stores/wizardSto
 import { useToast }                                     from '@/stores/uiStore'
 import { toUsdcBigInt }                                 from '@/lib/calculator'
 
-// Types
+// Types 
 
 export type DeployStatus =
   | 'idle'
@@ -40,7 +18,7 @@ export type DeployStatus =
   | 'success'
   | 'error'
 
-// Constants
+// Constants 
 
 const FUND_CREATED_EVENT = parseAbiItem(
   'event FundCreated(address indexed fundAddress, address indexed owner, uint256 initialDeposit, uint256 principal, uint256 monthlyDeposit, address selectedProtocol, uint256 retirementAge, uint256 timelockEnd, uint256 timestamp)'
@@ -76,7 +54,6 @@ function isTestnet(chainId: number): boolean {
 }
 
 const bigintMax = (a: bigint, b: bigint) => (a > b ? a : b)
-
 async function getGasOverrides(publicClient: PublicClient, chainId: number) {
   const cfg = GAS_CONFIG[isTestnet(chainId) ? 'testnet' : 'mainnet']
   try {
@@ -102,7 +79,7 @@ async function getGasOverrides(publicClient: PublicClient, chainId: number) {
   }
 }
 
-// Factory config helper 
+// Factory config helper
 
 interface FactoryConfig {
   minTimelockYears:  bigint
@@ -137,7 +114,7 @@ async function fetchFactoryConfig(
   }) as Promise<FactoryConfig>
 }
 
-// Error extraction
+// Error extraction 
 
 function extractErrorMsg(err: unknown): string {
   if (err instanceof Error) {
@@ -148,6 +125,23 @@ function extractErrorMsg(err: unknown): string {
     )
   }
   return 'Unknown error'
+}
+
+interface DepositAmounts {
+  /** Principal en wei USDC (6 decimales). Sin fee — el contrato no aplica fee al principal por separado. */
+  principalWei: bigint
+  monthlyNetWei: bigint
+  approveWei: bigint
+}
+
+function buildDepositAmounts(
+  principal:    number,
+  monthlyNet:   number,
+): DepositAmounts {
+  const principalWei  = toUsdcBigInt(principal)
+  const monthlyNetWei = toUsdcBigInt(monthlyNet)
+  const approveWei    = principalWei + monthlyNetWei
+  return { principalWei, monthlyNetWei, approveWei }
 }
 
 // Hook 
@@ -184,17 +178,11 @@ export function useDeployFund() {
     return addrs
   }, [chainId, toast])
 
-  // Step 1: Approve USDC 
+  // Step 1: Approve USDC al Factory
   //
-  // Amount is sourced from Factory.calculateInitialDeposit, which returns the
-  // gross amount already inclusive of the Treasury fee. This is the only
-  // correct way to compute it — doing it client-side would require mirroring
-  // the fee arithmetic from the Solidity contract.
-  //
-  // No silent fallback: if the Factory read fails, we abort and surface the
-  // error. Approving a guessed amount that turns out to be insufficient would
-  // cause deployFund to revert with a confusing ERC-20 error instead of this
-  // clear one.
+  // Aprobamos exactamente principal + monthlyNet al Factory.
+  // El Factory hará transferFrom(user → fund, principal + monthlyNet).
+  // El fondo luego descuenta el 5% de ese monto y se lo manda al Treasury.
 
   const approveUsdc = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected');     return }
@@ -202,43 +190,26 @@ export function useDeployFund() {
     const addrs = getAddresses()
     if (!addrs) return
 
+    // result.monthlyNet debe existir en el CalcResult. Es el monto que el
+    // calculator ya calculó descontando el fee (monthlyGross / 1.fee).
+    // Si por alguna razón no existe, usamos monthlyGross como fallback seguro
+    // aunque eso significaría pasar gross — en ese caso el frontend debe ser
+    // corregido para exponer monthlyNet correctamente desde el calculator.
+    const monthlyNetValue = result.monthlyNet ?? result.monthlyGross
+
+    const { approveWei } = buildDepositAmounts(calculator.principal, monthlyNetValue)
+
     setStatus('approving')
     setErrorMsg(null)
 
     try {
-      const principalRaw = toUsdcBigInt(calculator.principal)
-      const monthlyRaw   = toUsdcBigInt(result.monthlyGross)
-
-      // Factory.calculateInitialDeposit returns gross (net + fee).
-      // No fallback — a failure here means the ABI or address is wrong and
-      // we must not proceed with an incorrect allowance.
-      let initialDeposit: bigint
-      try {
-        initialDeposit = await publicClient.readContract({
-          address:      addrs.personalFundFactory,
-          abi:          FACTORY_ABI,
-          functionName: 'calculateInitialDeposit',
-          args:         [principalRaw, monthlyRaw],
-        }) as bigint
-      } catch (calcErr) {
-        const msg = extractErrorMsg(calcErr)
-        console.error('[useDeployFund] calculateInitialDeposit failed:', calcErr)
-        setStatus('error')
-        setErrorMsg(`Cannot read deposit amount from factory: ${msg}`)
-        toast.error('Factory read failed — please refresh the page and try again')
-        return
-      }
-
-      // +1 USDC buffer absorbs any integer-division rounding dust in the
-      // contract's fee calculation so the allowance is always sufficient.
-      const approveAmount = initialDeposit + 1_000_000n
-      const gasOverrides  = await getGasOverrides(publicClient, chainId)
+      const gasOverrides = await getGasOverrides(publicClient, chainId)
 
       const hash = await walletClient.writeContract({
         address:      addrs.usdc,
         abi:          ERC20_ABI,
         functionName: 'approve',
-        args:         [addrs.personalFundFactory, approveAmount],
+        args:         [addrs.personalFundFactory, approveWei],
         ...gasOverrides,
       })
 
@@ -256,11 +227,18 @@ export function useDeployFund() {
     }
   }, [walletClient, publicClient, result, calculator, chainId, getAddresses, setApproved, toast])
 
-  // Step 2: Deploy fund on-chain 
+  // Step 2: Deploy fund on-chain
   //
-  // Note: Factory.createPersonalFund does NOT take _maxFeeBP as a parameter.
-  // The Factory passes it internally to PersonalFund.initialize using its own
-  // configured value. The frontend has no role in setting it.
+  // Factory.createPersonalFund signature:
+  //   _principal        uint256   → NET, sin fee
+  //   _monthlyDeposit   uint256   → NET, el fondo cobra fee encima en cada depósito
+  //   _currentAge       uint256
+  //   _retirementAge    uint256
+  //   _desiredMonthly   uint256   → income deseado en retiro (para referencia)
+  //   _yearsPayments    uint256
+  //   _interestRate     uint256   → en bps (5% = 500)
+  //   _timelockYears    uint256   → años hasta retiro, clampado por Factory config
+  //   _selectedProtocol address
 
   const deployFund = useCallback(async () => {
     if (!walletClient || !publicClient) { toast.error('Wallet not connected');      return }
@@ -268,8 +246,7 @@ export function useDeployFund() {
     const addrs = getAddresses()
     if (!addrs) return
 
-    // Read factory config — validates connectivity and surfaces misconfiguration
-    // before we attempt to send a tx that would revert on-chain.
+    // Leer config del Factory para validar y calcular timelockYears.
     let factoryConfig: FactoryConfig
     try {
       factoryConfig = await fetchFactoryConfig(publicClient, addrs.personalFundFactory)
@@ -287,12 +264,53 @@ export function useDeployFund() {
       factoryConfig,
     )
 
-    // Arguments must match Factory.createPersonalFund signature exactly:
-    // (principal, monthlyDeposit, currentAge, retirementAge, desiredMonthly,
-    //  yearsPayments, interestRate, timelockYears, selectedProtocol)
+    const monthlyNetValue = result.monthlyNet ?? result.monthlyGross
+    const { principalWei, monthlyNetWei } = buildDepositAmounts(
+      calculator.principal,
+      monthlyNetValue,
+    )
+
+    // Verificar que el usuario todavía tiene suficiente allowance antes de
+    // intentar la simulación. Si hicieron approve y luego movieron fondos,
+    // esta comprobación da un error claro antes de gastar gas.
+    try {
+      const [allowance, balance] = await Promise.all([
+        publicClient.readContract({
+          address:      addrs.usdc,
+          abi:          ERC20_ABI,
+          functionName: 'allowance',
+          args:         [walletClient.account.address, addrs.personalFundFactory],
+        }) as Promise<bigint>,
+        publicClient.readContract({
+          address:      addrs.usdc,
+          abi:          ERC20_ABI,
+          functionName: 'balanceOf',
+          args:         [walletClient.account.address],
+        }) as Promise<bigint>,
+      ])
+
+      const required = principalWei + monthlyNetWei
+
+      if (allowance < required) {
+        setStatus('error')
+        setErrorMsg(`Insufficient allowance. Required: ${required}, current: ${allowance}. Please approve again.`)
+        toast.error('Allowance insuficiente — volvé a aprobar')
+        return
+      }
+      if (balance < required) {
+        setStatus('error')
+        setErrorMsg(`Insufficient USDC balance. Required: ${required}, current: ${balance}.`)
+        toast.error('Balance USDC insuficiente')
+        return
+      }
+    } catch (checkErr) {
+      // No es bloqueante — si la lectura falla, dejamos que la simulación lo detecte.
+      console.warn('[useDeployFund] Pre-flight balance check failed:', checkErr)
+    }
+
     const txArgs = [
-      toUsdcBigInt(calculator.principal),
-      toUsdcBigInt(result.monthlyGross),
+      principalWei,
+      monthlyNetWei,
       BigInt(calculator.currentAge),
       BigInt(calculator.retirementAge),
       toUsdcBigInt(calculator.desiredMonthlyIncome),
@@ -305,8 +323,7 @@ export function useDeployFund() {
     setStatus('deploying')
     setErrorMsg(null)
 
-    // Simulate before sending — surfaces revert reasons (insufficient allowance,
-    // validation failures, etc.) without spending gas.
+    // Simular antes de enviar — expone revert reasons sin gastar gas.
     let gasEstimate: bigint
     try {
       gasEstimate = await publicClient.estimateContractGas({
@@ -349,7 +366,7 @@ export function useDeployFund() {
     storeSetTxHash(hash)
     toast.info('Transaction sent — waiting for confirmation…')
 
-    // Extract deployed fund address from FundCreated event in receipt logs.
+    // Extraer la dirección del fondo del evento FundCreated en el receipt.
     let deployedFundAddr: `0x${string}` | null = null
     try {
       const receipt = await publicClient.waitForTransactionReceipt({ hash })
@@ -365,7 +382,7 @@ export function useDeployFund() {
             break
           }
         } catch {
-          // Log from a different contract — skip silently.
+          // Log de otro contrato — ignorar silenciosamente.
         }
       }
     } catch (err) {
@@ -373,22 +390,18 @@ export function useDeployFund() {
     }
 
     if (!deployedFundAddr) {
-      // Tx confirmed but FundCreated event not found in logs.
-      // Mark success anyway — Step3Deploy will handle the missing address.
       console.warn('[useDeployFund] Could not extract fund address from receipt logs')
       toast.warning('Fund deployed! Could not extract address — check the explorer.')
       setStatus('success')
       return
     }
 
-    // Commit address to local state AND Zustand store atomically before
-    // setting status=success. This ensures Step3Deploy's useEffect (which
-    // watches [isSuccess, fundAddr]) sees both truthy in the same render cycle.
+    // Persistir la dirección en el store ANTES de setear status=success para
+    // que Step3Deploy vea ambos truthy en el mismo ciclo de render.
     setFundAddr(deployedFundAddr)
     storeSetFundAddr(deployedFundAddr)
 
-    // ⚠️  DB registration is handled exclusively by Step3Deploy.runPostDeployFlow
-    //     to prevent double-registration and race conditions.
+    // ⚠️  El registro en DB lo maneja Step3Deploy.runPostDeployFlow exclusivamente.
     setStatus('success')
     toast.success('Fund deployed on-chain! 🎉')
   }, [
@@ -411,7 +424,7 @@ export function useDeployFund() {
   return {
     status,
     txHash,
-    fundAddr,  
+    fundAddr,
     errorMsg,
     approveUsdc,
     deployFund,

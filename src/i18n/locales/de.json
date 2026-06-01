@@ -864,13 +864,13 @@
     "Total Deposit": "Insgesamt eingezahlt",
     "Years Left": "Jahre bis zur Rente",
     "Fund at Retirement": "Geschätzter Fonds bei Rentenbeginn",
-    "Income For": "Einkommen für",
     "Fee Row": "Plattformgebühr",
     "Initial Deposit": "Aufschlüsselung der Ersteinzahlung",
     "First Monthly": "Erste monatliche Einzahlung",
     "Total Approve": "Insgesamt zu genehmigen",
     "Select Protocol": "Protokoll auswählen →",
-    "monthlyTooLow": "Monatliche Einzahlung muss mindestens {{min}} USDC betragen"
+    "monthlyTooLow": "Monatliche Einzahlung muss mindestens {{min}} USDC betragen",
+    "Income for": "Einkommen für"
   },
   "wizard": {
     "Select Protocol": "Protokoll auswählen",
@@ -1043,8 +1043,12 @@
       "stats": {
         "totalSupply": "Gesamtangebot",
         "seedRound": "Seed-Runde",
-        "seedPrice": "Seed-Preis"
-      }
+        "seedPrice": "Seed-Preis",
+        "totalSupplyValue": "1.000.000.000 ETRF",
+        "seedRoundValue": "100M Token",
+        "seedPriceValue": "$0,01 USDC"
+      },
+      "supplyLabel": "ETRF ANGEBOT"
     },
     "agreement": {
       "title": "ETRF-Token-Verkaufsvereinbarung",
@@ -1158,6 +1162,12 @@
           "body": "Dieses Dokument bildet zusammen mit dem Whitepaper und der Datenschutzerklärung die gesamte Vereinbarung zwischen dem Emittenten und dem Teilnehmer bezüglich des Token-Verkaufs. Wenn eine Klausel für ungültig oder nicht durchsetzbar erklärt wird, bleiben die übrigen Klauseln in vollem Umfang in Kraft."
         }
       }
+    },
+    "wrongChain": {
+      "title": "Falsches Netzwerk",
+      "subtitle": "Bitte wechsle zum unterstützten Netzwerk, um an der ETRF-Verkauf teilzunehmen.",
+      "switch": "Netzwerk wechseln",
+      "switching": "Wechsle..."
     }
   },
   "whitepaper": {

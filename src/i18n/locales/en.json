@@ -1043,8 +1043,12 @@
       "stats": {
         "totalSupply": "Total Supply",
         "seedRound": "Seed Round",
-        "seedPrice": "Seed Price"
-      }
+        "seedPrice": "Seed Price",
+        "totalSupplyValue": "1,000,000,000 ETRF",
+        "seedRoundValue": "100M tokens",
+        "seedPriceValue": "$0.01 USDC"
+      },
+      "supplyLabel": "ETRF SUPPLY"
     },
     "agreement": {
       "title": "ETRF Token Sale Agreement",
@@ -1158,6 +1162,12 @@
           "body": "This document, together with the Whitepaper and Privacy Policy, constitutes the entire agreement between the Issuer and the Participant regarding the Token Sale. If any clause is declared invalid or unenforceable, the remaining clauses shall continue in full force."
         }
       }
+    },
+    "wrongChain": {
+      "title": "Wrong network",
+      "subtitle": "Please switch to the supported network to participate in the ETRF sale.",
+      "switch": "Switch network",
+      "switching": "Switching..."
     }
   },
   "whitepaper": {

@@ -20,7 +20,7 @@ import { useProtocols }                                      from '@/hooks/usePr
 import { useInvalidateFund }                                 from '@/hooks/useMyFund'
 import { useMonthlyDeposit }                                 from '@/hooks/useMonthlyDeposit'
 import { useExtraDeposit }                                   from '@/hooks/useExtraDeposit'
-import { USER_PREFERENCES_ABI, PERSONAL_FUND_ABI }          from '@/config/abis'
+import { USER_PREFERENCES_ABI, PERSONAL_FUND_ABI }           from '@/config/abis'
 import { getContractAddress, ZERO_ADDRESS as ZERO_ADDR }     from '@/config/addresses'
 import { getExplorerAddressUrl }                             from '@/config/chains'
 import { toUsdcBigInt }                                      from '@/lib/calculator'

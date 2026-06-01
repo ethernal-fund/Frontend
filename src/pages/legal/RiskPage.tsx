@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, Shield, Clock, TrendingDown, Zap, Globe } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// Types 
 
 interface RiskItem {
   icon:        React.ReactNode;
@@ -12,7 +12,7 @@ interface RiskItem {
   detail:      string;
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// Constants 
 
 const SEVERITY_CONFIG = {
   critical: {
@@ -87,7 +87,7 @@ const RISKS: RiskItem[] = [
   },
 ];
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// Component 
 
 const RiskPage: React.FC = () => {
   const { t } = useTranslation();

@@ -1,28 +1,10 @@
-// contracts.ts
-//
-// Único punto de verdad para direcciones y ABIs de todos los contratos.
-//
-// Cómo funciona 
-//  • Los archivos ethernal-abis-{chainId}.json contienen addresses + ABIs
-//    exportados por Ethernal. Se importan estáticamente y se normalizan.
-//  • Las chains sin JSON (pending / mainnets) usan FALLBACK_CHAINS, que
-//    sólo tiene addresses (sin ABIs), idéntico al comportamiento anterior.
-//  • useContracts() lee el chainId de wagmi y devuelve el registro listo.
-//
-// Agregar una nueva chain 
-//  1. Exportá el JSON desde Ethernal y ponelo en src/config/
-//     como ethernal-abis-{chainId}.json
-//  2. Importalo aquí abajo en la sección "Chain JSON imports"
-//  3. Agrégalo a CHAIN_JSONS: { [chainId]: rawJson }
-//  Listo. addresses.ts no necesita tocar nada para esa chain.
-
 import { useChainId } from 'wagmi'
 import type { Abi } from 'viem'
 
 // Chain JSON imports 
 import raw421614   from '@/abis/ethernal-abis-421614.json'
 import raw11155111 from '@/abis/ethernal-abis-11155111.json'
-// import raw80002   from './ethernal-abis-80002.json'   // cuando esté listo
+// import raw80002   from './ethernal-abis-80002.json'   polygon
 
 // Types 
 
@@ -103,7 +85,7 @@ const OFFICIAL_USDC: Record<number, `0x${string}`> = {
   80002:    '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582',
   84532:    '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
   11155420: '0x5fd84259d66Cd46123540766Be93DFE6D43130D7',
-  11155111: '0x04c92F96F59f11e1E632169952b6C66f6D970b8A',
+  11155111: '0xa27dc7dd223a00E89B885CE6968E6379F7146CD3',
   42161:    '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   137:      '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
   8453:     '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',

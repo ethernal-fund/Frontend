@@ -1043,8 +1043,12 @@
       "stats": {
         "totalSupply": "Suministro Total",
         "seedRound": "Ronda Semilla",
-        "seedPrice": "Precio Semilla"
-      }
+        "seedPrice": "Precio Semilla",
+        "totalSupplyValue": "1.000.000.000 ETRF",
+        "seedRoundValue": "100M tokens",
+        "seedPriceValue": "$0.01 USDC"
+      },
+      "supplyLabel": "SUMINISTRO ETRF"
     },
     "agreement": {
       "title": "Acuerdo de Venta de Tokens ETRF",
@@ -1158,6 +1162,12 @@
           "body": "Este documento, junto con el Whitepaper y la Política de Privacidad, constituye el acuerdo completo entre el Emisor y el Participante con respecto a la Venta de Tokens. Si alguna cláusula se declara inválida o inejecutable, las cláusulas restantes continuarán en pleno vigor."
         }
       }
+    },
+    "wrongChain": {
+      "title": "Red incorrecta",
+      "subtitle": "Cambia a la red compatible para participar en la venta de ETRF.",
+      "switch": "Cambiar red",
+      "switching": "Cambiando..."
     }
   },
   "whitepaper": {

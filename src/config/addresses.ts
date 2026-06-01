@@ -23,7 +23,7 @@ const OFFICIAL_USDC: Record<number, `0x${string}`> = {
   80002:    '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582', // Polygon Amoy
   84532:    '0x036CbD53842c5426634e7929541eC2318f3dCF7e', // Base Sepolia
   11155420: '0x5fd84259d66Cd46123540766Be93DFE6D43130D7', // Optimism Sepolia
-  11155111: '0x04c92F96F59f11e1E632169952b6C66f6D970b8A', // Ethereum Sepolia
+  11155111: '0xa27dc7dd223a00E89B885CE6968E6379F7146CD3', // Ethereum Sepolia
   // Mainnets
   42161: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831', // Arbitrum One
   137:   '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359', // Polygon
@@ -34,7 +34,7 @@ const OFFICIAL_USDC: Record<number, `0x${string}`> = {
 
 export const MOCK_USDC: Record<number, `0x${string}`> = {
   421614:   '0x0463fb7aD07Eac920D1c3F55c96f22c35D5e9E7D', // Arbitrum Sepolia
-  11155111: '0x04c92F96F59f11e1E632169952b6C66f6D970b8A', // Ethereum Sepolia
+  11155111: '0xa27dc7dd223a00E89B885CE6968E6379F7146CD3', // Ethereum Sepolia
   80002:    '0xDA7610fD028bA2958d1Bb3dcB43F2d5d2Fb2A29d', // Polygon Amoy
 }
 

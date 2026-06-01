@@ -36,7 +36,7 @@ import {
   ChevronRight,
   LayoutDashboard,
   Copy,
-} from 'lucide-react';
+} from 'lucide-react'
 
 interface FieldProps {
   label: string;

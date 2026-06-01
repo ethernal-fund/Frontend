@@ -864,13 +864,13 @@
     "Total Deposit": "总存款额",
     "Years Left": "距离退休年数",
     "Fund at Retirement": "退休时预估基金",
-    "Income For": "收入年限",
     "Fee Row": "平台费",
     "Initial Deposit": "初始存款明细",
     "First Monthly": "首次每月存款",
     "Total Approve": "总授权金额",
     "Select Protocol": "选择协议 →",
-    "monthlyTooLow": "每月存款必须至少为 {{min}} USDC"
+    "monthlyTooLow": "每月存款必须至少为 {{min}} USDC",
+    "Income for": "收入年限"
   },
   "wizard": {
     "Select Protocol": "选择协议",
@@ -1043,8 +1043,12 @@
       "stats": {
         "totalSupply": "总供应量",
         "seedRound": "种子轮",
-        "seedPrice": "种子轮价格"
-      }
+        "seedPrice": "种子轮价格",
+        "totalSupplyValue": "1,000,000,000 ETRF",
+        "seedRoundValue": "1亿代币",
+        "seedPriceValue": "$0.01 USDC"
+      },
+      "supplyLabel": "ETRF 供应量"
     },
     "agreement": {
       "title": "ETRF 代币销售协议",
@@ -1158,6 +1162,12 @@
           "body": "本文件连同白皮书和隐私政策构成发行人与参与者之间关于代币销售的完整协议。如果任何条款被宣布无效或不可执行，其余条款将继续完全有效。"
         }
       }
+    },
+    "wrongChain": {
+      "title": "错误网络",
+      "subtitle": "请切换到支持的网络以参与 ETRF 销售。",
+      "switch": "切换网络",
+      "switching": "切换中..."
     }
   },
   "whitepaper": {

@@ -23,7 +23,7 @@ const NuestraHistoria = () => {
 
       <div className="min-h-screen bg-white">
         {/* Hero de la historia */}
-        <section className="bg-gradient-to-br from-gray-900 to-green-900 text-white py-20 px-4">
+        <section className="bg-linear-to-br from-gray-900 to-green-900 text-white py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-3 mb-6">
               <Heart className="text-green-400" size={32} />

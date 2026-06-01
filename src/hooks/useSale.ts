@@ -1,25 +1,8 @@
-/**
- * Hook principal de la token sale. Responsabilidades:
- *  1. Leer estado on-chain (useReadContracts) — ronda activa, purchase, balances
- *  2. Validar chain — la sale vive solo en Ethereum (SALE_CHAIN_ID)
- *  3. Exponer mutaciones tipadas: approveUSDC · buyTokens · claimTokens
- *  4. Notificar al backend post-tx para indexado inmediato (fire-and-forget)
- *  5. Sincronizar saleStore tras cada lectura y escritura
- *
- * NOTAS:
- *  - notifyBackend es fire-and-forget: si el API está caído,
- *    el indexer captura la tx en el próximo poll igualmente.
- *  - useReadContracts se deshabilita en wrong chain para evitar
- *    RPC errors en una red donde los contratos no existen.
- *  - Los tres useWriteContract son instancias separadas para que
- *    approve / buy / claim tengan estados independientes.
- */
-
 import { useCallback, useEffect } from 'react'
 import {
   useConnection,
-  useChainId,
   useSwitchChain,
+  useReadContract,
   useReadContracts,
   useWriteContract,
   useWaitForTransactionReceipt,
@@ -49,8 +32,8 @@ export interface UseSaleReturn {
   // Estado on-chain
   round:         RoundInfo | null
   purchase:      UserPurchase | null
-  usdcBalance:   string          // formateado: "1234.56"
-  usdcAllowance: string          // formateado: "1234.56"
+  usdcBalance:   string                                       // formateado: "1234.56"
+  usdcAllowance: string                                       // formateado: "1234.56"
   userAddress:   Address | undefined
 
   // Chain
@@ -65,9 +48,9 @@ export interface UseSaleReturn {
   // Estado de la última tx en vuelo
   refetch:      () => void
   txHash:       Hash | undefined
-  isPending:    boolean    // wallet abierta, esperando firma
-  isConfirming: boolean    // tx en mempool, esperando confirmación
-  isConfirmed:  boolean    // tx confirmada on-chain
+  isPending:    boolean                                         // wallet abierta, esperando firma
+  isConfirming: boolean                                         // tx en mempool, esperando confirmación
+  isConfirmed:  boolean                                         // tx confirmada on-chain
   error:        Error | null
 
   // Mutaciones
@@ -76,9 +59,6 @@ export interface UseSaleReturn {
   claimTokens:  () => Promise<Hash>
 }
 
-// Notificación al backend 
-// Fire-and-forget: acelera el indexado pero no es bloqueante.
-// El indexer es la fuente de verdad — esto solo mejora la UX post-compra.
 async function notifyBackend(txHash: Hash, jwt: string | null): Promise<void> {
   const apiUrl = import.meta.env.VITE_API_URL
   if (!apiUrl) return
@@ -97,10 +77,14 @@ async function notifyBackend(txHash: Hash, jwt: string | null): Promise<void> {
 }
 
 export function useSale(): UseSaleReturn {
-  const { address, isConnected } = useConnection()
-  const chainId                  = useChainId()       // chain activa del config global
-  const switchChain              = useSwitchChain()   // { mutate, isPending }
-  const queryClient              = useQueryClient()
+  const {
+    address,
+    isConnected,
+    chainId: connectedChainId,
+  } = useConnection()
+
+  const switchChain  = useSwitchChain()
+  const queryClient  = useQueryClient()
 
   // Store
   const {
@@ -115,25 +99,36 @@ export function useSale(): UseSaleReturn {
     jwt,
   } = useSaleStore()
 
-  // Validación de chain 
-  // La sale corre solo en Ethereum. Si el usuario está en otra red,
-  // bloqueamos lecturas y escrituras y exponemos switchToSaleChain.
-  const isWrongChain = isConnected && chainId !== SALE_CHAIN_ID
+  // Validación de chain
+  // connectedChainId puede ser undefined mientras el conector está inicializando.
+  // En ese caso no forzamos wrong-chain para evitar un flash del banner de error.
+  const isWrongChain = isConnected && connectedChainId !== undefined && connectedChainId !== SALE_CHAIN_ID
 
   const switchToSaleChain = useCallback(() => {
     switchChain.mutate({ chainId: SALE_CHAIN_ID })
   }, [switchChain])
 
-  // Lecturas on-chain 
-  // enabled = false en wrong chain: evita RPC errors por contratos inexistentes
-  // en esa red y evita llamadas innecesarias cuando no hay wallet conectada.
-  const { data: reads, refetch } = useReadContracts({
+  // ── Lectura pública de la ronda — siempre habilitada, sin wallet ──────────
+  // getCurrentRound es una función view pública del contrato. No requiere
+  // wallet conectada ni chain correcta del usuario: usamos la chain de la sale
+  // directamente vía wagmi con chainId explícito.
+  const { data: rawRoundPublic, refetch: refetchRound } = useReadContract({
+    address:      SALE_ADDRESS,
+    abi:          SALE_ABI,
+    functionName: 'getCurrentRound',
+    chainId:      SALE_CHAIN_ID,
+    query: {
+      enabled:         true,          // siempre activo, incluso sin wallet
+      staleTime:       10_000,
+      refetchInterval: 30_000,
+    },
+  })
+
+  // ── Lecturas que requieren wallet conectada (datos del usuario) ───────────
+  // enabled = false sin wallet o en wrong chain: evita RPC errors y
+  // llamadas innecesarias cuando el usuario no está listo para operar.
+  const { data: userReads, refetch: refetchUser } = useReadContracts({
     contracts: [
-      {
-        address:      SALE_ADDRESS,
-        abi:          SALE_ABI,
-        functionName: 'getCurrentRound',
-      },
       {
         address:      SALE_ADDRESS,
         abi:          SALE_ABI,
@@ -154,23 +149,31 @@ export function useSale(): UseSaleReturn {
       },
     ],
     query: {
-      enabled:       Boolean(isConnected && address && !isWrongChain),
-      staleTime:     10_000,   // 10s — refresca automáticamente sin ser agresivo
-      refetchInterval: 30_000, // polling cada 30s para mantener datos frescos
+      enabled:         Boolean(isConnected && address && !isWrongChain),
+      staleTime:       10_000,
+      refetchInterval: 30_000,
     },
   })
 
-  const rawRound     = reads?.[0]?.result as any
-  const rawPurchase  = reads?.[1]?.result as any
-  const rawUsdcBal   = reads?.[2]?.result as bigint | undefined
-  const rawAllowance = reads?.[3]?.result as bigint | undefined
+  const refetch = useCallback(() => {
+    void refetchRound()
+    void refetchUser()
+  }, [refetchRound, refetchUser])
+
+  // Parseo de resultados on-chain
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawRound     = rawRoundPublic as any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawPurchase  = userReads?.[0]?.status === 'success' ? (userReads[0].result as any) : undefined
+  const rawUsdcBal   = userReads?.[1]?.status === 'success' ? (userReads[1].result as bigint) : undefined
+  const rawAllowance = userReads?.[2]?.status === 'success' ? (userReads[2].result as bigint) : undefined
 
   const round:    RoundInfo | null    = rawRound    ? parseRound(rawRound)       : null
   const purchase: UserPurchase | null = rawPurchase ? parsePurchase(rawPurchase) : null
-  const usdcBalance   = rawUsdcBal   ? formatUnits(rawUsdcBal,   6) : '0'
-  const usdcAllowance = rawAllowance ? formatUnits(rawAllowance,  6) : '0'
+  const usdcBalance   = rawUsdcBal   !== undefined ? formatUnits(rawUsdcBal,   6) : '0'
+  const usdcAllowance = rawAllowance !== undefined ? formatUnits(rawAllowance,  6) : '0'
 
-  // Sync al store 
+  // Sync al store
   useEffect(() => { setRound(round)       }, [round,    setRound])
   useEffect(() => { setPurchase(purchase) }, [purchase, setPurchase])
   useEffect(() => {
@@ -191,8 +194,8 @@ export function useSale(): UseSaleReturn {
 
   // txHash refleja la última tx activa en orden de prioridad: buy > approve > claim
   const txHash    = buy.data ?? approve.data ?? claim.data
-  const isPending = approve.isPending  || buy.isPending  || claim.isPending
-  const error     = approve.error      || buy.error      || claim.error
+  const isPending = approve.isPending || buy.isPending || claim.isPending
+  const error     = approve.error     || buy.error     || claim.error
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({ hash: txHash })
@@ -211,7 +214,7 @@ export function useSale(): UseSaleReturn {
     if (error) setTxError(error.message)
   }, [error, setTxError])
 
-  // Helpers puros 
+  // Helpers puros
   const calcTokensOut = useCallback(
     (usdcAmount: string) => calcTokensOutPure(usdcAmount, round?.price ?? 0n),
     [round?.price],
@@ -222,6 +225,7 @@ export function useSale(): UseSaleReturn {
     [rawAllowance],
   )
 
+  // Mutaciones tipadas
   const approveUSDC = useCallback(async (usdcAmount: string): Promise<Hash> => {
     const hash = await approve.mutateAsync({
       address:      USDC_ADDRESS,
@@ -243,7 +247,7 @@ export function useSale(): UseSaleReturn {
     })
     await queryClient.invalidateQueries()
     // Notificar backend para indexado inmediato — fire-and-forget
-    notifyBackend(hash, jwt ?? null)
+    void notifyBackend(hash, jwt ?? null)
     return hash
   }, [buy, queryClient, jwt])
 
@@ -256,7 +260,7 @@ export function useSale(): UseSaleReturn {
     })
     await queryClient.invalidateQueries()
     // Notificar claim para actualizar claim_events en el backend
-    notifyBackend(hash, jwt ?? null)
+    void notifyBackend(hash, jwt ?? null)
     return hash
   }, [claim, queryClient, jwt])
 

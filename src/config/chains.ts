@@ -173,9 +173,37 @@ export const CHAIN_METADATA: Record<number, ChainMetadata> = {
   },
 }
 
-export const ACTIVE_CHAINS: readonly Chain[] = SUPPORTED_CHAINS.filter(
-  chain => CHAIN_METADATA[chain.id]?.deployed,
+// The token sale runs on a dedicated chain (controlled via VITE_SALE_CHAIN_ID).
+// This chain must always be included in wagmi's config regardless of whether
+// the main protocol contracts (personalFundFactory, treasury, etc.) are deployed
+// there — the sale uses its own contracts (SALE_ADDRESS, USDC_ADDRESS) from
+// saleService.ts which are resolved independently.
+export const SALE_CHAIN_ID: number = Number(
+  import.meta.env.VITE_SALE_CHAIN_ID ?? CHAIN_IDS.ETHEREUM_SEPOLIA,
 )
+
+const saleChain = SUPPORTED_CHAINS.find(c => c.id === SALE_CHAIN_ID)
+
+if (import.meta.env.DEV && !saleChain) {
+  console.warn(
+    `[chains] VITE_SALE_CHAIN_ID=${SALE_CHAIN_ID} is not in SUPPORTED_CHAINS. ` +
+    `The sale WrongChain guard will always fire. Add the chain to SUPPORTED_CHAINS.`,
+  )
+}
+
+export const ACTIVE_CHAINS: readonly Chain[] = (() => {
+  // Chains with main protocol contracts fully deployed
+  const protocolChains = SUPPORTED_CHAINS.filter(
+    chain => CHAIN_METADATA[chain.id]?.deployed,
+  )
+  // Always include the sale chain so wagmi can read/write its contracts,
+  // even if it has no main protocol deployment (e.g. Ethereum mainnet/Sepolia).
+  const hasSaleChain = protocolChains.some(c => c.id === SALE_CHAIN_ID)
+  if (saleChain && !hasSaleChain) {
+    return [...protocolChains, saleChain]
+  }
+  return protocolChains
+})()
 
 export const ACTIVE_CHAIN_IDS = ACTIVE_CHAINS.map(c => c.id)
 
@@ -326,9 +354,14 @@ if (import.meta.env.DEV) {
     if (!TRANSPORT_MAP[chain.id]) {
       errors.push(`[chains] ❌ No transport for active chain: ${chain.name} (${chain.id})`)
     }
-    // Every active chain must have full contract deployment
-    if (!CHAIN_METADATA[chain.id]?.deployed) {
+    // The sale chain is allowed in ACTIVE_CHAINS without a full protocol deployment.
+    // All other active chains must be fully deployed.
+    const isSaleOnly = chain.id === SALE_CHAIN_ID && !CHAIN_METADATA[chain.id]?.deployed
+    if (!isSaleOnly && !CHAIN_METADATA[chain.id]?.deployed) {
       errors.push(`[chains] ❌ Chain in ACTIVE_CHAINS but metadata.deployed=false: ${chain.name}`)
+    }
+    if (isSaleOnly) {
+      console.log(`[chains] ℹ️  ${chain.name} included as sale-only chain (no protocol contracts required)`)
     }
   })
 

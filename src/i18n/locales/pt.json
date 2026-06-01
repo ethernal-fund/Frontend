@@ -864,13 +864,13 @@
     "Total Deposit": "Total Depositado",
     "Years Left": "Anos para Aposentadoria",
     "Fund at Retirement": "Fundo Estimado na Aposentadoria",
-    "Income For": "Renda Por",
     "Fee Row": "Taxa da Plataforma",
     "Initial Deposit": "Detalhamento do Depósito Inicial",
     "First Monthly": "Primeiro Depósito Mensal",
     "Total Approve": "Total a Aprovar",
     "Select Protocol": "Selecionar Protocolo →",
-    "monthlyTooLow": "O depósito mensal deve ser de pelo menos {{min}} USDC"
+    "monthlyTooLow": "O depósito mensal deve ser de pelo menos {{min}} USDC",
+    "Income for": "Renda Por"
   },
   "wizard": {
     "Select Protocol": "Selecionar Protocolo",
@@ -1043,8 +1043,12 @@
       "stats": {
         "totalSupply": "Fornecimento Total",
         "seedRound": "Rodada Seed",
-        "seedPrice": "Preço Seed"
-      }
+        "seedPrice": "Preço Seed",
+        "totalSupplyValue": "1.000.000.000 ETRF",
+        "seedRoundValue": "100M tokens",
+        "seedPriceValue": "$0,01 USDC"
+      },
+      "supplyLabel": "FORNECIMENTO ETRF"
     },
     "agreement": {
       "title": "Acordo de Venda de Tokens ETRF",
@@ -1158,6 +1162,12 @@
           "body": "Este documento, juntamente com o Whitepaper e a Política de Privacidade, constitui o acordo integral entre o Emissor e o Participante em relação à Venda de Tokens. Se qualquer cláusula for declarada inválida ou inexequível, as cláusulas restantes continuarão em pleno vigor."
         }
       }
+    },
+    "wrongChain": {
+      "title": "Rede incorreta",
+      "subtitle": "Mude para a rede suportada para participar da venda ETRF.",
+      "switch": "Mudar rede",
+      "switching": "Mudando..."
     }
   },
   "whitepaper": {
