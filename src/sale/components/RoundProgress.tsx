@@ -1,7 +1,7 @@
 import { formatUnits } from 'viem'
 import { useTranslation } from 'react-i18next'
 import type { RoundInfo } from '@/sale/types'
-import { formatUSDC } from '@/services/saleService'
+import { formatUSDC } from '@/sale/saleService'
 
 interface Props {
   round: RoundInfo

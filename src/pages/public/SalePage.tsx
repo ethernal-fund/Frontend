@@ -2,14 +2,14 @@ import { useState }            from 'react';
 import { formatUnits }         from 'viem';
 import { useConnection }       from 'wagmi';
 import { useTranslation }      from 'react-i18next';
-import { useSale }             from '@/hooks/useSale';
-import { formatUSDC }          from '@/services/saleService';
-import { RoundProgress }       from '@/components/sale/RoundProgress';
-import { WalletGate }          from '@/components/sale/WalletGate';
-import { BuyForm }             from '@/components/sale/BuyForm';
-import { VestingTracker }      from '@/components/sale/VestingTracker';
-import { TokenomicsCard }      from '@/components/sale/TokenomicsCard';
-import { TokenomicsModal }     from '@/components/sale/TokenomicsModal';
+import { useSale }             from '@/sale/useSale';
+import { formatUSDC }          from '@/sale/saleService';
+import { RoundProgress }       from '@/sale/components/RoundProgress';
+import { WalletGate }          from '@/sale/components/WalletGate';
+import { BuyForm }             from '@/sale/components/BuyForm';
+import { VestingTracker }      from '@/sale/components/VestingTracker';
+import { TokenomicsCard }      from '@/sale/components/TokenomicsCard';
+import { TokenomicsModal }     from '@/sale/components/TokenomicsModal';
 import type { RoundInfo }      from '@/sale/types';
 
 // ─────────────────────────────────────────────────────────────────────────────

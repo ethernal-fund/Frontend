@@ -20,11 +20,8 @@ import {
 } from './addresses'
 
 export interface ChainMetadata {
-  /** Derived from addresses.ts — true when all core contracts are deployed. */
   readonly deployed:     boolean
-  /** Derived from addresses.ts — true when personalFundFactory is deployed. */
   readonly hasContracts: boolean
-  /** Lower = higher priority in chain selector UI. */
   readonly priority:     number
   readonly isTestnet:    boolean
   readonly faucets:      string[]
@@ -173,49 +170,54 @@ export const CHAIN_METADATA: Record<number, ChainMetadata> = {
   },
 }
 
-// The token sale runs on a dedicated chain (controlled via VITE_SALE_CHAIN_ID).
-// This chain must always be included in wagmi's config regardless of whether
-// the main protocol contracts (personalFundFactory, treasury, etc.) are deployed
-// there — the sale uses its own contracts (SALE_ADDRESS, USDC_ADDRESS) from
-// saleService.ts which are resolved independently.
-export const SALE_CHAIN_ID: number = Number(
-  import.meta.env.VITE_SALE_CHAIN_ID ?? CHAIN_IDS.ETHEREUM_SEPOLIA,
-)
+// ─── Sale chains ──────────────────────────────────────────────────────────────
+// VITE_SALE_CHAIN_IDS accepts a comma-separated list of chain IDs.
+// Every chain in this list is guaranteed to be in ACTIVE_CHAINS so wagmi
+// can read/write its contracts, even without a full protocol deployment.
+//
+// To add a new sale chain:
+//   1. Add its ID to VITE_SALE_CHAIN_IDS in .env
+//   2. Add VITE_SALE_ADDRESS_<CHAIN> and VITE_USDC_ADDRESS_<CHAIN> env vars
+//   3. Add the addresses to addresses.ts under SaleAddresses (see below)
+//   That's it — no other file changes needed.
+//
+// Examples:
+//   VITE_SALE_CHAIN_IDS=11155111               ← Sepolia only
+//   VITE_SALE_CHAIN_IDS=11155111,421614        ← Sepolia + Arbitrum Sepolia
+//   VITE_SALE_CHAIN_IDS=1,42161                ← Mainnet + Arbitrum (production)
 
-const saleChain = SUPPORTED_CHAINS.find(c => c.id === SALE_CHAIN_ID)
+export const SALE_CHAIN_IDS: number[] = (
+  import.meta.env.VITE_SALE_CHAIN_IDS
+    ?? String(CHAIN_IDS.ETHEREUM_SEPOLIA)      // default: Sepolia
+).split(',').map(Number).filter(Boolean)
 
-if (import.meta.env.DEV && !saleChain) {
-  console.warn(
-    `[chains] VITE_SALE_CHAIN_ID=${SALE_CHAIN_ID} is not in SUPPORTED_CHAINS. ` +
-    `The sale WrongChain guard will always fire. Add the chain to SUPPORTED_CHAINS.`,
-  )
-}
+/** The "primary" sale chain — used for standalone viem clients and as the
+ *  switch target when the user is on a wrong chain. First entry wins. */
+export const SALE_CHAIN_ID: number = SALE_CHAIN_IDS[0] ?? CHAIN_IDS.ETHEREUM_SEPOLIA
+
+/** True when chainId is one of the configured sale chains. */
+export const isSaleChain = (chainId: number | undefined): boolean =>
+  chainId !== undefined && SALE_CHAIN_IDS.includes(chainId)
 
 export const ACTIVE_CHAINS: readonly Chain[] = (() => {
   // Chains with main protocol contracts fully deployed
   const protocolChains = SUPPORTED_CHAINS.filter(
-    chain => CHAIN_METADATA[chain.id]?.deployed,
+    (chain) => CHAIN_METADATA[chain.id]?.deployed,
   )
-  // Always include the sale chain so wagmi can read/write its contracts,
-  // even if it has no main protocol deployment (e.g. Ethereum mainnet/Sepolia).
-  const hasSaleChain = protocolChains.some(c => c.id === SALE_CHAIN_ID)
-  if (saleChain && !hasSaleChain) {
-    return [...protocolChains, saleChain]
-  }
-  return protocolChains
+
+  const missing = SALE_CHAIN_IDS
+    .map((id) => SUPPORTED_CHAINS.find((c) => c.id === id))
+    .filter((c): c is SupportedChain => !!c && !protocolChains.some((p) => p.id === c.id))
+
+  return missing.length > 0 ? [...protocolChains, ...missing] : protocolChains
 })()
 
-export const ACTIVE_CHAIN_IDS = ACTIVE_CHAINS.map(c => c.id)
-
+export const ACTIVE_CHAIN_IDS: number[] = ACTIVE_CHAINS.map((c) => c.id)
 export const DEFAULT_CHAIN: Chain =
-  ACTIVE_CHAINS.find(c => c.id === CHAIN_IDS.ARBITRUM_SEPOLIA) ??
-  ACTIVE_CHAINS.find(c => c.id === CHAIN_IDS.ARBITRUM) ??
+  ACTIVE_CHAINS.find((c) => c.id === CHAIN_IDS.ARBITRUM_SEPOLIA) ??
+  ACTIVE_CHAINS.find((c) => c.id === CHAIN_IDS.ARBITRUM) ??
   ACTIVE_CHAINS[0] ??
-  arbitrumSepolia   // absolute fallback during initial setup
-
-// ─── RPC Transports ───────────────────────────────────────────────────────────
-// Defined here (not in web3.tsx) so they travel with the chain definitions.
-// web3.tsx reads TRANSPORT_MAP to build wagmi config — no RPC logic there.
+  arbitrumSepolia                                          // absolute fallback during initial setup
 
 const ALCHEMY_KEY = import.meta.env.VITE_ALCHEMY_API_KEY ?? ''
 const INFURA_KEY  = import.meta.env.VITE_INFURA_API_KEY  ?? ''
@@ -233,7 +235,7 @@ function buildTransport(
 }
 
 export const TRANSPORT_MAP: Record<number, Transport> = {
-  [CHAIN_IDS.ARBITRUM_SEPOLIA]:  buildTransport(
+  [CHAIN_IDS.ARBITRUM_SEPOLIA]: buildTransport(
     'https://arb-sepolia.g.alchemy.com/v2/',
     'https://arbitrum-sepolia.infura.io/v3/',
     'https://sepolia-rollup.arbitrum.io/rpc',
@@ -286,17 +288,16 @@ export const TRANSPORT_MAP: Record<number, Transport> = {
 }
 
 export const getChainById = (chainId: number): Chain | undefined =>
-  SUPPORTED_CHAINS.find(c => c.id === chainId)
+  SUPPORTED_CHAINS.find((c) => c.id === chainId)
 
 export const getChainMetadata = (chainId: number): ChainMetadata | undefined =>
   CHAIN_METADATA[chainId]
 
 export const isChainSupported = (chainId: number): boolean =>
-  SUPPORTED_CHAINS.some(c => c.id === chainId)
+  SUPPORTED_CHAINS.some((c) => c.id === chainId)
 
-/** True only when the chain is fully deployed. Use this for user-facing chain guards. */
 export const isChainActive = (chainId: number): boolean =>
-  ACTIVE_CHAINS.some(c => c.id === chainId)
+  ACTIVE_CHAINS.some((c) => c.id === chainId)
 
 export const isTestnetChain = (chainId: number): boolean =>
   CHAIN_METADATA[chainId]?.isTestnet ?? false
@@ -340,48 +341,60 @@ export const getExplorerAddressUrl = (chainId: number, address: string): string 
 }
 
 export const getChainErrorMessage = (currentChainId?: number): string => {
-  const activeNames = ACTIVE_CHAINS.map(c => c.name).join(', ')
+  const activeNames = ACTIVE_CHAINS.map((c) => c.name).join(', ')
   if (!currentChainId) return `Connect to one of: ${activeNames}`
   const current = getChainName(currentChainId)
   return `Wrong network (${current}). Switch to: ${activeNames}`
 }
 
+export const getSaleChainNames = (): string[] =>
+  SALE_CHAIN_IDS.map(getChainName).filter(Boolean)
+
 if (import.meta.env.DEV) {
   const errors: string[] = []
 
-  ACTIVE_CHAINS.forEach(chain => {
-    // Every active chain must have a transport
+  // Validate every sale chain ID is in SUPPORTED_CHAINS
+  SALE_CHAIN_IDS.forEach((id) => {
+    if (!SUPPORTED_CHAINS.some((c) => c.id === id)) {
+      errors.push(
+        `[chains] ❌ VITE_SALE_CHAIN_IDS contains ${id} which is not in SUPPORTED_CHAINS. ` +
+        `Add it or correct the env var.`,
+      )
+    }
+  })
+
+  // Validate every active chain has a transport
+  ACTIVE_CHAINS.forEach((chain) => {
     if (!TRANSPORT_MAP[chain.id]) {
       errors.push(`[chains] ❌ No transport for active chain: ${chain.name} (${chain.id})`)
     }
-    // The sale chain is allowed in ACTIVE_CHAINS without a full protocol deployment.
-    // All other active chains must be fully deployed.
-    const isSaleOnly = chain.id === SALE_CHAIN_ID && !CHAIN_METADATA[chain.id]?.deployed
+    const isSaleOnly = isSaleChain(chain.id) && !CHAIN_METADATA[chain.id]?.deployed
     if (!isSaleOnly && !CHAIN_METADATA[chain.id]?.deployed) {
       errors.push(`[chains] ❌ Chain in ACTIVE_CHAINS but metadata.deployed=false: ${chain.name}`)
     }
     if (isSaleOnly) {
-      console.log(`[chains] ℹ️  ${chain.name} included as sale-only chain (no protocol contracts required)`)
+      console.log(`[chains] ℹ️  ${chain.name} included as sale-only chain`)
     }
   })
 
-  SUPPORTED_CHAINS.forEach(chain => {
-    // Every supported chain must have metadata
-    if (!CHAIN_METADATA[chain.id]) {
+  // Validate every supported chain has metadata and transport
+  SUPPORTED_CHAINS.forEach((chain) => {
+    if (!CHAIN_METADATA[chain.id])
       errors.push(`[chains] ❌ Missing metadata for supported chain: ${chain.name} (${chain.id})`)
-    }
-    // Every supported chain must have a transport (even if not active yet)
-    if (!TRANSPORT_MAP[chain.id]) {
+    if (!TRANSPORT_MAP[chain.id])
       errors.push(`[chains] ⚠️ No transport for supported chain: ${chain.name} (${chain.id})`)
-    }
   })
 
   if (errors.length > 0) {
-    errors.forEach(e => console.error(e))
+    errors.forEach((e) => console.error(e))
   } else {
     console.log(
       `[chains] ✅ Config valid — ${ACTIVE_CHAINS.length} active chain(s): ` +
-      ACTIVE_CHAINS.map(c => c.name).join(', ')
+      ACTIVE_CHAINS.map((c) => c.name).join(', '),
+    )
+    console.log(
+      `[chains] 🏷️  Sale chain(s): ${getSaleChainNames().join(', ')} ` +
+      `(${SALE_CHAIN_IDS.join(', ')})`,
     )
   }
 }

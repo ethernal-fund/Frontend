@@ -12,7 +12,8 @@ import {
   CheckCircle, AlertCircle, ArrowRight, RefreshCw, Sparkles,
   Target, MessageCircle, ExternalLink, PieChart,
   Settings, Zap, BarChart3, BookOpen, ChevronRight, Activity,
-  AlertTriangle, X, Info, ChevronDown,
+  AlertTriangle, X, Info, ChevronDown, Coins, ShoppingCart,
+  ChevronUp, Percent,
 } from 'lucide-react'
 
 import { useDashboard }                                      from '@/hooks/useDashboard'
@@ -25,7 +26,27 @@ import { getContractAddress, ZERO_ADDRESS as ZERO_ADDR }     from '@/config/addr
 import { getExplorerAddressUrl }                             from '@/config/chains'
 import { toUsdcBigInt }                                      from '@/lib/calculator'
 
-// Constants 
+// ─── ETRF Token types ─────────────────────────────────────────────────────────
+// Replace mock values in `etrfStatus` (inside DashboardPage) with real hook calls:
+// useETRFBalance(address), useUserBenefits(address), useCurrentRound()
+
+export interface ETRFTokenStatus {
+  balance: number
+  usedForPremium: number
+  usedForFeeReduction: number
+  premiumActive: boolean
+  feeReductionActive: boolean
+  feeReductionPct: number
+  currentPrice: number
+  saleActive: boolean
+  premiumThreshold: number
+  feeReductionThreshold: number
+  totalAcquired: number
+  vested: number
+  claimed: number
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const ZERO_ADDRESS = ZERO_ADDR
 
@@ -87,8 +108,6 @@ const ADMIN_CONTENT = [
   },
 ] as const
 
-// Helpers 
-
 function formatUSDC(amount: bigint | number | undefined | null): string {
   if (amount == null) return '$0.00'
   const n = typeof amount === 'bigint' ? Number(amount) / 1e6 : amount
@@ -104,7 +123,9 @@ function riskLabel(level: number): string {
   return RISK_LEVELS[level as 0 | 1 | 2]?.label ?? 'Desconocido'
 }
 
-// CountdownTimer 
+function fmtToken(n: number, dec = 0) {
+  return n.toLocaleString('en-US', { maximumFractionDigits: dec })
+}
 
 function CountdownTimer({ targetDate }: { targetDate: Date | null }) {
   const [display, setDisplay] = useState('—')
@@ -125,8 +146,6 @@ function CountdownTimer({ targetDate }: { targetDate: Date | null }) {
   return <span>{display}</span>
 }
 
-// StatCard
-
 function StatCard({ label, value, sub }: { label: string; value: React.ReactNode; sub?: string }) {
   return (
     <div style={{ background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(255,255,255,0.08)' }}
@@ -137,8 +156,6 @@ function StatCard({ label, value, sub }: { label: string; value: React.ReactNode
     </div>
   )
 }
-
-// SectionCard 
 
 function SectionCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
@@ -151,19 +168,320 @@ function SectionCard({ children, className = '' }: { children: React.ReactNode; 
   )
 }
 
-// TxStatusBadge
-
 function TxStatusBadge({ isPending, isConfirming, isConfirmed, error }: {
   isPending: boolean; isConfirming: boolean; isConfirmed: boolean; error?: Error | null
 }) {
-  if (error)       return <p className="text-xs text-red-400 mt-2 flex items-center gap-1"><AlertCircle size={12} />{error.message.split('\n')[0]}</p>
-  if (isConfirmed) return <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1"><CheckCircle size={12} />Guardado on-chain</p>
+  if (error)        return <p className="text-xs text-red-400 mt-2 flex items-center gap-1"><AlertCircle size={12} />{error.message.split('\n')[0]}</p>
+  if (isConfirmed)  return <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1"><CheckCircle size={12} />Guardado on-chain</p>
   if (isConfirming) return <p className="text-xs mt-2 flex items-center gap-1" style={{ color: '#897148' }}><RefreshCw size={12} className="animate-spin" />Confirmando...</p>
-  if (isPending)   return <p className="text-xs mt-2 flex items-center gap-1" style={{ color: '#897148' }}><RefreshCw size={12} className="animate-spin" />Esperando firma...</p>
+  if (isPending)    return <p className="text-xs mt-2 flex items-center gap-1" style={{ color: '#897148' }}><RefreshCw size={12} className="animate-spin" />Esperando firma...</p>
   return null
 }
 
-// DepositModal 
+// ─── ETRFBenefitPill
+
+function ETRFBenefitPill({
+  icon: Icon, label, active, detail,
+}: {
+  icon: React.ElementType
+  label: string
+  active: boolean
+  detail?: string
+}) {
+  return (
+    <div
+      className="flex items-center gap-2 px-3 py-2 rounded-lg"
+      style={
+        active
+          ? { background: 'rgba(137,113,72,0.12)', border: '0.5px solid rgba(196,169,106,0.35)' }
+          : { background: 'rgba(255,255,255,0.03)', border: '0.5px solid rgba(255,255,255,0.07)' }
+      }
+    >
+      <div
+        className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
+        style={{ background: active ? 'rgba(137,113,72,0.25)' : 'rgba(255,255,255,0.05)' }}
+      >
+        <Icon size={12} style={{ color: active ? '#c4a96a' : '#444' }} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] tracking-widest uppercase font-medium leading-none" style={{ color: active ? '#c4a96a' : '#555' }}>
+          {label}
+        </p>
+        {detail && (
+          <p className="text-[10px] mt-0.5 leading-snug" style={{ color: active ? '#897148' : '#3a3a3a' }}>
+            {detail}
+          </p>
+        )}
+      </div>
+      <div className="shrink-0">
+        {active
+          ? <CheckCircle size={11} style={{ color: '#c4a96a' }} />
+          : <Clock size={11} style={{ color: '#333' }} />
+        }
+      </div>
+    </div>
+  )
+}
+
+// ─── ETRFTokenCard ────────────────────────────────────────────────────────────
+
+function ETRFTokenCard({
+  status,
+  onBuyClick,
+}: {
+  status: ETRFTokenStatus
+  onBuyClick: () => void
+}) {
+  const navigate   = useNavigate()
+  const [expanded, setExpanded] = useState(false)
+
+  const usedTotal  = status.usedForPremium + status.usedForFeeReduction
+  const remaining  = status.balance - usedTotal
+  const usedPct    = status.balance > 0 ? Math.min((usedTotal / status.balance) * 100, 100) : 0
+  const vestedPct  = status.totalAcquired > 0 ? Math.min((status.vested / status.totalAcquired) * 100, 100) : 0
+  const claimedPct = status.totalAcquired > 0 ? Math.min((status.claimed / status.totalAcquired) * 100, 100) : 0
+
+  const tokensForPremium      = Math.max(0, status.premiumThreshold - status.balance)
+  const tokensForFeeReduction = Math.max(0, status.feeReductionThreshold - status.balance)
+  const showNextStep          = tokensForPremium > 0 || tokensForFeeReduction > 0
+
+  const nextBenefitLabel = tokensForPremium > 0
+    ? `Comprá ${fmtToken(tokensForPremium)} ETRF más para activar Premium`
+    : tokensForFeeReduction > 0
+    ? `Comprá ${fmtToken(tokensForFeeReduction)} ETRF más para reducir comisiones`
+    : null
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{ background: 'rgba(255,255,255,0.025)', border: '0.5px solid rgba(255,255,255,0.07)' }}
+    >
+      {/* Header */}
+      <div className="px-6 pt-6 pb-0">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-8 h-8 rounded-xl flex items-center justify-center"
+              style={{ background: 'rgba(137,113,72,0.15)', border: '0.5px solid rgba(137,113,72,0.3)' }}
+            >
+              <Coins size={15} style={{ color: '#c4a96a' }} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] tracking-[0.25em] uppercase font-medium" style={{ color: '#555' }}>
+                  ETRF Token
+                </span>
+                {status.saleActive && (
+                  <span
+                    className="text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full"
+                    style={{ background: 'rgba(137,113,72,0.15)', color: '#c4a96a', border: '0.5px solid rgba(196,169,106,0.3)' }}
+                  >
+                    Venta activa
+                  </span>
+                )}
+              </div>
+              <p className="text-[10px] mt-0.5" style={{ color: '#3a3a3a' }}>
+                Utility · Premium · Fee reduction
+              </p>
+            </div>
+          </div>
+
+          {/* Balance hero */}
+          <div className="text-right">
+            <p
+              className="text-2xl font-light tabular-nums leading-none"
+              style={{ color: '#f7f8f6', fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            >
+              {fmtToken(status.balance, 2)}
+            </p>
+            <p className="text-[10px] tracking-widest uppercase mt-1" style={{ color: '#444' }}>
+              ETRF balance
+            </p>
+          </div>
+        </div>
+
+        {/* Benefits */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <ETRFBenefitPill
+            icon={Zap}
+            label="Premium"
+            active={status.premiumActive}
+            detail={
+              status.premiumActive
+                ? 'Acceso completo activo'
+                : tokensForPremium > 0
+                ? `Faltan ${fmtToken(tokensForPremium)} ETRF`
+                : 'Listo para activar'
+            }
+          />
+          <ETRFBenefitPill
+            icon={Percent}
+            label={status.feeReductionActive ? `Fee −${status.feeReductionPct}%` : 'Fee reduction'}
+            active={status.feeReductionActive}
+            detail={
+              status.feeReductionActive
+                ? `−${status.feeReductionPct}% en comisiones`
+                : tokensForFeeReduction > 0
+                ? `Faltan ${fmtToken(tokensForFeeReduction)} ETRF`
+                : 'Listo para activar'
+            }
+          />
+        </div>
+
+        {/* Usage bar — only shown when user has tokens */}
+        {status.balance > 0 && (
+          <div className="mb-5">
+            <div className="flex justify-between items-baseline mb-1.5">
+              <span className="text-[10px] tracking-widest uppercase" style={{ color: '#444' }}>Tokens utilizados</span>
+              <span className="text-[10px] font-mono" style={{ color: '#555' }}>
+                {fmtToken(usedTotal)} / {fmtToken(status.balance)}
+              </span>
+            </div>
+            <div
+              className="h-1.5 rounded-full overflow-hidden"
+              style={{ background: 'rgba(255,255,255,0.06)' }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{ width: `${usedPct}%`, background: 'linear-gradient(90deg, #7a6340, #c4a96a)' }}
+              />
+            </div>
+            <div className="flex justify-between mt-1.5">
+              <span className="text-[9px]" style={{ color: '#3a3a3a' }}>Premium: {fmtToken(status.usedForPremium)}</span>
+              <span className="text-[9px]" style={{ color: '#3a3a3a' }}>Fee red.: {fmtToken(status.usedForFeeReduction)}</span>
+              <span className="text-[9px]" style={{ color: '#555' }}>Libre: {fmtToken(remaining)}</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Expandable vesting detail — only when user has purchased tokens */}
+      {status.totalAcquired > 0 && (
+        <>
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            className="w-full flex items-center justify-between px-6 py-2.5 transition-opacity hover:opacity-70"
+            style={{ borderTop: '0.5px solid rgba(255,255,255,0.05)', color: '#444' }}
+          >
+            <span className="text-[10px] tracking-widest uppercase">Detalle de adquisición</span>
+            {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          </button>
+
+          {expanded && (
+            <div className="px-6 pb-4 space-y-3">
+              {/* Vesting bar */}
+              <div>
+                <div className="flex justify-between mb-1.5">
+                  <span className="text-[10px] tracking-widest uppercase" style={{ color: '#444' }}>Vesting</span>
+                  <span className="text-[10px] font-mono" style={{ color: '#555' }}>
+                    {vestedPct.toFixed(1)}% vestido
+                  </span>
+                </div>
+                <div className="h-1.5 rounded-full overflow-hidden relative" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  {/* Vested (faded gold) */}
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                    style={{ width: `${vestedPct}%`, background: 'rgba(137,113,72,0.45)' }}
+                  />
+                  {/* Claimed (solid gold) */}
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                    style={{ width: `${claimedPct}%`, background: 'linear-gradient(90deg, #7a6340, #c4a96a)' }}
+                  />
+                </div>
+                {/* Legend */}
+                <div className="flex gap-3 mt-1.5">
+                  {[
+                    { color: 'linear-gradient(90deg, #7a6340, #c4a96a)', label: 'Reclamado' },
+                    { color: 'rgba(137,113,72,0.45)', label: 'Vestido disp.' },
+                    { color: 'rgba(255,255,255,0.07)', label: 'Locked' },
+                  ].map(({ color, label }) => (
+                    <div key={label} className="flex items-center gap-1">
+                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
+                      <span className="text-[9px] tracking-widest uppercase" style={{ color: '#3a3a3a' }}>{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stats grid */}
+              <div
+                className="grid grid-cols-3 gap-px rounded-lg overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.04)' }}
+              >
+                {[
+                  { label: 'Adquiridos', value: fmtToken(status.totalAcquired) },
+                  { label: 'Vestido',    value: fmtToken(status.vested) },
+                  { label: 'Reclamado',  value: fmtToken(status.claimed) },
+                ].map(({ label, value }) => (
+                  <div
+                    key={label}
+                    className="px-3 py-3 text-center"
+                    style={{ background: 'rgba(12,11,10,0.6)' }}
+                  >
+                    <p className="text-[9px] tracking-widest uppercase mb-1" style={{ color: '#444' }}>{label}</p>
+                    <p className="text-xs font-mono font-medium" style={{ color: '#888' }}>{value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* CTA footer */}
+      <div
+        className="px-6 py-4"
+        style={{ borderTop: '0.5px solid rgba(255,255,255,0.05)' }}
+      >
+        {/* Next benefit hint */}
+        {showNextStep && nextBenefitLabel && (
+          <div
+            className="flex items-start gap-2.5 rounded-lg px-3 py-2.5 mb-3"
+            style={{ background: 'rgba(137,113,72,0.06)', border: '0.5px solid rgba(137,113,72,0.15)' }}
+          >
+            <TrendingUp size={12} className="shrink-0 mt-0.5" style={{ color: '#897148' }} />
+            <div>
+              <p className="text-[10px] font-medium tracking-wide" style={{ color: '#897148' }}>
+                {nextBenefitLabel}
+              </p>
+              <p className="text-[9px] mt-0.5" style={{ color: '#555' }}>
+                Precio actual: ${status.currentPrice.toFixed(4)} USDC / ETRF
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <button
+            onClick={onBuyClick}
+            disabled={!status.saleActive}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{
+              background: status.saleActive ? '#897148' : 'rgba(137,113,72,0.2)',
+              color: '#f7f8f6',
+              border: '0.5px solid rgba(137,113,72,0.4)',
+            }}
+          >
+            <ShoppingCart size={13} />
+            {status.saleActive ? 'Comprar ETRF' : 'Venta no activa'}
+          </button>
+
+          <button
+            onClick={() => navigate('/sale')}
+            className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-medium transition-opacity hover:opacity-70 shrink-0"
+            style={{ background: 'rgba(255,255,255,0.04)', color: '#555', border: '0.5px solid rgba(255,255,255,0.08)' }}
+          >
+            Ver todo
+            <ArrowRight size={11} />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── DepositModal ─────────────────────────────────────────────────────────────
 
 interface DepositModalProps {
   mode:           'monthly' | 'extra'
@@ -353,7 +671,7 @@ function DepositModal({ mode, fundAddress, monthlyAmount, onClose }: DepositModa
                 >
                   {extra.status === 'reclaiming'
                     ? <><RefreshCw size={12} className="animate-spin" />Reclamando...</>
-                    : 'Reclamar depósito (−1%)'
+                    : <>Reclamar con 1% de penalidad</>
                   }
                 </button>
               </div>
@@ -368,9 +686,9 @@ function DepositModal({ mode, fundAddress, monthlyAmount, onClose }: DepositModa
 
             <button
               onClick={() => void handleExtraDeposit()}
-              disabled={extra.isLoading || !amount}
+              disabled={extra.isLoading}
               className="w-full py-3.5 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              style={{ background: 'rgba(137,113,72,0.25)', color: '#c9a96e', border: '0.5px solid rgba(137,113,72,0.4)' }}
+              style={{ background: 'rgba(255,255,255,0.06)', color: '#888', border: '0.5px solid rgba(255,255,255,0.1)' }}
             >
               {extra.isLoading
                 ? <><RefreshCw size={14} className="animate-spin" />{extra.status === 'approving' ? 'Aprobando...' : 'Depositando...'}</>
@@ -394,23 +712,21 @@ function DepositModal({ mode, fundAddress, monthlyAmount, onClose }: DepositModa
   )
 }
 
-// DashboardPage 
+// ─── DashboardPage ────────────────────────────────────────────────────────────
 
-const DashboardPage: React.FC = () => {
-  const navigate  = useNavigate()
-  const location  = useLocation()
-  const chainId   = useChainId()
+function DashboardPage() {
+  const navigate   = useNavigate()
+  const location   = useLocation()
+  const chainId    = useChainId()
   const { address } = useConnection()
-
-  // Data 
 
   const {
     hasFund,
     fundAddress,
     fundFromChain,
     monthlyDeposit,
-    desiredMonthly,
     retirementAge,
+    desiredMonthly,
     paymentYears,
     apyPercent,
     protocolAddress,
@@ -429,7 +745,7 @@ const DashboardPage: React.FC = () => {
   const hasFundRef = useRef(hasFund)
   useEffect(() => { hasFundRef.current = hasFund }, [hasFund])
 
-  //  Read on-chain preferences 
+  // Read on-chain preferences
   const { data: onChainPrefs } = useReadContract({
     address:      userPrefAddress,
     abi:          USER_PREFERENCES_ABI,
@@ -438,14 +754,11 @@ const DashboardPage: React.FC = () => {
     query:        { enabled: !!address && userPrefAddress !== ZERO_ADDRESS },
   })
 
-  // getUserConfig returns { selectedProtocol, autoCompound, riskTolerance, lastUpdate, totalDeposited, totalWithdrawn }
   const onChainRisk     = onChainPrefs ? Number((onChainPrefs as { riskTolerance: number }).riskTolerance ?? 0) : 0
   const onChainProtocol = onChainPrefs ? (onChainPrefs as { selectedProtocol: `0x${string}` }).selectedProtocol : undefined
-
-  // getRoutingStrategy is not in the ABI; derive strategy value from onChainPrefs if available
   const onChainStrategyValue = 0
 
-  // Preferences state 
+  // Preferences state
   const [pendingRisk,     setPendingRisk]     = useState<number | null>(null)
   const [pendingStrategy, setPendingStrategy] = useState<number | null>(null)
   const [pendingProtocol, setPendingProtocol] = useState<`0x${string}` | null>(null)
@@ -464,7 +777,7 @@ const DashboardPage: React.FC = () => {
     [monthlyDeposit],
   )
 
-  // Post-deploy polling 
+  // Post-deploy polling
   const [isPollingFund, setIsPollingFund] = useState(false)
 
   useEffect(() => {
@@ -522,7 +835,7 @@ const DashboardPage: React.FC = () => {
     }
   }, [chain, monthlyDeposit, desiredMonthly, paymentYears])
 
-  // Write contracts 
+  // Write contracts
   const {
     writeContract: writeConfig,
     isPending:     isWritingConfig,
@@ -552,13 +865,13 @@ const DashboardPage: React.FC = () => {
     useWaitForTransactionReceipt({ hash: stratTxHash,      query: { enabled: Boolean(stratTxHash)      } })
   const { isPending: isConfirmingRetire,   isSuccess: isRetireConfirmed   } =
     useWaitForTransactionReceipt({ hash: retirementTxHash, query: { enabled: Boolean(retirementTxHash) } })
+
   const [prefSaveError, setPrefSaveError] = useState<string | null>(null)
   useEffect(() => {
-    if (configError)  setPrefSaveError(configError.message.split('\n')[0] ?? null)
-    if (stratError)   setPrefSaveError(stratError.message.split('\n')[0]  ?? null)
+    if (configError) setPrefSaveError(configError.message.split('\n')[0] ?? null)
+    if (stratError)  setPrefSaveError(stratError.message.split('\n')[0]  ?? null)
   }, [configError, stratError])
 
-  // Clear error on new attempt
   const isSavingPrefs    = isWritingConfig    || isConfirmingConfig
   const isSavingStrategy = isWritingStrategy  || isConfirmingStrategy
   const isRetiringFund   = isWritingRetirement || isConfirmingRetire
@@ -566,8 +879,32 @@ const DashboardPage: React.FC = () => {
   const nowSec = BigInt(Math.floor(Date.now() / 1000))
   const timelockExpired = chain?.timelockEnd && chain.timelockEnd > 0n && chain.timelockEnd <= nowSec
 
-  // Handlers
+  // ── ETRF token status ──────────────────────────────────────────────────────
+  // TODO: replace mock values with real hook calls:
+  //   balance          → useETRFBalance(address).formatted
+  //   premiumActive    → useUserBenefits(address).premiumActive
+  //   feeReduction*    → useUserBenefits(address).feeActive / feeReductionPct
+  //   currentPrice     → useCurrentRound().price (formatted from BigInt 6-dec)
+  //   saleActive       → useCurrentRound().status === 'active'
+  //   totalAcquired    → useVesting(address).tokensBought (formatted from BigInt 18-dec)
+  //   vested / claimed → useVesting(address).tokensVested / tokensClaimed
+  const etrfStatus: ETRFTokenStatus = {
+    balance:               250,
+    usedForPremium:        100,
+    usedForFeeReduction:   50,
+    premiumActive:         true,
+    feeReductionActive:    false,
+    feeReductionPct:       25,
+    currentPrice:          0.01,
+    saleActive:            true,
+    premiumThreshold:      100,
+    feeReductionThreshold: 200,
+    totalAcquired:         500,
+    vested:                250,
+    claimed:               100,
+  }
 
+  // Handlers
   const handleSaveUserConfig = useCallback(() => {
     if (!address) return
     setPrefSaveError(null)
@@ -604,11 +941,15 @@ const DashboardPage: React.FC = () => {
     })
   }, [fundAddress, writeRetirement])
 
+  const handleETRFBuy = useCallback(() => {
+    navigate('/sale')
+  }, [navigate])
+
   const refetchAll = useCallback(async () => {
     await Promise.all([refetchDb(), refetchChain()])
   }, [refetchDb, refetchChain])
 
-  // Loading
+  // ── Loading ────────────────────────────────────────────────────────────────
 
   if (isLoading && !hasFund) {
     return (
@@ -624,7 +965,7 @@ const DashboardPage: React.FC = () => {
     )
   }
 
-  // Render
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen" style={{ background: '#0c0b0a', fontFamily: "'DM Sans', system-ui, sans-serif" }}>
@@ -634,7 +975,7 @@ const DashboardPage: React.FC = () => {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap');
       `}</style>
 
-      {/* Grain overlay — consistent with SalePage */}
+      {/* Grain overlay */}
       <div className="fixed inset-0 pointer-events-none" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
         opacity: 0.4, zIndex: 0,
@@ -668,7 +1009,6 @@ const DashboardPage: React.FC = () => {
         )}
 
         {/* Header */}
-
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -699,7 +1039,7 @@ const DashboardPage: React.FC = () => {
         {/* Main layout */}
         <div className="grid lg:grid-cols-3 gap-6">
 
-          {/* ── Left column: Fund ── */}
+          {/* ── Left column ── */}
           <div className="lg:col-span-2 space-y-6">
 
             {/* My Fund card */}
@@ -760,7 +1100,6 @@ const DashboardPage: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Progress bar */}
                       <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-700"
@@ -801,10 +1140,7 @@ const DashboardPage: React.FC = () => {
                     <StatCard label="Edad de Retiro"    value={retirementAge != null ? `${retirementAge} años` : '—'} />
                     <StatCard label="APY Configurado"   value={apyPercent    != null ? `${apyPercent.toFixed(2)}%` : '—'} />
                     <StatCard label="Ingreso Deseado"   value={desiredMonthly != null ? formatUSDC(desiredMonthly) : '—'} />
-                    <StatCard
-                      label="Protocolo"
-                      value={protocolAddress ? shortAddr(protocolAddress) : '—'}
-                    />
+                    <StatCard label="Protocolo"         value={protocolAddress ? shortAddr(protocolAddress) : '—'} />
                   </div>
 
                   {/* Missed months warning */}
@@ -815,6 +1151,23 @@ const DashboardPage: React.FC = () => {
                         Tenés <strong>{chain.missedMonths.toString()}</strong> {chain.missedMonths === 1n ? 'mes perdido' : 'meses perdidos'} sin depositar.
                         Los depósitos atrasados aplican penalidades.
                       </p>
+                    </div>
+                  )}
+
+                  {/* Premium active banner */}
+                  {etrfStatus.premiumActive && (
+                    <div
+                      className="flex items-center gap-2.5 rounded-xl px-4 py-3"
+                      style={{ background: 'rgba(137,113,72,0.08)', border: '0.5px solid rgba(137,113,72,0.22)' }}
+                    >
+                      <Zap size={13} style={{ color: '#c4a96a' }} />
+                      <p className="text-xs font-medium" style={{ color: '#c4a96a' }}>
+                        Premium activo
+                        {etrfStatus.feeReductionActive && ` · Comisiones reducidas ${etrfStatus.feeReductionPct}%`}
+                      </p>
+                      <span className="ml-auto text-[10px] tracking-widest uppercase" style={{ color: '#555' }}>
+                        {fmtToken(etrfStatus.balance)} ETRF
+                      </span>
                     </div>
                   )}
 
@@ -992,8 +1345,14 @@ const DashboardPage: React.FC = () => {
 
           </div>
 
-          {/* Right column: Preferences + Protocols */}
+          {/* ── Right column ── */}
           <div className="space-y-6">
+
+            {/* ETRF Token card — first item in right column */}
+            <ETRFTokenCard
+              status={etrfStatus}
+              onBuyClick={handleETRFBuy}
+            />
 
             {/* Preferences */}
             <SectionCard>

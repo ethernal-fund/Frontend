@@ -21,8 +21,8 @@ import {
   needsApproval as needsApprovalPure,
   formatUSDC,
   formatETRF,
-} from '@/services/saleService'
-import { useSaleStore } from '@/stores/saleStore'
+} from '@/sale/saleService'
+import { useSaleStore } from '@/sale/saleStore'
 import type { RoundInfo, UserPurchase } from '@/sale/types'
 
 // Re-exports para componentes que no importan saleService directamente

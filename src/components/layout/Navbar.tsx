@@ -14,7 +14,7 @@ import { useTranslation }    from 'react-i18next';
 import { useQueryClient }    from '@tanstack/react-query';
 import { useAuthStore }      from '@/stores/authStore';
 import { useWizardStore }    from '@/stores/wizardStore';
-import { useSaleStore }      from '@/stores/saleStore';
+import { useSaleStore }      from '@/sale/saleStore';
 
 import {
   Wallet,

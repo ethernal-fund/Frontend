@@ -5,7 +5,7 @@ import { z } from 'zod/v4'
 import { formatUnits } from 'viem'
 import { useTranslation } from 'react-i18next'
 import type { RoundInfo } from '@/sale/types'
-import { formatUSDC } from '@/services/saleService'
+import { formatUSDC } from '@/sale/saleService'
 import type { Hash } from 'viem'
 
 // Schema defined outside component — useTranslation must be called inside a component/hook
