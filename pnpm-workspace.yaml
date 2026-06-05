@@ -4,3 +4,5 @@ allowBuilds:
   esbuild: true
   protobufjs: true
   utf-8-validate: true
+minimumReleaseAgeExclude:
+  - i18next@26.3.1

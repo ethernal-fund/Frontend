@@ -1,7 +1,7 @@
 
 import api from '@/lib/axios'
 import { buildApiUrl, API_ENDPOINTS, warmupManager } from '@/config/api.config'
-import { useAuthStore } from '@/stores/authStore'
+import { authSelectors } from '@/stores/authStore'
 
 // Public types 
 
@@ -251,11 +251,7 @@ export const fundsService = {
     const pending = loadPendingRegister()
     if (!pending) return
 
-    // Auth guard 
-    // authStore uses sessionStorage, so the token is gone after tab close.
-    // We must wait until the user has logged in again before retrying,
-    // otherwise we always hit a non-retriable 401 and the item is never cleared.
-    const { accessToken } = useAuthStore.getState()
+    const accessToken = authSelectors.saleToken
     if (!accessToken) {
       console.info(
         '[fundsService] retryPendingRegister: no access token — ' +

@@ -1,25 +1,26 @@
 export type RoundStatus = 'upcoming' | 'active' | 'ended'
+
 export interface RoundInfo {
   id:          number
   name:        string
-  price:       bigint        // USDC por token (6 decimales)
-  hardCap:     bigint        // máximo USDC a recaudar
-  raised:      bigint        // USDC recaudado hasta ahora
-  walletCap:   bigint        // máximo USDC por wallet
+  price:       bigint
+  hardCap:     bigint
+  raised:      bigint
+  walletCap:   bigint
   startTime:   bigint
   endTime:     bigint
   status:      RoundStatus
-  cliffMonths: number        // meses de cliff para compradores
-  vestingMonths: number      // meses de vesting lineal post-cliff
+  cliffMonths: number
+  vestingMonths: number
 }
 
 export interface UserPurchase {
-  usdcSpent:    bigint       // USDC total invertido
-  tokensBought: bigint       // ETRF total comprado (18 decimales)
-  tokensVested: bigint       // ETRF ya vested
-  tokensClaimed: bigint      // ETRF ya reclamados
-  claimable:    bigint       // ETRF disponibles para reclamar ahora
-  startTime:    bigint       // timestamp de la compra
+  usdcSpent:    bigint
+  tokensBought: bigint
+  tokensVested: bigint
+  tokensClaimed: bigint
+  claimable:    bigint
+  startTime:    bigint
   hasPurchased: boolean
 }
 

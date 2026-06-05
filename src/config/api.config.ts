@@ -8,10 +8,12 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   AUTH: {
-    NONCE:   '/users/nonce',
-    VERIFY:  '/users/auth',
+    NONCE:   '/auth/nonce',
+    VERIFY:  '/auth/verify-siwe',
     REFRESH: '/auth/refresh',
     LOGOUT:  '/auth/logout',
+    ME:      '/auth/me',
+    STATUS:  '/auth/status',
   },
 
   USERS: {

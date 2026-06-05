@@ -1,9 +1,14 @@
 import { useAppKit } from '@reown/appkit/react'
 import { useTranslation } from 'react-i18next'
 
+/**
+ * WalletGate — shown on SalePage when the user is not connected.
+ * Clicking "Connect" opens the AppKit modal; the user stays on /sale
+ * and the page automatically transitions to the buy form once connected.
+ */
 export function WalletGate() {
   const { open } = useAppKit()
-  const { t } = useTranslation()   // ← Sin 'sale' por ahora
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-8 text-center">

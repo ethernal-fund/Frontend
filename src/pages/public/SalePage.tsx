@@ -30,8 +30,8 @@ export default function SalePage() {
   const sale            = useSale();
   const hasPurchased    = sale.purchase?.hasPurchased ?? false;
   const isWrongChain    = sale.isWrongChain;
-  const isRoundLoading  = !sale.round;
-  const isActionLoading = isConnected && !isWrongChain && !sale.round;
+  const isRoundLoading  = sale.isRoundLoading;
+  const isActionLoading = isConnected && !isWrongChain && sale.isRoundLoading;
 
   const [tokenomicsOpen, setTokenomicsOpen] = useState(false);
 
@@ -101,7 +101,9 @@ export default function SalePage() {
           >
             {isRoundLoading
               ? <RoundSkeleton />
-              : <RoundProgress round={sale.round!} />
+              : sale.round
+                ? <RoundProgress round={sale.round} />
+                : <NoRoundBanner />
             }
 
             <TokenomicsCard onClick={() => setTokenomicsOpen(true)} />
@@ -202,6 +204,7 @@ export default function SalePage() {
                     needsApproval={sale.needsApproval}
                     onApprove={sale.approveUSDC}
                     onBuy={sale.buyTokens}
+                    onResetTx={sale.resetTxState}
                     isPending={sale.isPending}
                     isConfirming={sale.isConfirming}
                     isConfirmed={sale.isConfirmed}
@@ -422,6 +425,35 @@ function FormSkeleton() {
       <div className="h-14 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
       <div className="h-24 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
       <div className="h-12 rounded" style={{ background: 'rgba(137,113,72,0.1)'  }} />
+    </div>
+  );
+}
+function NoRoundBanner() {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center mb-5"
+        style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: '0.5px solid rgba(255,255,255,0.08)',
+        }}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8.5" stroke="#444" strokeWidth="1" />
+          <path d="M10 6v5M10 13.5v.5" stroke="#444" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+      </div>
+      <p
+        className="text-lg font-light mb-2"
+        style={{ color: '#f7f8f6', fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      >
+        {t('sale.noRound.title', { defaultValue: 'No active round' })}
+      </p>
+      <p className="text-xs max-w-xs leading-relaxed" style={{ color: '#444' }}>
+        {t('sale.noRound.subtitle', { defaultValue: 'There is no sale round open at this time. Check back soon.' })}
+      </p>
     </div>
   );
 }

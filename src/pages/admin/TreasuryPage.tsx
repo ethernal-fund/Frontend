@@ -1,10 +1,9 @@
-// TreasuryPage.tsx
-// Treasury management: all registered funds, fees paid per fund, withdraw/emergency controls
-// Data sourced from Treasury.vy (getTreasuryStats, getFundFeeRecord, withdrawFees, emergencyWithdraw)
-// + PersonalFundFactory.vy (FundCreated events indexed off-chain)
-// Uses the app's design system (index.css + Tailwind)
-
 import { useState } from "react";
+import { CheckCircle, RefreshCw, Wallet, Clock, TrendingUp, Users, DollarSign, BarChart3 } from "lucide-react";
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 interface FundRecord {
   fundAddress:      string;
@@ -30,7 +29,33 @@ interface TreasuryStats {
   totalFeesWithdrawn:        number;
 }
 
-// ── Mock data (enumerate via FeeReceived events + getFundFeeRecord per fund) ──
+interface SaleRound {
+  id: number;
+  name: string;
+  status: 'upcoming' | 'active' | 'ended';
+  price: number;           // USDC en decimal (ej: 0.01)
+  hardCap: number;         // USDC total (ej: 1,000,000)
+  raised: number;          // USDC recaudado
+  walletCap: number;       // USDC máximo por wallet
+  startTime: number;       // timestamp
+  endTime: number;         // timestamp
+  cliffMonths: number;
+  vestingMonths: number;
+  buyers: number;
+  progressPct: number;
+  
+  // Datos de VestingETRF
+  tokensReserved: number;               // ETRF reservados para esta ronda
+  tokensSold: number;                   // ETRF vendidos
+  unsoldAmount: number;                 // ETRF no vendidos = reserved - sold
+  recoveryAvailableAt: number;          // timestamp cuando se puede recuperar
+  recoveryUnlocked: boolean;            // true si ya pasó el timelock
+  recovered: boolean;                   // true si ya se recuperaron los unsold
+}
+
+// ============================================================================
+// MOCK DATA (TODO: reemplazar con datos reales del backend/chain)
+// ============================================================================
 
 const MOCK_STATS: TreasuryStats = {
   totalFeesCollectedUSDC:    19_250,
@@ -54,19 +79,234 @@ const MOCK_FUNDS: FundRecord[] = [
   { fundAddress: "0xee77…9012", owner: "0xBBCC…0008", totalFeesPaid: 660,    lastFeeTimestamp: 1742500000, feeCount: 5,  isActive: true,  retirementAge: 68, monthlyDeposit: 110, protocol: "Compound Finance",  createdAt: 1704585600 },
 ];
 
+const SALE_MOCK_ROUNDS: SaleRound[] = [
+  {
+    id: 0,
+    name: "Seed Round",
+    status: "ended",
+    price: 0.01,
+    hardCap: 1_000_000,
+    raised: 1_000_000,
+    walletCap: 50_000,
+    startTime: 1740000000,
+    endTime: 1742500000,
+    cliffMonths: 12,
+    vestingMonths: 36,
+    buyers: 142,
+    progressPct: 100,
+    tokensReserved: 300_000_000,
+    tokensSold: 300_000_000,
+    unsoldAmount: 0,
+    recoveryAvailableAt: 1742500000 + 90 * 86400,
+    recoveryUnlocked: false,
+    recovered: false,
+  },
+  {
+    id: 1,
+    name: "Private Round",
+    status: "active",
+    price: 0.015,
+    hardCap: 2_000_000,
+    raised: 1_250_000,
+    walletCap: 100_000,
+    startTime: 1745000000,
+    endTime: 0,
+    cliffMonths: 6,
+    vestingMonths: 24,
+    buyers: 89,
+    progressPct: 62.5,
+    tokensReserved: 200_000_000,
+    tokensSold: 125_000_000,
+    unsoldAmount: 75_000_000,
+    recoveryAvailableAt: 0,
+    recoveryUnlocked: false,
+    recovered: false,
+  },
+  {
+    id: 2,
+    name: "Public Round",
+    status: "upcoming",
+    price: 0.025,
+    hardCap: 3_000_000,
+    raised: 0,
+    walletCap: 150_000,
+    startTime: 1747000000,
+    endTime: 0,
+    cliffMonths: 3,
+    vestingMonths: 15,
+    buyers: 0,
+    progressPct: 0,
+    tokensReserved: 200_000_000,
+    tokensSold: 0,
+    unsoldAmount: 200_000_000,
+    recoveryAvailableAt: 0,
+    recoveryUnlocked: false,
+    recovered: false,
+  },
+];
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
 function fmt(n: number, decimals = 2): string {
   return n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
 function fmtDate(ts: number): string {
+  if (ts === 0) return "—";
   return new Date(ts * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-function SectionHeader({ title, sub }: { title: string; sub?: string }) {
+function SectionHeader({ title, sub, icon }: { title: string; sub?: string; icon?: React.ReactNode }) {
   return (
-    <div className="mb-4">
-      <h2 className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-0!">{title}</h2>
-      {sub && <p className="text-xs text-gray-400 mb-0! mt-0.5">{sub}</p>}
+    <div className="mb-4 flex items-center gap-2">
+      {icon && <span className="text-forest-green">{icon}</span>}
+      <div>
+        <h2 className="text-sm font-bold text-gray-800 uppercase tracking-widest mb-0!">{title}</h2>
+        {sub && <p className="text-xs text-gray-400 mb-0! mt-0.5">{sub}</p>}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// SUB-COMPONENTS
+// ============================================================================
+
+function SaleRoundCard({ round, onRecover }: { round: SaleRound; onRecover: (roundId: number) => void }) {
+  const [recovering, setRecovering] = useState(false);
+
+  const handleRecover = async () => {
+    setRecovering(true);
+    // TODO: call VestingETRF.recover_unsold(round.id)
+    await new Promise(r => setTimeout(r, 1500));
+    onRecover(round.id);
+    setRecovering(false);
+  };
+
+  const statusColor = {
+    upcoming: "bg-gray-100 text-gray-600",
+    active: "bg-green-100 text-green-700",
+    ended: "bg-blue-100 text-blue-700",
+  }[round.status];
+
+  const statusText = {
+    upcoming: "Próxima",
+    active: "Activa",
+    ended: "Finalizada",
+  }[round.status];
+
+  return (
+    <div className="border border-gray-200 rounded-xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <h3 className="font-bold text-gray-900">{round.name}</h3>
+          <span className={`text-xs px-2 py-0.5 rounded-full ${statusColor}`}>
+            {statusText}
+          </span>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-gray-400">Precio</p>
+          <p className="font-mono font-bold text-forest-green">${round.price} USDC</p>
+        </div>
+      </div>
+
+      {/* Progress */}
+      <div className="mb-4">
+        <div className="flex justify-between text-xs mb-1">
+          <span className="text-gray-500">Progreso</span>
+          <span className="font-semibold">{round.progressPct.toFixed(1)}%</span>
+        </div>
+        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${round.progressPct}%`,
+              background: round.status === 'active' 
+                ? 'linear-gradient(90deg, #897148, #c4a96a)'
+                : '#10b981'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Stats grid */}
+      <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
+        <div>
+          <p className="text-xs text-gray-400">Recaudado</p>
+          <p className="font-semibold">${round.raised.toLocaleString()} USDC</p>
+          <p className="text-xs text-gray-400">/ ${round.hardCap.toLocaleString()}</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">Compradores</p>
+          <p className="font-semibold">{round.buyers}</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">Vesting</p>
+          <p className="text-xs">{round.cliffMonths}m cliff + {round.vestingMonths}m linear</p>
+        </div>
+        <div>
+          <p className="text-xs text-gray-400">Wallet Cap</p>
+          <p className="font-semibold">${round.walletCap.toLocaleString()} USDC</p>
+        </div>
+      </div>
+
+      {/* Tokens stats */}
+      {(round.tokensReserved > 0 || round.tokensSold > 0) && (
+        <div className="bg-gray-50 rounded-lg p-3 mb-4">
+          <p className="text-xs font-semibold text-gray-600 mb-2">📊 Tokens ETRF</p>
+          <div className="grid grid-cols-3 gap-2 text-center text-xs">
+            <div>
+              <p className="text-gray-400">Reservados</p>
+              <p className="font-mono font-bold">{round.tokensReserved.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-gray-400">Vendidos</p>
+              <p className="font-mono font-bold text-forest-green">{round.tokensSold.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-gray-400">No vendidos</p>
+              <p className={`font-mono font-bold ${round.unsoldAmount > 0 ? 'text-amber-600' : 'text-gray-400'}`}>
+                {round.unsoldAmount.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Recovery button */}
+      {round.status === 'ended' && round.unsoldAmount > 0 && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          {round.recovered ? (
+            <div className="flex items-center gap-2 text-green-600 text-sm">
+              <CheckCircle size={16} />
+              <span>Tokens recuperados</span>
+            </div>
+          ) : round.recoveryUnlocked ? (
+            <button
+              onClick={handleRecover}
+              disabled={recovering}
+              className="w-full py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 transition-all"
+              style={{ background: '#897148', color: '#f7f8f6' }}
+            >
+              {recovering ? (
+                <><RefreshCw size={14} className="animate-spin" /> Recuperando...</>
+              ) : (
+                <><Wallet size={14} /> Recuperar {round.unsoldAmount.toLocaleString()} ETRF</>
+              )}
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 text-amber-600 text-sm">
+              <Clock size={14} />
+              <span>
+                Recovery disponible en {Math.ceil((round.recoveryAvailableAt - Math.floor(Date.now() / 1000)) / 86400)} días
+              </span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -280,16 +520,19 @@ function FundRow({
 type FundFilter = "all" | "active" | "inactive";
 type FundSort   = "fees_desc" | "fees_asc" | "recent" | "oldest";
 
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
 export default function TreasuryPage() {
   const [stats,          setStats]         = useState<TreasuryStats>(MOCK_STATS);
   const [funds,          setFunds]         = useState<FundRecord[]>(MOCK_FUNDS);
+  const [saleRounds,     setSaleRounds]    = useState<SaleRound[]>(SALE_MOCK_ROUNDS);
   const [fundFilter,     setFundFilter]    = useState<FundFilter>("all");
   const [fundSort,       setFundSort]      = useState<FundSort>("fees_desc");
   const [search,         setSearch]        = useState("");
   const [showWithdraw,   setShowWithdraw]  = useState(false);
   const [deactivateTarget, setDeactivateTarget] = useState<FundRecord | null>(null);
-
-  // TODO: on mount, read Treasury.getTreasuryStats() and enumerate FeeReceived events off-chain
 
   const maxFees = Math.max(...funds.map(f => f.totalFeesPaid), 1);
 
@@ -328,6 +571,21 @@ export default function TreasuryPage() {
     setStats(prev => ({ ...prev, activeFundsCount: prev.activeFundsCount - 1 }));
   }
 
+  function handleRecoverUnsold(roundId: number) {
+    setSaleRounds(prev =>
+      prev.map(r => 
+        r.id === roundId ? { ...r, recovered: true, unsoldAmount: 0 } : r
+      )
+    );
+    // TODO: mostrar toast de éxito
+  }
+
+  // Calcular estadísticas totales de la sale
+  const totalRaised = saleRounds.reduce((s, r) => s + r.raised, 0);
+  const totalBuyers = saleRounds.reduce((s, r) => s + r.buyers, 0);
+  const totalTokensSold = saleRounds.reduce((s, r) => s + r.tokensSold, 0);
+  const totalUnsold = saleRounds.reduce((s, r) => s + r.unsoldAmount, 0);
+
   return (
     <div className="container-app py-6 sm:py-8 animate-fade-in">
 
@@ -337,12 +595,14 @@ export default function TreasuryPage() {
           Treasury
         </h1>
         <p className="text-sm text-gray-500 mb-0!">
-          Fee collection · fund registry · withdrawal management
+          Fee collection · fund registry · token sale management · withdrawal controls
         </p>
       </div>
 
-      {/* ── Treasury Overview Stats ── */}
-      <SectionHeader title="Treasury Overview" sub="Treasury.getTreasuryStats()" />
+      {/* ========================================================================
+          SECTION 1: Treasury Overview Stats
+      ======================================================================== */}
+      <SectionHeader title="Treasury Overview" sub="Treasury.getTreasuryStats()" icon={<DollarSign size={16} />} />
       <div className="grid-responsive-4 mb-8">
         <div className="card border-l-4 border-l-forest-green">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Available Balance</p>
@@ -372,8 +632,62 @@ export default function TreasuryPage() {
         </div>
       </div>
 
-      {/* ── Fee Management Actions ── */}
-      <SectionHeader title="Fee Management" sub="Admin actions · require wallet connection" />
+      {/* ========================================================================
+          SECTION 2: Token Sale Management
+      ======================================================================== */}
+      <SectionHeader 
+        title="Token Sale Management" 
+        sub="Venta de tokens ETRF · rondas · recuperación de no vendidos"
+        icon={<BarChart3 size={16} />}
+      />
+      
+      {/* Sale Summary Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-3 border border-amber-100">
+          <div className="flex items-center gap-2 mb-1">
+            <TrendingUp size={14} className="text-amber-600" />
+            <p className="text-xs text-gray-500">Total Recaudado</p>
+          </div>
+          <p className="text-xl font-bold text-amber-700">${fmt(totalRaised)} USDC</p>
+        </div>
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-3 border border-blue-100">
+          <div className="flex items-center gap-2 mb-1">
+            <Users size={14} className="text-blue-600" />
+            <p className="text-xs text-gray-500">Compradores Únicos</p>
+          </div>
+          <p className="text-xl font-bold text-blue-700">{totalBuyers}</p>
+        </div>
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3 border border-green-100">
+          <div className="flex items-center gap-2 mb-1">
+            <Wallet size={14} className="text-green-600" />
+            <p className="text-xs text-gray-500">ETRF Vendidos</p>
+          </div>
+          <p className="text-xl font-bold text-green-700">{fmt(totalTokensSold, 0)}</p>
+        </div>
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-3 border border-amber-100">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock size={14} className="text-amber-600" />
+            <p className="text-xs text-gray-500">ETRF por Recuperar</p>
+          </div>
+          <p className="text-xl font-bold text-amber-700">{fmt(totalUnsold, 0)}</p>
+        </div>
+      </div>
+
+      {/* Sale Rounds Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+        {saleRounds.map(round => (
+          <SaleRoundCard
+            key={round.id}
+            round={round}
+            onRecover={handleRecoverUnsold}
+          />
+        ))}
+      </div>
+
+      {/* ========================================================================
+          SECTION 3: Fee Management Actions
+      ======================================================================== */}
+      <SectionHeader title="Fee Management" sub="Admin actions · require wallet connection" icon={<DollarSign size={16} />} />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         {/* Withdraw Card */}
         <div className="card">
@@ -440,7 +754,9 @@ export default function TreasuryPage() {
         </div>
       </div>
 
-      {/* ── Funds Table ── */}
+      {/* ========================================================================
+          SECTION 4: Registered Funds Table
+      ======================================================================== */}
       <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
         <SectionHeader
           title="Registered Funds"
@@ -546,7 +862,9 @@ export default function TreasuryPage() {
         )}
       </div>
 
-      {/* ── Modals ── */}
+      {/* ========================================================================
+          MODALS
+      ======================================================================== */}
       {showWithdraw && (
         <WithdrawModal
           available={stats.totalFeesCollectedUSDC}

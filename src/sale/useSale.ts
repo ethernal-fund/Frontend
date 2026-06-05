@@ -1,286 +1,289 @@
-import { useCallback, useEffect } from 'react'
+
+import { useCallback, useEffect }          from 'react'
+import { useQuery, useQueryClient }        from '@tanstack/react-query'
+import { getDefaultSaleChainId }           from '@/sale/saleAddresses'
 import {
-  useConnection,
+  useAccount,
   useSwitchChain,
-  useReadContract,
   useReadContracts,
-  useWriteContract,
-  useWaitForTransactionReceipt,
-} from 'wagmi'
-import { parseUnits, formatUnits, type Address, type Hash } from 'viem'
-import { useQueryClient } from '@tanstack/react-query'
+}                                          from 'wagmi'
+import { type Address, type Hash, parseUnits, formatUnits } from 'viem'
 import {
-  SALE_ADDRESS,
-  SALE_CHAIN_ID,
-  USDC_ADDRESS,
+  fetchCurrentRoundFromBackend,
+  fetchUserPurchaseFromBackend,
+  verifyPurchaseOnBackend,
+  convertRoundResponse,
+  convertPurchaseResponse,
+  getSaleAddress,
+  getUSDCAddress,
+  isSaleSupported,
   SALE_ABI,
   USDC_ABI,
-  parseRound,
-  parsePurchase,
-  calcTokensOut as calcTokensOutPure,
-  needsApproval as needsApprovalPure,
   formatUSDC,
   formatETRF,
-} from '@/sale/saleService'
-import { useSaleStore } from '@/sale/saleStore'
-import type { RoundInfo, UserPurchase } from '@/sale/types'
+  calcTokensOut as calcTokensOutPure,
+  needsApproval as needsApprovalPure,
+}                                          from './saleService'
+import { useSaleStore }                    from '@/sale/saleStore'
+import { useSaleWriter }                   from './useSaleWriter'
+import type { SaleOp }                     from './useSaleWriter'
+import type { RoundInfo, UserPurchase }    from './types'
+import { useAuthStore }                    from '@/stores/authStore'
 
-// Re-exports para componentes que no importan saleService directamente
-export { formatUSDC, formatETRF, SALE_ABI, SALE_ADDRESS, USDC_ADDRESS }
+export { formatUSDC, formatETRF }
+export type { SaleOp }
+
+// ─── Public interface ─────────────────────────────────────────────────────────
 
 export interface UseSaleReturn {
-  // Estado on-chain
-  round:         RoundInfo | null
-  purchase:      UserPurchase | null
-  usdcBalance:   string                                       // formateado: "1234.56"
-  usdcAllowance: string                                       // formateado: "1234.56"
-  userAddress:   Address | undefined
+  // ── Data ──
+  round:           RoundInfo | null
+  purchase:        UserPurchase | null
+  usdcBalance:     string
+  usdcAllowance:   string
+  userAddress:     Address | undefined
+  currentChainId:  number | undefined
 
-  // Chain
+  // ── Loading / error ──
+  isRoundLoading:  boolean
+  isUserLoading:   boolean
+  roundError:      Error | null
+  userError:       Error | null
+
+  // ── Chain ──
   isWrongChain:      boolean
+  isSaleAvailable:   boolean
   switchToSaleChain: () => void
   isSwitchingChain:  boolean
 
-  // Helpers puros (sin side effects)
+  // ── Helpers ──
   calcTokensOut: (usdcAmount: string) => string
   needsApproval: (usdcAmount: string) => boolean
+  refetch:       () => void
 
-  // Estado de la última tx en vuelo
-  refetch:      () => void
+  // ── Tx state ──
   txHash:       Hash | undefined
-  isPending:    boolean                                         // wallet abierta, esperando firma
-  isConfirming: boolean                                         // tx en mempool, esperando confirmación
-  isConfirmed:  boolean                                         // tx confirmada on-chain
+  activeOp:     SaleOp | null     // which operation is in flight
+  isPending:    boolean
+  isConfirming: boolean
+  isConfirmed:  boolean
   error:        Error | null
 
-  // Mutaciones
+  // ── Actions ──
+  resetTxState: () => void
   approveUSDC:  (usdcAmount: string) => Promise<Hash>
   buyTokens:    (usdcAmount: string) => Promise<Hash>
   claimTokens:  () => Promise<Hash>
 }
 
-async function notifyBackend(txHash: Hash, jwt: string | null): Promise<void> {
-  const apiUrl = import.meta.env.VITE_API_URL
-  if (!apiUrl) return
-  try {
-    await fetch(`${apiUrl}/api/sale/verify-purchase`, {
-      method:  'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(jwt ? { Authorization: `Bearer ${jwt}` } : {}),
-      },
-      body: JSON.stringify({ txHash }),
-    })
-  } catch {
-    // Silencioso: el indexer lo captura en el próximo poll
-  }
-}
+// ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useSale(): UseSaleReturn {
-  const {
-    address,
-    isConnected,
-    chainId: connectedChainId,
-  } = useConnection()
-
+  // useAccount is the canonical wagmi hook — exposes address, isConnected, chainId
+  const { address, isConnected, chainId: connectedChainId } = useAccount()
   const switchChain  = useSwitchChain()
   const queryClient  = useQueryClient()
 
-  // Store
+  const jwt = useAuthStore(s => s.sessions.sale?.accessToken ?? null)
+
+  // ── Chain availability ───────────────────────────────────────────────────────
+  const isSaleAvailable = isConnected && !!connectedChainId && isSaleSupported(connectedChainId)
+  const isWrongChain    = isConnected && !!connectedChainId && !isSaleSupported(connectedChainId)
+
+  // ── Round (public, no JWT required) ─────────────────────────────────────────
   const {
-    setRound,
-    setPurchase,
-    setBalances,
-    setTxPending,
-    setTxConfirming,
-    setTxConfirmed,
-    setTxError,
-    resetUser,
-    jwt,
-  } = useSaleStore()
-
-  // Validación de chain
-  // connectedChainId puede ser undefined mientras el conector está inicializando.
-  // En ese caso no forzamos wrong-chain para evitar un flash del banner de error.
-  const isWrongChain = isConnected && connectedChainId !== undefined && connectedChainId !== SALE_CHAIN_ID
-
-  const switchToSaleChain = useCallback(() => {
-    switchChain.mutate({ chainId: SALE_CHAIN_ID })
-  }, [switchChain])
-
-  // ── Lectura pública de la ronda — siempre habilitada, sin wallet ──────────
-  // getCurrentRound es una función view pública del contrato. No requiere
-  // wallet conectada ni chain correcta del usuario: usamos la chain de la sale
-  // directamente vía wagmi con chainId explícito.
-  const { data: rawRoundPublic, refetch: refetchRound } = useReadContract({
-    address:      SALE_ADDRESS,
-    abi:          SALE_ABI,
-    functionName: 'getCurrentRound',
-    chainId:      SALE_CHAIN_ID,
-    query: {
-      enabled:         true,          // siempre activo, incluso sin wallet
-      staleTime:       10_000,
-      refetchInterval: 30_000,
-    },
+    data:     backendRound,
+    isLoading: isRoundLoading,
+    error:     roundError,
+    refetch:   refetchRound,
+  } = useQuery({
+    queryKey: ['sale', 'round'],
+    queryFn:  () => fetchCurrentRoundFromBackend(),
+    staleTime:       30_000,
+    refetchInterval: 60_000,
   })
 
-  // ── Lecturas que requieren wallet conectada (datos del usuario) ───────────
-  // enabled = false sin wallet o en wrong chain: evita RPC errors y
-  // llamadas innecesarias cuando el usuario no está listo para operar.
-  const { data: userReads, refetch: refetchUser } = useReadContracts({
+  const round: RoundInfo | null = backendRound
+    ? convertRoundResponse(backendRound)
+    : null
+
+  // ── User purchase (requires JWT + correct chain) ─────────────────────────────
+  const {
+    data:     backendPurchase,
+    isLoading: isUserLoading,
+    error:     userError,
+    refetch:   refetchUserPurchase,
+  } = useQuery({
+    queryKey: ['sale', 'my-purchase', jwt],
+    queryFn:  () => fetchUserPurchaseFromBackend(jwt!),
+    enabled:  !!jwt && isSaleAvailable,
+    staleTime: 10_000,
+  })
+
+  const purchase: UserPurchase | null = backendPurchase
+    ? convertPurchaseResponse(backendPurchase)
+    : null
+
+  // ── On-chain USDC reads ──────────────────────────────────────────────────────
+  const usdcContractBase = {
+    address: getUSDCAddress(connectedChainId ?? 0) as Address,
+    abi:     USDC_ABI,
+  } as const
+
+  const saleAddress = getSaleAddress(connectedChainId ?? 0)
+
+  const { data: usdcData, queryKey: usdcQueryKey } = useReadContracts({
     contracts: [
-      {
-        address:      SALE_ADDRESS,
-        abi:          SALE_ABI,
-        functionName: 'getUserPurchase',
-        args:         address ? [address] : undefined,
-      },
-      {
-        address:      USDC_ADDRESS,
-        abi:          USDC_ABI,
-        functionName: 'balanceOf',
-        args:         address ? [address] : undefined,
-      },
-      {
-        address:      USDC_ADDRESS,
-        abi:          USDC_ABI,
-        functionName: 'allowance',
-        args:         address ? [address, SALE_ADDRESS] : undefined,
-      },
+      { ...usdcContractBase, functionName: 'balanceOf', args: [address ?? '0x0'] },
+      { ...usdcContractBase, functionName: 'allowance', args: [address ?? '0x0', saleAddress] },
     ],
     query: {
-      enabled:         Boolean(isConnected && address && !isWrongChain),
-      staleTime:       10_000,
-      refetchInterval: 30_000,
+      enabled:   !!address && isSaleAvailable,
+      staleTime: 15_000,
     },
   })
 
-  const refetch = useCallback(() => {
-    void refetchRound()
-    void refetchUser()
-  }, [refetchRound, refetchUser])
+  const usdcBalance   = usdcData?.[0]?.result != null
+    ? formatUnits(usdcData[0].result as bigint, 6)
+    : '0'
 
-  // Parseo de resultados on-chain
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawRound     = rawRoundPublic as any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawPurchase  = userReads?.[0]?.status === 'success' ? (userReads[0].result as any) : undefined
-  const rawUsdcBal   = userReads?.[1]?.status === 'success' ? (userReads[1].result as bigint) : undefined
-  const rawAllowance = userReads?.[2]?.status === 'success' ? (userReads[2].result as bigint) : undefined
+  const usdcAllowance = usdcData?.[1]?.result != null
+    ? formatUnits(usdcData[1].result as bigint, 6)
+    : '0'
 
-  const round:    RoundInfo | null    = rawRound    ? parseRound(rawRound)       : null
-  const purchase: UserPurchase | null = rawPurchase ? parsePurchase(rawPurchase) : null
-  const usdcBalance   = rawUsdcBal   !== undefined ? formatUnits(rawUsdcBal,   6) : '0'
-  const usdcAllowance = rawAllowance !== undefined ? formatUnits(rawAllowance,  6) : '0'
-
-  // Sync al store
-  useEffect(() => { setRound(round)       }, [round,    setRound])
-  useEffect(() => { setPurchase(purchase) }, [purchase, setPurchase])
+  // ── Sync to saleStore ────────────────────────────────────────────────────────
+  // The store acts as a snapshot for components outside the hook tree
+  // (e.g. ETRFTokenCard in a different subtree). Keep writes minimal.
+  useEffect(() => { useSaleStore.getState().setRound(round)       }, [round])
+  useEffect(() => { useSaleStore.getState().setPurchase(purchase) }, [purchase])
   useEffect(() => {
-    setBalances(usdcBalance, usdcAllowance, '0') // etrfBalance: leer si se necesita en UI
-  }, [usdcBalance, usdcAllowance, setBalances])
+    useSaleStore.getState().setBalances(usdcBalance, usdcAllowance, '0')
+  }, [usdcBalance, usdcAllowance])
 
-  // Reset completo del store al desconectar wallet
-  useEffect(() => {
-    if (!isConnected) resetUser()
-  }, [isConnected, resetUser])
+  // ── Single writer — replaces triple useWriteContract ────────────────────────
+  const saleWriter = useSaleWriter()
 
-  // Mutaciones
-  // Tres instancias separadas para que approve / buy / claim
-  // tengan isPending / error independientes y no se mezclen en la UI.
-  const approve = useWriteContract()
-  const buy     = useWriteContract()
-  const claim   = useWriteContract()
+  // ── Contract actions ─────────────────────────────────────────────────────────
 
-  // txHash refleja la última tx activa en orden de prioridad: buy > approve > claim
-  const txHash    = buy.data ?? approve.data ?? claim.data
-  const isPending = approve.isPending || buy.isPending || claim.isPending
-  const error     = approve.error     || buy.error     || claim.error
+  const approveUSDC = useCallback(async (usdcAmount: string): Promise<Hash> => {
+    if (!connectedChainId || !isSaleSupported(connectedChainId)) {
+      throw new Error('Sale not available on this chain')
+    }
 
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({ hash: txHash })
+    const hash = await saleWriter.write('approve', {
+      chainId:      connectedChainId,
+      address:      getUSDCAddress(connectedChainId),
+      abi:          USDC_ABI,
+      functionName: 'approve',
+      args:         [getSaleAddress(connectedChainId), parseUnits(usdcAmount, 6)],
+    })
 
-  // Sync estado de tx al store
-  useEffect(() => {
-    if (isPending && txHash) setTxConfirming(txHash)
-    else if (isPending)      setTxPending()
-  }, [isPending, txHash, setTxPending, setTxConfirming])
+    await queryClient.invalidateQueries({ queryKey: usdcQueryKey })
 
-  useEffect(() => {
-    if (isConfirmed && txHash) setTxConfirmed(txHash)
-  }, [isConfirmed, txHash, setTxConfirmed])
+    return hash
+  }, [saleWriter, connectedChainId, queryClient, usdcQueryKey])
 
-  useEffect(() => {
-    if (error) setTxError(error.message)
-  }, [error, setTxError])
+  const buyTokens = useCallback(async (usdcAmount: string): Promise<Hash> => {
+    if (!connectedChainId || !isSaleSupported(connectedChainId)) {
+      throw new Error('Sale not available on this chain')
+    }
 
-  // Helpers puros
+    const hash = await saleWriter.write('buy', {
+      chainId:      connectedChainId,
+      address:      getSaleAddress(connectedChainId),
+      abi:          SALE_ABI,
+      functionName: 'buy',
+      args:         [parseUnits(usdcAmount, 6)],
+    })
+
+    // Fire-and-forget backend notification.
+    // The indexer covers this if the call fails.
+    if (jwt) {
+      verifyPurchaseOnBackend(hash, jwt).catch(() => {})
+    }
+
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: usdcQueryKey }),
+      queryClient.invalidateQueries({ queryKey: ['sale', 'my-purchase', jwt] }),
+    ])
+    await refetchUserPurchase()
+
+    return hash
+  }, [saleWriter, connectedChainId, jwt, queryClient, usdcQueryKey, refetchUserPurchase])
+
+  const claimTokens = useCallback(async (): Promise<Hash> => {
+    if (!connectedChainId || !isSaleSupported(connectedChainId)) {
+      throw new Error('Sale not available on this chain')
+    }
+
+    const hash = await saleWriter.write('claim', {
+      chainId:      connectedChainId,
+      address:      getSaleAddress(connectedChainId),
+      abi:          SALE_ABI,
+      functionName: 'claim',
+      args:         [],
+    })
+
+    await queryClient.invalidateQueries({ queryKey: ['sale', 'my-purchase', jwt] })
+    await refetchUserPurchase()
+
+    return hash
+  }, [saleWriter, connectedChainId, jwt, queryClient, refetchUserPurchase])
+
+  // ── Derived helpers ──────────────────────────────────────────────────────────
+
   const calcTokensOut = useCallback(
     (usdcAmount: string) => calcTokensOutPure(usdcAmount, round?.price ?? 0n),
     [round?.price],
   )
 
   const needsApproval = useCallback(
-    (usdcAmount: string) => needsApprovalPure(usdcAmount, rawAllowance ?? 0n),
-    [rawAllowance],
+    (usdcAmount: string) => needsApprovalPure(usdcAmount, parseUnits(usdcAllowance, 6)),
+    [usdcAllowance],
   )
 
-  // Mutaciones tipadas
-  const approveUSDC = useCallback(async (usdcAmount: string): Promise<Hash> => {
-    const hash = await approve.mutateAsync({
-      address:      USDC_ADDRESS,
-      abi:          USDC_ABI,
-      functionName: 'approve',
-      args:         [SALE_ADDRESS, parseUnits(usdcAmount, 6)],
-    })
-    // Refrescar allowance inmediatamente para que el BuyForm refleje el nuevo estado
-    await queryClient.invalidateQueries()
-    return hash
-  }, [approve, queryClient])
+  const switchToSaleChain = useCallback(() => {
+    switchChain.mutate({ chainId: getDefaultSaleChainId() })
+  }, [switchChain])
 
-  const buyTokens = useCallback(async (usdcAmount: string): Promise<Hash> => {
-    const hash = await buy.mutateAsync({
-      address:      SALE_ADDRESS,
-      abi:          SALE_ABI,
-      functionName: 'buy',
-      args:         [parseUnits(usdcAmount, 6)],
-    })
-    await queryClient.invalidateQueries()
-    // Notificar backend para indexado inmediato — fire-and-forget
-    void notifyBackend(hash, jwt ?? null)
-    return hash
-  }, [buy, queryClient, jwt])
+  const refetch = useCallback(() => {
+    refetchRound()
+    refetchUserPurchase()
+  }, [refetchRound, refetchUserPurchase])
 
-  const claimTokens = useCallback(async (): Promise<Hash> => {
-    const hash = await claim.mutateAsync({
-      address:      SALE_ADDRESS,
-      abi:          SALE_ABI,
-      functionName: 'claim',
-      args:         [],
-    })
-    await queryClient.invalidateQueries()
-    // Notificar claim para actualizar claim_events en el backend
-    void notifyBackend(hash, jwt ?? null)
-    return hash
-  }, [claim, queryClient, jwt])
+  // ── Return ───────────────────────────────────────────────────────────────────
 
   return {
     round,
     purchase,
     usdcBalance,
     usdcAllowance,
-    userAddress:       address,
+    userAddress:    address,
+    currentChainId: connectedChainId,
+
+    isRoundLoading,
+    isUserLoading,
+    roundError,
+    userError,
+
     isWrongChain,
+    isSaleAvailable,
     switchToSaleChain,
-    isSwitchingChain:  switchChain.isPending,
+    isSwitchingChain: switchChain.isPending,
+
     calcTokensOut,
     needsApproval,
     refetch,
-    txHash,
-    isPending,
-    isConfirming,
-    isConfirmed,
-    error,
+
+    txHash:       saleWriter.txHash,
+    activeOp:     saleWriter.activeOp,
+    isPending:    saleWriter.isPending,
+    isConfirming: saleWriter.isConfirming,
+    isConfirmed:  saleWriter.isConfirmed,
+    error:        saleWriter.error,
+
+    resetTxState: saleWriter.reset,
+
     approveUSDC,
     buyTokens,
     claimTokens,

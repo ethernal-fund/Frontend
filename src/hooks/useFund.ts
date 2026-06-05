@@ -1,11 +1,11 @@
-import { useReadContract, useReadContracts } from 'wagmi';
-import { useChainId }                        from 'wagmi';
-import { useCallback, useMemo }              from 'react';
-import { getContractAddresses }              from '@/config/addresses';
+import { useReadContract, useReadContracts }         from 'wagmi';
+import { useChainId }                                from 'wagmi';
+import { useCallback, useMemo }                      from 'react';
+import { getContractAddresses }                      from '@/config/addresses';
 import { FACTORY_ABI, PERSONAL_FUND_ABI, ERC20_ABI } from '@/config/abis';
-import type { FundInfoTuple }                from '@/config/abis';
-import { useWalletStore }                    from '@/stores/walletStore';
-import type { FundOnChain }                  from '@/types';
+import type { FundInfoTuple }                        from '@/config/abis';
+import { useWalletStore }                            from '@/stores/walletStore';
+import type { FundOnChain }                          from '@/types';
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000' as `0x${string}`;
 
@@ -28,8 +28,7 @@ export function useFund() {
   const owner     = useWalletStore((s) => s.address);
   const chainId   = useChainId();
   const contracts = getContractAddresses(chainId);
-
-  const hasFund = !!fundAddress && fundAddress !== ZERO_ADDR;
+  const hasFund   = !!fundAddress && fundAddress !== ZERO_ADDR;
 
   const { data: results, isLoading: loadingDetails, isError: errorDetails, refetch: refetchDetails } = useReadContracts({
     contracts: hasFund && owner && contracts

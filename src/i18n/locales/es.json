@@ -1168,6 +1168,14 @@
       "subtitle": "Cambia a la red compatible para participar en la venta de ETRF.",
       "switch": "Cambiar red",
       "switching": "Cambiando..."
+    },
+    "error": {
+      "title": "Error al cargar la venta",
+      "retry": "Reintentar"
+    },
+    "notAvailable": {
+      "title": "Venta no disponible",
+      "subtitle": "La venta de tokens ETRF no está disponible en esta red."
     }
   },
   "whitepaper": {

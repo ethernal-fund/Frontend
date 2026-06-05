@@ -7,47 +7,43 @@ import {
   isRouteErrorResponse,
 } from 'react-router-dom';
 
-import { lazy, Suspense }  from 'react';
-import { ROUTES }          from './routes';
-import { ProtectedRoute }  from './ProtectedRoute';
-import { AdminGuard }      from './AdminGuard';
-import { SessionGuard }    from './SessionGuard';
-import { WalletRoute }     from './WalletRoute';
-import ScrollToTop         from './ScrollToTop';
-import ErrorBoundary       from './ErrorBoundary';
-import LoadingScreen       from '@/components/common/LoadingScreen';
-import Navbar              from '@/components/layout/Navbar';
-import Footer              from '@/components/layout/Footer';
-import { Analytics }       from '@vercel/analytics/react';
+import { lazy, Suspense } from 'react';
+import { ROUTES } from './routes';
+import { ProtectedRoute } from './ProtectedRoute';
+import { AdminGuard } from './AdminGuard';
+import { SessionGuard } from './SessionGuard';
+import ScrollToTop from './ScrollToTop';
+import ErrorBoundary from './ErrorBoundary';
+import LoadingScreen from '@/components/common/LoadingScreen';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import { Analytics } from '@vercel/analytics/react';
 
-// Public pages 
-const HomePage       = lazy(() => import('@/pages/public/LandingPage'));
+// Import AdminLayout (ya tiene Outlet interno)
+import AdminLayout from '@/components/admin/AdminLayout';
+
+const HomePage = lazy(() => import('@/pages/public/LandingPage'));
 const CalculatorPage = lazy(() => import('@/pages/public/CalculatorPage'));
-const ContactPage    = lazy(() => import('@/pages/public/ContactPage'));
-const SurveyPage     = lazy(() => import('@/pages/public/SurveyPage'));
+const ContactPage = lazy(() => import('@/pages/public/ContactPage'));
+const SurveyPage = lazy(() => import('@/pages/public/SurveyPage'));
 const OurHistoryPage = lazy(() => import('@/pages/public/OurHistoryPage'));
-const SalePage       = lazy(() => import('@/pages/public/SalePage'));
-const NotFoundPage   = lazy(() => import('@/pages/public/NotFoundPage'));
+const SalePage = lazy(() => import('@/pages/public/SalePage'));
+const NotFoundPage = lazy(() => import('@/pages/public/NotFoundPage'));
 
-// Legal pages 
-const PrivacyPage    = lazy(() => import('@/pages/legal/PrivacyPage'));
-const TermsPage      = lazy(() => import('@/pages/legal/TermsPage'));
+const PrivacyPage = lazy(() => import('@/pages/legal/PrivacyPage'));
+const TermsPage = lazy(() => import('@/pages/legal/TermsPage'));
 const DisclaimerPage = lazy(() => import('@/pages/legal/DisclaimerPage'));
-const TokenSalePage  = lazy(() => import('@/pages/legal/TokenSalePage'));
+const TokenSalePage = lazy(() => import('@/pages/legal/TokenSalePage'));
 const WhitePaperPage = lazy(() => import('@/pages/legal/WhitePaperPage'));
 
-// User pages 
 const DashboardPage = lazy(() => import('@/pages/user/DashboardPage'));
-const CoursesPage   = lazy(() => import('@/pages/user/CoursesPage'));
-const LearningPage  = lazy(() => import('@/pages/user/LearningPage'));
-
-// Admin pages 
-const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboard'));
-const TreasuryPage      = lazy(() => import('@/pages/admin/TreasuryPage'));
-const ProtocolManager   = lazy(() => import('@/pages/admin/ProtocolManager'));
+const CoursesPage = lazy(() => import('@/pages/user/CoursesPage'));
+const LearningPage = lazy(() => import('@/pages/user/LearningPage'));
+const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'));
+const TreasuryPage = lazy(() => import('@/pages/admin/TreasuryPage'));
+const ProtocolManager = lazy(() => import('@/pages/admin/ProtocolManager'));
 const ContactManagement = lazy(() => import('@/pages/admin/ContactManagement'));
 
-// Root layout
 function RootLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-background-light">
@@ -66,10 +62,10 @@ function RootLayout() {
 }
 
 function RouteErrorFallback() {
-  const error  = useRouteError();
-  const is404  = isRouteErrorResponse(error) && error.status === 404;
+  const error = useRouteError();
+  const is404 = isRouteErrorResponse(error) && error.status === 404;
 
-  const title  = is404
+  const title = is404
     ? 'Page not found'
     : 'Something went wrong';
 
@@ -106,67 +102,95 @@ function RouteErrorFallback() {
   );
 }
 
-// Router 
 const router = createBrowserRouter([
   {
-    path:         '/',
-    element:      <RootLayout />,
-    errorElement: <RouteErrorFallback />,  
+    path: '/',
+    element: <RootLayout />,
+    errorElement: <RouteErrorFallback />,
     children: [
-      { index: true,              element: <HomePage /> },
-      { path: ROUTES.CALCULATOR,  element: <CalculatorPage /> },
-      { path: ROUTES.CONTACT,     element: <ContactPage /> },
-      { path: ROUTES.SURVEY,      element: <SurveyPage /> },
+      // ────────────────────────────────────────────────────────────────────────
+      // Public routes
+      // ────────────────────────────────────────────────────────────────────────
+      { index: true, element: <HomePage /> },
+      { path: ROUTES.CALCULATOR, element: <CalculatorPage /> },
+      { path: ROUTES.CONTACT, element: <ContactPage /> },
+      { path: ROUTES.SURVEY, element: <SurveyPage /> },
       { path: ROUTES.OUR_HISTORY, element: <OurHistoryPage /> },
-      { path: ROUTES.SALE,        element: <SalePage /> },
+      { path: ROUTES.SALE, element: <SalePage /> },
 
-      // Legal
-      { path: ROUTES.PRIVACY,    element: <PrivacyPage /> },
-      { path: ROUTES.TERMS,      element: <TermsPage /> },
+      // ────────────────────────────────────────────────────────────────────────
+      // Legal routes
+      // ────────────────────────────────────────────────────────────────────────
+      { path: ROUTES.PRIVACY, element: <PrivacyPage /> },
+      { path: ROUTES.TERMS, element: <TermsPage /> },
       { path: ROUTES.DISCLAIMER, element: <DisclaimerPage /> },
-      { path: ROUTES.TOKEN,      element: <TokenSalePage /> },
+      { path: ROUTES.TOKEN, element: <TokenSalePage /> },
       { path: ROUTES.WHITEPAPER, element: <WhitePaperPage /> },
 
+      // ────────────────────────────────────────────────────────────────────────
+      // User routes (requieren autenticación SIWE)
+      // ────────────────────────────────────────────────────────────────────────
       {
         path: ROUTES.DASHBOARD,
-        element: <WalletRoute><DashboardPage/></WalletRoute>
+        element: (
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: ROUTES.COURSES,
+        element: (
+          <ProtectedRoute>
+            <CoursesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: ROUTES.LEARNING,
+        element: (
+          <ProtectedRoute>
+            <LearningPage />
+          </ProtectedRoute>
+        ),
       },
 
-      // Protected — requires authenticated wallet
+      // ────────────────────────────────────────────────────────────────────────
+      // Admin routes (requieren wallet autorizada en Gnosis Safe)
+      // ────────────────────────────────────────────────────────────────────────
       {
-        path:    ROUTES.COURSES,
-        element: <ProtectedRoute><CoursesPage /></ProtectedRoute>,
-      },
-      {
-        path:    ROUTES.LEARNING,
-        element: <ProtectedRoute><LearningPage /></ProtectedRoute>,
-      },
-
-      // Admin — requires on-chain admin role (AdminGuard)
-      {
-        path:    ROUTES.ADMIN,
+        path: ROUTES.ADMIN,
         element: <AdminGuard />,
         children: [
-          { index: true,         element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
-          { path: 'dashboard',   element: <AdminDashboard /> },
-          { path: 'treasury',    element: <TreasuryPage /> },
-          { path: 'protocols',   element: <ProtocolManager /> },
-          { path: 'contact',     element: <ContactManagement /> },
+          {
+            // AdminLayout tiene <Outlet /> interno - patrón estándar de React Router
+            element: <AdminLayout />,
+            children: [
+              { index: true, element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
+              { path: 'dashboard', element: <AdminDashboard /> },
+              { path: 'treasury', element: <TreasuryPage /> },
+              { path: 'protocols', element: <ProtocolManager /> },
+              { path: 'contact', element: <ContactManagement /> },
+            ],
+          },
         ],
       },
 
-      // Legacy redirects — do not remove (linked from external sites / emails)
+      // ────────────────────────────────────────────────────────────────────────
+      // Legacy redirects (do not remove - linked from external sites/emails)
+      // ────────────────────────────────────────────────────────────────────────
       { path: ROUTES.LEGACY_ADMIN_LOGIN, element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace /> },
-      { path: ROUTES.LEGACY_GOVERNANCE,  element: <Navigate to={ROUTES.DASHBOARD}       replace /> },
-      { path: ROUTES.LEGACY_FUND,        element: <Navigate to={ROUTES.COURSES}          replace /> },
+      { path: ROUTES.LEGACY_GOVERNANCE, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
+      { path: ROUTES.LEGACY_FUND, element: <Navigate to={ROUTES.COURSES} replace /> },
 
-      // 404
+      // ────────────────────────────────────────────────────────────────────────
+      // 404 catch-all (debe ir al final)
+      // ────────────────────────────────────────────────────────────────────────
       { path: ROUTES.NOT_FOUND, element: <NotFoundPage /> },
     ],
   },
 ]);
 
-// App entry point 
 export default function AppRouter() {
   return (
     <ErrorBoundary>
@@ -175,9 +199,8 @@ export default function AppRouter() {
   );
 }
 
-// Re-exports de conveniencia (consumidos por index.ts) 
-export { ROUTES, ROUTE_META }                         from './routes';
-export type { AppRoute, RouteMeta, RouteGuard }        from './routes';
-export { ProtectedRoute }                             from './ProtectedRoute';
-export { default as ScrollToTop }                     from './ScrollToTop';
-export { default as ErrorBoundary }                   from './ErrorBoundary';
+export { ROUTES, ROUTE_META } from './routes';
+export type { AppRoute, RouteMeta, RouteGuard } from './routes';
+export { ProtectedRoute } from './ProtectedRoute';
+export { default as ScrollToTop } from './ScrollToTop';
+export { default as ErrorBoundary } from './ErrorBoundary';

@@ -61,21 +61,31 @@ async function autoLogin(address: string): Promise<void> {
   try {
     const walletClient = await getWalletClient(wagmiConfig)
     if (!walletClient) return
-    const { nonce, message } = await SiweService.getNonce(address)
+    
+    // 1. Obtener nonce
+    const { message } = await SiweService.getNonce(address, 'retirement')
+    
+    // 2. Firmar mensaje
     const signature = await walletClient.signMessage({ message })
-    const token = await SiweService.verify(address, message, signature, nonce)
+    
+    // 3. Verificar firma (SOLO message + signature)
+    const { access_token, refresh_token, wallet_address: verifiedAddress, expires_in, refresh_expires_in } = 
+      await SiweService.verify(message, signature)
 
-    setTokens(token, address)
+    // 4. Guardar tokens
+    setTokens(
+      access_token,
+      refresh_token,
+      verifiedAddress,
+      'retirement', 
+      expires_in,
+      refresh_expires_in,
+    )
 
   } catch (err: unknown) {
     const code = (err as { code?: number })?.code
-
-    // User intentionally rejected the signature prompt — silent, expected UX
     if (code !== undefined && USER_REJECTED_CODES.has(code)) return
-
     console.warn('[web3] SIWE auto-login failed:', err)
-
-    // Reset so the user can retry manually (useSiweAuth / useSiweSession)
     lastAddress = null
 
   } finally {

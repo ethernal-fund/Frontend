@@ -13,10 +13,11 @@
 │   Frontend   │   Faucet API     │   Contracts           │
 │   (Vercel)   │   (Render)       │   (Blockchain)        │
 │              │                  │                       │
-│  React 19    │  FastAPI         │  Vyper 0.4.3          │
-│  Vite 7      │  PostgreSQL      │  Arbitrum Sepolia     │
-│  Wagmi v3    │  Redis           │  Polygon Amoy         │
-│  TypeScript  │  Celery          │                       │
+│  React 19    │  FastAPI         │  Vyper 0.4.3          │  
+│  Vite 7      │  PostgreSQL      │  Sepolia              │  
+│  Wagmi v3    │  Redis           │  Arbitrum Sepolia     │
+│  TypeScript  │  Celery          │  Polygon Amoy         │
+│              │                  │                       │
 └──────────────┴──────────────────┴───────────────────────┘
                         │
               ┌─────────┴─────────┐

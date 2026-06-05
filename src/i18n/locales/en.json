@@ -663,7 +663,7 @@
       "title": "Privacy Policy",
       "s1": {
         "title": "Introduction",
-        "body": "This Privacy Policy describes how FondoRetiro DeFi (hereinafter, 'the Protocol') handles information from users who interact with the smart contracts deployed on the public blockchain. By using the Protocol, you acknowledge that you have read, understood, and accepted the terms set forth herein."
+        "body": "This Privacy Policy describes how FondoRetiro DeFi ('the Protocol') handles information from users who interact with the smart contracts deployed on the public blockchain. By using the Protocol, you acknowledge that you have read, understood, and accepted the terms set forth herein."
       },
       "s2": {
         "title": "Information Recorded on Blockchain",
@@ -1168,6 +1168,14 @@
       "subtitle": "Please switch to the supported network to participate in the ETRF sale.",
       "switch": "Switch network",
       "switching": "Switching..."
+    },
+    "error": {
+      "title": "Error loading sale",
+      "retry": "Retry"
+    },
+    "notAvailable": {
+      "title": "Sale Not Available",
+      "subtitle": "The ETRF token sale is not available on this network."
     }
   },
   "whitepaper": {
