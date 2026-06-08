@@ -1,16 +1,15 @@
-import { useState }            from 'react';
-import { formatUnits }         from 'viem';
-import { useConnection }       from 'wagmi';
-import { useTranslation }      from 'react-i18next';
-import { useSale }             from '@/sale/useSale';
-import { formatUSDC }          from '@/sale/saleService';
-import { RoundProgress }       from '@/sale/components/RoundProgress';
-import { WalletGate }          from '@/sale/components/WalletGate';
-import { BuyForm }             from '@/sale/components/BuyForm';
-import { VestingTracker }      from '@/sale/components/VestingTracker';
-import { TokenomicsCard }      from '@/sale/components/TokenomicsCard';
-import { TokenomicsModal }     from '@/sale/components/TokenomicsModal';
-import type { RoundInfo }      from '@/sale/types';
+import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useConnection } from 'wagmi'
+import { useSale } from '@/sale/useSale'
+import { RoundProgress } from '@/sale/components/RoundProgress'
+import { WalletGate } from '@/sale/components/WalletGate'
+import { BuyForm } from '@/sale/components/BuyForm'
+import { VestingTracker } from '@/sale/components/VestingTracker'
+import { TokenomicsCard } from '@/sale/components/TokenomicsCard'
+import { TokenomicsModal } from '@/sale/components/TokenomicsModal'
+import { RefreshCw, WifiOff, ServerCrash } from 'lucide-react'
+import type { RoundInfo } from '@/sale/types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SalePage — public page, no wallet required to view
@@ -25,15 +24,28 @@ import type { RoundInfo }      from '@/sale/types';
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function SalePage() {
-  const { isConnected } = useConnection();
-  const { t }           = useTranslation();
-  const sale            = useSale();
-  const hasPurchased    = sale.purchase?.hasPurchased ?? false;
-  const isWrongChain    = sale.isWrongChain;
-  const isRoundLoading  = sale.isRoundLoading;
-  const isActionLoading = isConnected && !isWrongChain && sale.isRoundLoading;
+  const { isConnected } = useConnection()
+  const { t } = useTranslation()
+  const sale = useSale()
 
-  const [tokenomicsOpen, setTokenomicsOpen] = useState(false);
+  const hasPurchased = sale.purchase?.hasPurchased ?? false
+  const isWrongChain = sale.isWrongChain
+  const isRoundLoading = sale.isRoundLoading
+  const isRoundTimeout = sale.isRoundTimeout
+  const roundError = sale.roundError
+
+  const [tokenomicsOpen, setTokenomicsOpen] = useState(false)
+
+  // Show error toast when round fails to load
+  useEffect(() => {
+    if (roundError && !isRoundLoading) {
+      console.warn('[SalePage] Round loading error:', roundError)
+    }
+  }, [roundError, isRoundLoading])
+
+  const handleRetry = useCallback(() => {
+    sale.refetch()
+  }, [sale])
 
   return (
     <div
@@ -99,12 +111,18 @@ export default function SalePage() {
               border: '0.5px solid rgba(255,255,255,0.07)',
             }}
           >
-            {isRoundLoading
-              ? <RoundSkeleton />
-              : sale.round
-                ? <RoundProgress round={sale.round} />
-                : <NoRoundBanner />
-            }
+            {/* Round Progress or Error State */}
+            {isRoundLoading && !isRoundTimeout ? (
+              <RoundSkeleton />
+            ) : isRoundTimeout ? (
+              <RoundTimeoutBanner onRetry={handleRetry} />
+            ) : roundError ? (
+              <RoundErrorBanner error={roundError} onRetry={handleRetry} />
+            ) : sale.round ? (
+              <RoundProgress round={sale.round} />
+            ) : (
+              <NoRoundBanner />
+            )}
 
             <TokenomicsCard onClick={() => setTokenomicsOpen(true)} />
 
@@ -115,8 +133,8 @@ export default function SalePage() {
             >
               {[
                 { label: t('sale.page.links.whitepaper'), href: 'https://ethernal.fund/whitepaper' },
-                { label: t('sale.page.links.audit'),      href: 'https://ethernal.fund/audit'      },
-                { label: t('sale.page.links.docs'),       href: 'https://ethernal.fund/docs'       },
+                { label: t('sale.page.links.audit'), href: 'https://ethernal.fund/audit' },
+                { label: t('sale.page.links.docs'), href: 'https://ethernal.fund/docs' },
               ].map(({ label, href }) => (
                 <a
                   key={label}
@@ -168,10 +186,10 @@ export default function SalePage() {
             )}
 
             {/* 3 · Connected, correct chain, waiting for on-chain data */}
-            {isConnected && !isWrongChain && isActionLoading && <FormSkeleton />}
+            {isConnected && !isWrongChain && sale.isUserLoading && <FormSkeleton />}
 
             {/* 4 · Connected, correct chain, data ready */}
-            {isConnected && !isWrongChain && !isActionLoading && sale.round && (
+            {isConnected && !isWrongChain && !sale.isUserLoading && sale.round && (
               <>
                 {/* Vesting tracker — only when user has an existing purchase */}
                 {hasPurchased && sale.purchase && (
@@ -239,19 +257,23 @@ export default function SalePage() {
 
       <TokenomicsModal isOpen={tokenomicsOpen} onClose={() => setTokenomicsOpen(false)} />
     </div>
-  );
+  )
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Sub-components
+// ─────────────────────────────────────────────────────────────────────────────
+
 interface PublicRoundSummaryProps {
-  round: RoundInfo;
+  round: RoundInfo
 }
 
 function PublicRoundSummary({ round }: PublicRoundSummaryProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const raisedNum  = Number(formatUnits(round.raised,  6));
-  const hardCapNum = Number(formatUnits(round.hardCap, 6));
-  const pct        = hardCapNum > 0 ? Math.min((raisedNum / hardCapNum) * 100, 100) : 0;
+  const raisedNum = Number(formatUnits(round.raised, 6))
+  const hardCapNum = Number(formatUnits(round.hardCap, 6))
+  const pct = hardCapNum > 0 ? Math.min((raisedNum / hardCapNum) * 100, 100) : 0
 
   return (
     <div
@@ -264,8 +286,8 @@ function PublicRoundSummary({ round }: PublicRoundSummaryProps) {
           className="text-[10px] font-medium tracking-[0.2em] uppercase px-2.5 py-1 rounded-full"
           style={{
             background: round.status === 'active' ? 'rgba(137,113,72,0.15)' : 'rgba(255,255,255,0.06)',
-            color:      round.status === 'active' ? '#c4a96a'               : '#666',
-            border:     `0.5px solid ${round.status === 'active' ? 'rgba(137,113,72,0.4)' : 'rgba(255,255,255,0.1)'}`,
+            color: round.status === 'active' ? '#c4a96a' : '#666',
+            border: `0.5px solid ${round.status === 'active' ? 'rgba(137,113,72,0.4)' : 'rgba(255,255,255,0.1)'}`,
           }}
         >
           {round.status === 'active' ? t('sale.round.live') : t('sale.round.ended')}
@@ -344,16 +366,20 @@ function PublicRoundSummary({ round }: PublicRoundSummaryProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
+// Missing import
+import { formatUnits } from 'viem'
+import { formatUSDC } from '@/sale/saleService'
+
 interface WrongChainProps {
-  onSwitch:    () => void;
-  isSwitching: boolean;
+  onSwitch: () => void
+  isSwitching: boolean
 }
 
 function WrongChain({ onSwitch, isSwitching }: WrongChainProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
@@ -366,8 +392,8 @@ function WrongChain({ onSwitch, isSwitching }: WrongChainProps) {
             d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
             stroke="#e05252" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"
           />
-          <line x1="12" y1="9"  x2="12"    y2="13"   stroke="#e05252" strokeWidth="1"   strokeLinecap="round"/>
-          <line x1="12" y1="17" x2="12.01" y2="17"   stroke="#e05252" strokeWidth="1.5" strokeLinecap="round"/>
+          <line x1="12" y1="9" x2="12" y2="13" stroke="#e05252" strokeWidth="1" strokeLinecap="round"/>
+          <line x1="12" y1="17" x2="12.01" y2="17" stroke="#e05252" strokeWidth="1.5" strokeLinecap="round"/>
         </svg>
       </div>
 
@@ -386,8 +412,8 @@ function WrongChain({ onSwitch, isSwitching }: WrongChainProps) {
         disabled={isSwitching}
         className="px-10 py-3.5 text-sm tracking-[0.15em] uppercase font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
-          background:   isSwitching ? 'rgba(137,113,72,0.3)' : '#897148',
-          color:        '#f7f8f6',
+          background: isSwitching ? 'rgba(137,113,72,0.3)' : '#897148',
+          color: '#f7f8f6',
           borderRadius: '2px',
         }}
       >
@@ -401,14 +427,14 @@ function WrongChain({ onSwitch, isSwitching }: WrongChainProps) {
         )}
       </button>
     </div>
-  );
+  )
 }
 
 function RoundSkeleton() {
   return (
     <div className="space-y-4 animate-pulse">
-      <div className="h-4 rounded w-1/3"  style={{ background: 'rgba(255,255,255,0.06)' }} />
-      <div className="h-8 rounded w-2/3"  style={{ background: 'rgba(255,255,255,0.04)' }} />
+      <div className="h-4 rounded w-1/3" style={{ background: 'rgba(255,255,255,0.06)' }} />
+      <div className="h-8 rounded w-2/3" style={{ background: 'rgba(255,255,255,0.04)' }} />
       <div className="h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }} />
       <div className="grid grid-cols-3 gap-1">
         {[0, 1, 2].map((i) => (
@@ -416,20 +442,98 @@ function RoundSkeleton() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
-function FormSkeleton() {
+function RoundTimeoutBanner({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation()
+
   return (
-    <div className="space-y-4 animate-pulse">
-      <div className="h-14 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
-      <div className="h-24 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
-      <div className="h-12 rounded" style={{ background: 'rgba(137,113,72,0.1)'  }} />
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center mb-5"
+        style={{
+          background: 'rgba(245,158,11,0.1)',
+          border: '0.5px solid rgba(245,158,11,0.25)',
+        }}
+      >
+        <WifiOff size={20} style={{ color: '#f59e0b' }} />
+      </div>
+      <p
+        className="text-lg font-light mb-2"
+        style={{ color: '#f7f8f6', fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      >
+        {t('sale.error.timeoutTitle', { defaultValue: 'Loading timeout' })}
+      </p>
+      <p className="text-xs max-w-xs leading-relaxed mb-5" style={{ color: '#555' }}>
+        {t('sale.error.timeoutMessage', { defaultValue: 'The sale round is taking longer than expected to load.' })}
+      </p>
+      <button
+        onClick={onRetry}
+        className="px-6 py-2 text-xs tracking-widest uppercase font-medium transition-all"
+        style={{
+          background: 'rgba(137,113,72,0.2)',
+          color: '#c4a96a',
+          border: '0.5px solid rgba(137,113,72,0.3)',
+          borderRadius: '2px',
+        }}
+      >
+        <RefreshCw size={12} className="inline mr-2" />
+        {t('common.retry', { defaultValue: 'Retry' })}
+      </button>
     </div>
-  );
+  )
 }
+
+function RoundErrorBanner({ error, onRetry }: { error: Error; onRetry: () => void }) {
+  const { t } = useTranslation()
+  const isNotFound = error.message?.includes('404')
+
+  return (
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <div
+        className="w-12 h-12 rounded-full flex items-center justify-center mb-5"
+        style={{
+          background: 'rgba(224,82,82,0.08)',
+          border: '0.5px solid rgba(224,82,82,0.25)',
+        }}
+      >
+        <ServerCrash size={20} style={{ color: '#e05252' }} />
+      </div>
+      <p
+        className="text-lg font-light mb-2"
+        style={{ color: '#f7f8f6', fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+      >
+        {isNotFound
+          ? t('sale.error.noRound', { defaultValue: 'No active round' })
+          : t('sale.error.loadError', { defaultValue: 'Failed to load sale' })}
+      </p>
+      <p className="text-xs max-w-xs leading-relaxed mb-5" style={{ color: '#555' }}>
+        {isNotFound
+          ? t('sale.error.noRoundMessage', { defaultValue: 'There is no active sale round at this time.' })
+          : t('sale.error.loadErrorMessage', { defaultValue: 'Could not connect to the sale server. Please try again.' })}
+      </p>
+      {!isNotFound && (
+        <button
+          onClick={onRetry}
+          className="px-6 py-2 text-xs tracking-widest uppercase font-medium transition-all"
+          style={{
+            background: 'rgba(137,113,72,0.2)',
+            color: '#c4a96a',
+            border: '0.5px solid rgba(137,113,72,0.3)',
+            borderRadius: '2px',
+          }}
+        >
+          <RefreshCw size={12} className="inline mr-2" />
+          {t('common.retry', { defaultValue: 'Retry' })}
+        </button>
+      )}
+    </div>
+  )
+}
+
 function NoRoundBanner() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center justify-center py-10 text-center">
@@ -455,5 +559,15 @@ function NoRoundBanner() {
         {t('sale.noRound.subtitle', { defaultValue: 'There is no sale round open at this time. Check back soon.' })}
       </p>
     </div>
-  );
+  )
+}
+
+function FormSkeleton() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      <div className="h-14 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
+      <div className="h-24 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
+      <div className="h-12 rounded" style={{ background: 'rgba(137,113,72,0.1)' }} />
+    </div>
+  )
 }

@@ -1,13 +1,12 @@
-
-import { useCallback, useEffect }          from 'react'
-import { useQuery, useQueryClient }        from '@tanstack/react-query'
-import { getDefaultSaleChainId }           from '@/sale/saleAddresses'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getDefaultSaleChainId } from '@/sale/saleAddresses'
 import {
   useAccount,
   useSwitchChain,
   useReadContracts,
-}                                          from 'wagmi'
-import { type Address, type Hash, parseUnits, formatUnits } from 'viem'
+} from 'wagmi'
+import { type Address, type Hash, parseUnits, formatUnits, zeroAddress } from 'viem'
 import {
   fetchCurrentRoundFromBackend,
   fetchUserPurchaseFromBackend,
@@ -23,20 +22,36 @@ import {
   formatETRF,
   calcTokensOut as calcTokensOutPure,
   needsApproval as needsApprovalPure,
-}                                          from './saleService'
-import { useSaleStore }                    from '@/sale/saleStore'
-import { useSaleWriter }                   from './useSaleWriter'
-import type { SaleOp }                     from './useSaleWriter'
-import type { RoundInfo, UserPurchase }    from './types'
-import { useAuthStore }                    from '@/stores/authStore'
+} from './saleService'
+import { useSaleStore } from '@/sale/saleStore'
+import { useSaleWriter } from './useSaleWriter'
+import type { SaleOp } from './useSaleWriter'
+import type { RoundInfo, UserPurchase } from './types'
+import { useAuthStore } from '@/stores/authStore'
+import { useToast } from '@/stores/uiStore'
 
 export { formatUSDC, formatETRF }
 export type { SaleOp }
 
-// ─── Public interface ─────────────────────────────────────────────────────────
+const ROUND_QUERY_OPTIONS = {
+  staleTime: 30_000,
+  gcTime: 5 * 60_000,
+  refetchInterval: 60_000,
+  retry: 3,
+  retryDelay: (attempt: number) => Math.min(1000 * 2 ** attempt, 10_000),
+} as const
+
+const PURCHASE_QUERY_OPTIONS = {
+  staleTime: 10_000,
+  gcTime: 60_000,
+  retry: 1,
+} as const
+
+const LOADING_TIMEOUT_MS = 15_000
+const TX_CONFIRMATION_TIMEOUT_MS = 120_000
 
 export interface UseSaleReturn {
-  // ── Data ──
+  // Data
   round:           RoundInfo | null
   purchase:        UserPurchase | null
   usdcBalance:     string
@@ -44,106 +59,172 @@ export interface UseSaleReturn {
   userAddress:     Address | undefined
   currentChainId:  number | undefined
 
-  // ── Loading / error ──
+  // Loading / error
   isRoundLoading:  boolean
   isUserLoading:   boolean
   roundError:      Error | null
   userError:       Error | null
+  isRoundTimeout:  boolean
 
-  // ── Chain ──
+  // Chain
   isWrongChain:      boolean
   isSaleAvailable:   boolean
   switchToSaleChain: () => void
   isSwitchingChain:  boolean
 
-  // ── Helpers ──
+  // Helpers
   calcTokensOut: (usdcAmount: string) => string
   needsApproval: (usdcAmount: string) => boolean
   refetch:       () => void
 
-  // ── Tx state ──
+  // Tx state
   txHash:       Hash | undefined
-  activeOp:     SaleOp | null     // which operation is in flight
+  activeOp:     SaleOp | null
   isPending:    boolean
   isConfirming: boolean
   isConfirmed:  boolean
   error:        Error | null
 
-  // ── Actions ──
+  // Actions
   resetTxState: () => void
   approveUSDC:  (usdcAmount: string) => Promise<Hash>
   buyTokens:    (usdcAmount: string) => Promise<Hash>
   claimTokens:  () => Promise<Hash>
 }
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+function getSafeChainId(chainId: number | undefined): number {
+  return chainId && chainId !== 0 ? chainId : 0
+}
 
 export function useSale(): UseSaleReturn {
-  // useAccount is the canonical wagmi hook — exposes address, isConnected, chainId
   const { address, isConnected, chainId: connectedChainId } = useAccount()
-  const switchChain  = useSwitchChain()
-  const queryClient  = useQueryClient()
+  const switchChain = useSwitchChain()
+  const queryClient = useQueryClient()
+  const toast       = useToast()  
 
-  const jwt = useAuthStore(s => s.sessions.sale?.accessToken ?? null)
+  const jwt = useAuthStore((s) => s.sessions.sale?.accessToken ?? null)
+  const [isRoundTimeout, setIsRoundTimeout] = useState(false)
+  const loadingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)  // ← CORREGIDO: inicializar como null
+  const confirmationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)  // ← CORREGIDO
 
-  // ── Chain availability ───────────────────────────────────────────────────────
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current)
+      if (confirmationTimeoutRef.current) clearTimeout(confirmationTimeoutRef.current)
+    }
+  }, [])
+
+  const safeChainId     = getSafeChainId(connectedChainId)
   const isSaleAvailable = isConnected && !!connectedChainId && isSaleSupported(connectedChainId)
   const isWrongChain    = isConnected && !!connectedChainId && !isSaleSupported(connectedChainId)
 
-  // ── Round (public, no JWT required) ─────────────────────────────────────────
+  // Reset purchase and round when chain becomes unsupported
+  useEffect(() => {
+    if (connectedChainId && !isSaleSupported(connectedChainId)) {
+      useSaleStore.getState().setPurchase(null)
+      useSaleStore.getState().setRound(null)
+    }
+  }, [connectedChainId])
+
   const {
-    data:     backendRound,
+    data: backendRound,
     isLoading: isRoundLoading,
-    error:     roundError,
-    refetch:   refetchRound,
+    error: roundError,
+    refetch: refetchRound,
   } = useQuery({
-    queryKey: ['sale', 'round'],
-    queryFn:  () => fetchCurrentRoundFromBackend(),
-    staleTime:       30_000,
-    refetchInterval: 60_000,
+    queryKey: ['sale', 'round', safeChainId],
+    queryFn: async () => {
+      setIsRoundTimeout(false)
+      return fetchCurrentRoundFromBackend()
+    },
+    ...ROUND_QUERY_OPTIONS,
   })
+
+  // Round loading timeout detection
+  useEffect(() => {
+    if (isRoundLoading) {
+      loadingTimeoutRef.current = setTimeout(() => {
+        if (isRoundLoading) {
+          setIsRoundTimeout(true)
+          toast.warning(  // ← CORREGIDO: usar toast.warning
+            'The sale round is taking longer than expected to load. Check your connection.',
+            8000
+          )
+        }
+      }, LOADING_TIMEOUT_MS)
+    } else {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current)
+        loadingTimeoutRef.current = null
+      }
+    }
+    return () => {
+      if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current)
+    }
+  }, [isRoundLoading, toast])
 
   const round: RoundInfo | null = backendRound
     ? convertRoundResponse(backendRound)
     : null
 
-  // ── User purchase (requires JWT + correct chain) ─────────────────────────────
   const {
-    data:     backendPurchase,
+    data: backendPurchase,
     isLoading: isUserLoading,
-    error:     userError,
-    refetch:   refetchUserPurchase,
+    error: userError,
+    refetch: refetchUserPurchase,
   } = useQuery({
-    queryKey: ['sale', 'my-purchase', jwt],
-    queryFn:  () => fetchUserPurchaseFromBackend(jwt!),
-    enabled:  !!jwt && isSaleAvailable,
-    staleTime: 10_000,
+    queryKey: ['sale', 'my-purchase', jwt, safeChainId],
+    queryFn: () => {
+      if (!jwt) throw new Error('No authentication token')
+      return fetchUserPurchaseFromBackend(jwt)
+    },
+    enabled: !!jwt && !!connectedChainId && isSaleSupported(connectedChainId),
+    ...PURCHASE_QUERY_OPTIONS,
   })
 
   const purchase: UserPurchase | null = backendPurchase
     ? convertPurchaseResponse(backendPurchase)
     : null
 
-  // ── On-chain USDC reads ──────────────────────────────────────────────────────
-  const usdcContractBase = {
-    address: getUSDCAddress(connectedChainId ?? 0) as Address,
-    abi:     USDC_ABI,
-  } as const
+  // Reset purchase when JWT becomes invalid
+  useEffect(() => {
+    if (!jwt) {
+      useSaleStore.getState().setPurchase(null)
+    }
+  }, [jwt])
 
-  const saleAddress = getSaleAddress(connectedChainId ?? 0)
+  const usdcAddress = getUSDCAddress(safeChainId)
+  const saleAddress = getSaleAddress(safeChainId)
 
-  const { data: usdcData, queryKey: usdcQueryKey } = useReadContracts({
+  const {
+    data: usdcData,
+    queryKey: usdcQueryKey,
+    refetch: refetchUsdc,
+  } = useReadContracts({
     contracts: [
-      { ...usdcContractBase, functionName: 'balanceOf', args: [address ?? '0x0'] },
-      { ...usdcContractBase, functionName: 'allowance', args: [address ?? '0x0', saleAddress] },
+      {
+        address: usdcAddress,
+        abi: USDC_ABI,
+        functionName: 'balanceOf',
+        args: [address ?? zeroAddress],
+      },
+      {
+        address: usdcAddress,
+        abi: USDC_ABI,
+        functionName: 'allowance',
+        args: [address ?? zeroAddress, saleAddress],
+      },
     ],
     query: {
-      enabled:   !!address && isSaleAvailable,
+      enabled: !!address && !!connectedChainId && isSaleSupported(connectedChainId),
       staleTime: 15_000,
+      gcTime: 60_000,
+      retry: 2,
     },
   })
 
-  const usdcBalance   = usdcData?.[0]?.result != null
+  const usdcBalance = usdcData?.[0]?.result != null
     ? formatUnits(usdcData[0].result as bigint, 6)
     : '0'
 
@@ -151,33 +232,60 @@ export function useSale(): UseSaleReturn {
     ? formatUnits(usdcData[1].result as bigint, 6)
     : '0'
 
-  // ── Sync to saleStore ────────────────────────────────────────────────────────
-  // The store acts as a snapshot for components outside the hook tree
-  // (e.g. ETRFTokenCard in a different subtree). Keep writes minimal.
-  useEffect(() => { useSaleStore.getState().setRound(round)       }, [round])
-  useEffect(() => { useSaleStore.getState().setPurchase(purchase) }, [purchase])
+  useEffect(() => {
+    useSaleStore.getState().setRound(round)
+  }, [round])
+
+  useEffect(() => {
+    useSaleStore.getState().setPurchase(purchase)
+  }, [purchase])
+
   useEffect(() => {
     useSaleStore.getState().setBalances(usdcBalance, usdcAllowance, '0')
   }, [usdcBalance, usdcAllowance])
 
-  // ── Single writer — replaces triple useWriteContract ────────────────────────
   const saleWriter = useSaleWriter()
 
-  // ── Contract actions ─────────────────────────────────────────────────────────
+  // Monitor transaction confirmation timeout
+  useEffect(() => {
+    if (saleWriter.isConfirming && saleWriter.txHash) {
+      confirmationTimeoutRef.current = setTimeout(() => {
+        if (saleWriter.isConfirming) {
+          toast.warning(  // ← CORREGIDO: usar toast.warning
+            'Transaction confirmation is taking longer than expected. Check the explorer for status.',
+            10000
+          )
+        }
+      }, TX_CONFIRMATION_TIMEOUT_MS)
+    } else {
+      if (confirmationTimeoutRef.current) {
+        clearTimeout(confirmationTimeoutRef.current)
+        confirmationTimeoutRef.current = null
+      }
+    }
+    return () => {
+      if (confirmationTimeoutRef.current) clearTimeout(confirmationTimeoutRef.current)
+    }
+  }, [saleWriter.isConfirming, saleWriter.txHash, toast])
 
   const approveUSDC = useCallback(async (usdcAmount: string): Promise<Hash> => {
     if (!connectedChainId || !isSaleSupported(connectedChainId)) {
       throw new Error('Sale not available on this chain')
     }
 
-    const hash = await saleWriter.write('approve', {
-      chainId:      connectedChainId,
-      address:      getUSDCAddress(connectedChainId),
-      abi:          USDC_ABI,
+    const amountWei = parseUnits(usdcAmount, 6)
+    const usdcAddr  = getUSDCAddress(connectedChainId)
+    const saleAddr  = getSaleAddress(connectedChainId)
+
+    const hash      = await saleWriter.write('approve', {
+      chainId: connectedChainId,
+      address: usdcAddr,
+      abi: USDC_ABI,
       functionName: 'approve',
-      args:         [getSaleAddress(connectedChainId), parseUnits(usdcAmount, 6)],
+      args: [saleAddr, amountWei],
     })
 
+    // Invalidate queries after approval
     await queryClient.invalidateQueries({ queryKey: usdcQueryKey })
 
     return hash
@@ -188,49 +296,59 @@ export function useSale(): UseSaleReturn {
       throw new Error('Sale not available on this chain')
     }
 
+    const amountWei = parseUnits(usdcAmount, 6)
+    const saleAddr = getSaleAddress(connectedChainId)
+
     const hash = await saleWriter.write('buy', {
-      chainId:      connectedChainId,
-      address:      getSaleAddress(connectedChainId),
-      abi:          SALE_ABI,
+      chainId: connectedChainId,
+      address: saleAddr,
+      abi: SALE_ABI,
       functionName: 'buy',
-      args:         [parseUnits(usdcAmount, 6)],
+      args: [amountWei],
     })
 
-    // Fire-and-forget backend notification.
-    // The indexer covers this if the call fails.
+    // Fire-and-forget backend notification (non-blocking)
     if (jwt) {
-      verifyPurchaseOnBackend(hash, jwt).catch(() => {})
+      verifyPurchaseOnBackend(hash, jwt).catch((err) => {
+        console.warn('[useSale] Failed to notify backend of purchase:', err)
+      })
     }
 
+    // Invalidate all relevant queries
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: usdcQueryKey }),
       queryClient.invalidateQueries({ queryKey: ['sale', 'my-purchase', jwt] }),
+      refetchUsdc(),
     ])
+
+    // Refetch user purchase data
     await refetchUserPurchase()
 
     return hash
-  }, [saleWriter, connectedChainId, jwt, queryClient, usdcQueryKey, refetchUserPurchase])
+  }, [saleWriter, connectedChainId, jwt, queryClient, usdcQueryKey, refetchUserPurchase, refetchUsdc])
 
   const claimTokens = useCallback(async (): Promise<Hash> => {
     if (!connectedChainId || !isSaleSupported(connectedChainId)) {
       throw new Error('Sale not available on this chain')
     }
 
-    const hash = await saleWriter.write('claim', {
-      chainId:      connectedChainId,
-      address:      getSaleAddress(connectedChainId),
-      abi:          SALE_ABI,
+    const saleAddr = getSaleAddress(connectedChainId)
+    const hash     = await saleWriter.write('claim', {
+      chainId: connectedChainId,
+      address: saleAddr,
+      abi: SALE_ABI,
       functionName: 'claim',
-      args:         [],
+      args: [],
     })
 
-    await queryClient.invalidateQueries({ queryKey: ['sale', 'my-purchase', jwt] })
-    await refetchUserPurchase()
+    // Invalidate purchase data after claim
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['sale', 'my-purchase', jwt] }),
+      refetchUserPurchase(),
+    ])
 
     return hash
   }, [saleWriter, connectedChainId, jwt, queryClient, refetchUserPurchase])
-
-  // ── Derived helpers ──────────────────────────────────────────────────────────
 
   const calcTokensOut = useCallback(
     (usdcAmount: string) => calcTokensOutPure(usdcAmount, round?.price ?? 0n),
@@ -238,33 +356,52 @@ export function useSale(): UseSaleReturn {
   )
 
   const needsApproval = useCallback(
-    (usdcAmount: string) => needsApprovalPure(usdcAmount, parseUnits(usdcAllowance, 6)),
+    (usdcAmount: string) => {
+      const allowanceWei = parseUnits(usdcAllowance, 6)
+      return needsApprovalPure(usdcAmount, allowanceWei)
+    },
     [usdcAllowance],
   )
 
   const switchToSaleChain = useCallback(() => {
-    switchChain.mutate({ chainId: getDefaultSaleChainId() })
-  }, [switchChain])
+    switchChain.mutate(
+      { chainId: getDefaultSaleChainId() },
+      {
+        onError: (error) => {
+          toast.error(  // ← CORREGIDO: usar toast.error
+            error.message.includes('User rejected')
+              ? 'You rejected the network switch. Please try again.'
+              : 'Failed to switch network. Please do it manually in your wallet.',
+            5000
+          )
+        },
+      }
+    )
+  }, [switchChain, toast])
 
   const refetch = useCallback(() => {
     refetchRound()
     refetchUserPurchase()
-  }, [refetchRound, refetchUserPurchase])
+    refetchUsdc()
+  }, [refetchRound, refetchUserPurchase, refetchUsdc])
 
-  // ── Return ───────────────────────────────────────────────────────────────────
+  const resetTxState = useCallback(() => {
+    saleWriter.reset()
+  }, [saleWriter])
 
   return {
     round,
     purchase,
     usdcBalance,
     usdcAllowance,
-    userAddress:    address,
+    userAddress: address,
     currentChainId: connectedChainId,
 
     isRoundLoading,
     isUserLoading,
     roundError,
     userError,
+    isRoundTimeout,
 
     isWrongChain,
     isSaleAvailable,
@@ -275,14 +412,14 @@ export function useSale(): UseSaleReturn {
     needsApproval,
     refetch,
 
-    txHash:       saleWriter.txHash,
-    activeOp:     saleWriter.activeOp,
-    isPending:    saleWriter.isPending,
+    txHash: saleWriter.txHash,
+    activeOp: saleWriter.activeOp,
+    isPending: saleWriter.isPending,
     isConfirming: saleWriter.isConfirming,
-    isConfirmed:  saleWriter.isConfirmed,
-    error:        saleWriter.error,
+    isConfirmed: saleWriter.isConfirmed,
+    error: saleWriter.error,
 
-    resetTxState: saleWriter.reset,
+    resetTxState,
 
     approveUSDC,
     buyTokens,
