@@ -1,22 +1,3 @@
-/**
- * useSale
- *
- * Hook principal de la feature Token Sale.
- * Combina autenticación SIWE, datos de ronda/compra del backend,
- * balances on-chain (USDC) y escritura de contratos (approve/buy/claim).
- *
- * Stack: wagmi v3 · TanStack Query v5 · viem · axios
- *
- * Cambios respecto a la versión anterior:
- *  - useConnection en lugar de useAccount (wagmi v3)
- *  - useSignMessage en lugar de window.ethereum.personal_sign
- *    → compatible con MetaMask, WalletConnect, Safe, Coinbase Wallet, etc.
- *  - refreshTokenRef (useRef) para evitar stale closure en el setInterval
- *    de rotación automática del access token
- *  - localStorage inicializado en useEffect (no en el initializer de useState)
- *    para evitar problemas en entornos SSR / tests
- */
-
 import {
   useCallback,
   useEffect,
