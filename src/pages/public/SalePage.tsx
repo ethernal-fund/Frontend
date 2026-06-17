@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useConnection } from 'wagmi'
-import { useSale } from '@/sale/useSale'
-import { RoundProgress } from '@/sale/components/RoundProgress'
-import { WalletGate } from '@/sale/components/WalletGate'
-import { BuyForm } from '@/sale/components/BuyForm'
-import { VestingTracker } from '@/sale/components/VestingTracker'
-import { TokenomicsCard } from '@/sale/components/TokenomicsCard'
+import { useTranslation }  from 'react-i18next'
+import { useConnection }   from 'wagmi'
+import { useSale }         from '@/sale/useSale'
+import { RoundProgress }   from '@/sale/components/RoundProgress'
+import { WalletGate }      from '@/sale/components/WalletGate'
+import { BuyForm }         from '@/sale/components/BuyForm'
+import { VestingTracker }  from '@/sale/components/VestingTracker'
+import { TokenomicsCard }  from '@/sale/components/TokenomicsCard'
 import { TokenomicsModal } from '@/sale/components/TokenomicsModal'
 import { RefreshCw, WifiOff, ServerCrash } from 'lucide-react'
-import type { RoundInfo } from '@/sale/types'
+import type { RoundInfo }  from '@/sale/types'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SalePage — public page, no wallet required to view
@@ -25,14 +25,14 @@ import type { RoundInfo } from '@/sale/types'
 
 export default function SalePage() {
   const { isConnected } = useConnection()
-  const { t } = useTranslation()
-  const sale = useSale()
+  const { t }           = useTranslation()
+  const sale            = useSale()
 
-  const hasPurchased = sale.purchase?.hasPurchased ?? false
-  const isWrongChain = sale.isWrongChain
+  const hasPurchased   = sale.purchase?.hasPurchased ?? false
+  const isWrongChain   = sale.isWrongChain
   const isRoundLoading = sale.isRoundLoading
   const isRoundTimeout = sale.isRoundTimeout
-  const roundError = sale.roundError
+  const roundError     = sale.roundError
 
   const [tokenomicsOpen, setTokenomicsOpen] = useState(false)
 
